@@ -133,3 +133,12 @@ Respuesta 200:
 ```
 
 Cada cifra coincide con la del módulo de origen (`GET /orders`, `GET /appointments`, `GET /maintenance`, `GET /parts/summary` y `GET /orders/:id/payments`). 403 para los demás roles.
+
+## Notas de implementación
+
+- `POST /orders/:id/payments` con `MERCADO_PAGO` solicita el cobro a Mercado Pago con la orden bloqueada; si Mercado Pago falla, la transacción se revierte y no queda ningún pago.
+- La respuesta de pagos nunca incluye la referencia externa ni el identificador de Mercado Pago; solo el enlace de pago.
+- Los errores de validación de pagos usan los mensajes en español del servidor; el de saldo incluye `balance` (saldo disponible) y el campo `amount` en `details`.
+- El ticket guarda solo folio, orden, pago principal y fecha; su contenido se arma en cada consulta. `payment.status` del ticket usa los estados de cobro (`SIN_PAGOS` se muestra como "Pendiente").
+- La dirección de impresión se arma con `PUBLIC_API_URL` si está definida y, si no, con el servidor que atendió la petición.
+- Una aprobación tardía de un pago de Mercado Pago ya cancelado en Motorix se ignora y se registra una advertencia en el servidor.

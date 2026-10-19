@@ -1355,6 +1355,25 @@ Antes de asumirlas como definitivas, el equipo debe decidir:
 - **Datos de ejemplo**: el seed agrega 14 refacciones (una agotada, dos con stock bajo), refacciones usadas en las órdenes
   de ejemplo y 7 mantenimientos en cada clasificación.
 
+### Decisiones resueltas con Spec Kit para el Sprint 4 (2026-10-19)
+
+- **Mercado Pago** (`/speckit-clarify`): enlace de pago en modo de pruebas (sandbox), con código QR; el cliente paga en la página de
+  Mercado Pago y Motorix nunca captura datos de tarjeta. La integración está aislada en `server/integrations/`, usa el `fetch` nativo
+  de Node (sin SDK) y las credenciales viven solo en variables de entorno (`MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET`,
+  `MP_NOTIFICATION_URL`). Las notificaciones son públicas pero no se confía en su contenido: se consulta el pago real a Mercado Pago y
+  se aplica de forma idempotente. Límite aceptado: la aprobación tardía de un pago ya cancelado en Motorix se ignora y se concilia
+  fuera del sistema.
+- **Ticket** (`/speckit-clarify`): vista imprimible que se arma al consultarla con los datos vigentes; Motorix no genera ni guarda PDF.
+  "Imprimir" abre una página HTML con estilos de impresión en el navegador mediante un token de 5 minutos firmado con otra clave que la
+  de sesión. Un ticket por orden (`TK-000123`); generarlo de nuevo devuelve el mismo folio.
+- **Pagos parciales** (`/speckit-clarify`): permitidos; el saldo se protege bloqueando la orden en la transacción y los pagos
+  Pendientes de Mercado Pago reservan su importe. Estados `PENDIENTE`, `PAGADO`, `RECHAZADO` y `CANCELADO`; los pagos nunca se eliminan.
+- **Reembolsos** (`/speckit-clarify`): fuera del sistema; un pago Pagado no se modifica ni se revierte.
+- **Panel de control** (`/speckit-clarify`): periodos fijos (hoy, mes en curso y próximos 7 días), sin selector de fechas; exclusivo del
+  administrador y calculado al abrirlo reutilizando los módulos de origen, sin copias.
+- **IVA**: no se maneja; el subtotal del ticket es igual al total de la orden.
+- **Datos de ejemplo**: el seed agrega pagos en distintos métodos y estados y el ticket de la orden entregada.
+
 CLAUDE puede proponer opciones para estas decisiones, pero no debe
 introducir dependencias grandes sin justificar su necesidad.
 

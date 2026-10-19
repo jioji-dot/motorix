@@ -3,13 +3,15 @@
 Sistema de Gestión para Taller Mecánico. Proyecto académico de Ingeniería en Sistemas Computacionales,
 desarrollado con **Desarrollo Guiado por Especificaciones (SDD)** usando Spec Kit.
 
-Este repositorio contiene los **Sprints 1, 2 y 3** del MVP:
+Este repositorio contiene los **cuatro sprints** del MVP:
 
 - **Sprint 1**: autenticación con roles, gestión de usuarios, clientes y vehículos.
 - **Sprint 2**: agenda de citas y órdenes de servicio (asignación de mecánico, diagnóstico, servicios, mano de obra,
   total calculado, estados con historial y cancelación).
 - **Sprint 3**: historial de servicios del vehículo, mantenimientos programados (próximos y vencidos) e inventario de
   refacciones con movimientos, uso en las órdenes y alertas de stock bajo.
+- **Sprint 4**: pagos de las órdenes (parciales, con cuatro métodos y cobro con enlace de Mercado Pago en sandbox), ticket de
+  servicio imprimible y panel de control del administrador.
 
 El alcance completo y las reglas de negocio están en [`docs/project-context.md`](docs/project-context.md)
 y las reglas del proyecto en la [constitución](.specify/memory/constitution.md).
@@ -31,6 +33,7 @@ La documentación de cada funcionalidad está en `specs/`:
 - [`specs/001-base-clientes-vehiculos/`](specs/001-base-clientes-vehiculos/) (Sprint 1)
 - [`specs/002-citas-ordenes-servicio/`](specs/002-citas-ordenes-servicio/) (Sprint 2)
 - [`specs/003-historial-mantenimiento-inventario/`](specs/003-historial-mantenimiento-inventario/) (Sprint 3)
+- [`specs/004-pagos-tickets-dashboard/`](specs/004-pagos-tickets-dashboard/) (Sprint 4)
 
 Cada carpeta incluye `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/api.md`, `quickstart.md`,
 `tasks.md` y `validacion-quickstart.md`.
@@ -80,7 +83,8 @@ npm start        # API en http://localhost:3000/api
 Cuentas iniciales: `admin`, `recepcion`, `mecanico` y `mecanico2` (se puede entrar con el usuario o con el correo).
 El seed carga clientes, vehículos, 8 citas (una o más por estado) y 7 órdenes de servicio (una por estado) repartidas entre
 los dos mecánicos, 14 refacciones (una agotada y dos con stock bajo) con sus movimientos, refacciones usadas en las órdenes
-y 7 mantenimientos programados en cada clasificación, para que cada pantalla muestre información al abrirla.
+7 mantenimientos programados en cada clasificación y pagos de ejemplo (una orden cobrada completa con su ticket, una con pago
+parcial y un intento de Mercado Pago rechazado), para que cada pantalla muestre información al abrirla.
 
 ### Qué puede hacer cada rol
 
@@ -109,6 +113,25 @@ desde En reparación; una orden en curso puede cancelarse con motivo). Una orden
 - El **stock** de cada refacción solo cambia con movimientos inmutables (entrada, salida o ajuste) dentro de una
   transacción que impide dejarlo negativo; siempre es igual a la suma de sus movimientos. Cada uso en una orden genera una
   salida ligada a ella (con el precio de venta vigente, que se conserva) y cancelar la orden regresa las piezas.
+
+### Pagos, ticket y panel de control (Sprint 4)
+
+| Rol | Pagos | Ticket | Panel de control |
+|-----|-------|--------|------------------|
+| Administrador | Registra y consulta | Genera, consulta e imprime | Sí |
+| Recepcionista | Registra y consulta | Genera, consulta e imprime | — |
+| Mecánico | — | — | — |
+
+- Una orden **Terminada o Entregada** admite pagos parciales hasta cubrir su total (efectivo, tarjeta cobrada en terminal externa,
+  transferencia o Mercado Pago). Motorix **no pide ni guarda datos de tarjeta**. No hay reembolsos: un pago Pagado no se modifica.
+- **Mercado Pago** funciona con un enlace de pago en modo de pruebas (sandbox): el cliente paga en la página de Mercado Pago y el
+  estado se actualiza por notificación o con el botón "Actualizar estado". Configura `MP_ACCESS_TOKEN` (credencial de **prueba**)
+  en tu `.env`; sin ella, el cobro con Mercado Pago avisa que no está configurado y se puede usar otro método. Para recibir
+  notificaciones en local hace falta una dirección pública (`MP_NOTIFICATION_URL`); sin ella, usa "Actualizar estado".
+- El **ticket** (uno por orden, folio `TK-000123`) se arma con los datos vigentes de la orden y sus pagos. "Imprimir" lo abre en el
+  navegador del sistema, donde también se puede guardar como PDF; el enlace dura 5 minutos.
+- El **panel de control** (solo administrador) muestra órdenes por estado y por cobrar, citas de hoy y de los próximos 7 días,
+  mantenimientos vencidos y próximos, alertas de inventario y lo cobrado hoy y en el mes; cada cifra coincide con su módulo.
 
 ### 4. Frontend
 
