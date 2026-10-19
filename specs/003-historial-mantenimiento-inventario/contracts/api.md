@@ -142,3 +142,12 @@ Solicitud: `{ "vehicleId", "serviceType", "lastServiceDate", "lastMileage", "nex
 ### `PATCH /maintenance/:id` (ADMIN o mecánico)
 
 Campos opcionales: `serviceType`, `lastServiceDate`, `lastMileage`, `nextDate`, `nextMileage`, `notes` (se pueden enviar `nextDate` o `nextMileage` en `null` mientras quede al menos uno). Respuesta 200. 409 `MAINTENANCE_NOT_EDITABLE` si está Atendido.
+
+## Notas de implementación
+
+- `GET /parts`: sin el parámetro `active`, el administrador recibe todas las refacciones (activas e inactivas) y los demás
+  roles solo las activas; una refacción inactiva responde 404 a quien no es administrador.
+- `GET /maintenance`: la lista se clasifica y pagina en el servidor. Para ordenar por urgencia dentro de un mismo grupo se
+  asume una equivalencia de 50 km por día entre los días y los kilómetros restantes; esa equivalencia no cambia la
+  clasificación.
+- Los mensajes de validación respetan la concordancia de género ("El código es obligatorio.", "La categoría es obligatoria.").

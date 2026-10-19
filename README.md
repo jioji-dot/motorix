@@ -3,11 +3,13 @@
 Sistema de Gestión para Taller Mecánico. Proyecto académico de Ingeniería en Sistemas Computacionales,
 desarrollado con **Desarrollo Guiado por Especificaciones (SDD)** usando Spec Kit.
 
-Este repositorio contiene los **Sprints 1 y 2** del MVP:
+Este repositorio contiene los **Sprints 1, 2 y 3** del MVP:
 
 - **Sprint 1**: autenticación con roles, gestión de usuarios, clientes y vehículos.
 - **Sprint 2**: agenda de citas y órdenes de servicio (asignación de mecánico, diagnóstico, servicios, mano de obra,
   total calculado, estados con historial y cancelación).
+- **Sprint 3**: historial de servicios del vehículo, mantenimientos programados (próximos y vencidos) e inventario de
+  refacciones con movimientos, uso en las órdenes y alertas de stock bajo.
 
 El alcance completo y las reglas de negocio están en [`docs/project-context.md`](docs/project-context.md)
 y las reglas del proyecto en la [constitución](.specify/memory/constitution.md).
@@ -28,6 +30,7 @@ La documentación de cada funcionalidad está en `specs/`:
 
 - [`specs/001-base-clientes-vehiculos/`](specs/001-base-clientes-vehiculos/) (Sprint 1)
 - [`specs/002-citas-ordenes-servicio/`](specs/002-citas-ordenes-servicio/) (Sprint 2)
+- [`specs/003-historial-mantenimiento-inventario/`](specs/003-historial-mantenimiento-inventario/) (Sprint 3)
 
 Cada carpeta incluye `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/api.md`, `quickstart.md`,
 `tasks.md` y `validacion-quickstart.md`.
@@ -76,7 +79,8 @@ npm start        # API en http://localhost:3000/api
 
 Cuentas iniciales: `admin`, `recepcion`, `mecanico` y `mecanico2` (se puede entrar con el usuario o con el correo).
 El seed carga clientes, vehículos, 8 citas (una o más por estado) y 7 órdenes de servicio (una por estado) repartidas entre
-los dos mecánicos, para que cada pantalla muestre información al abrirla.
+los dos mecánicos, 14 refacciones (una agotada y dos con stock bajo) con sus movimientos, refacciones usadas en las órdenes
+y 7 mantenimientos programados en cada clasificación, para que cada pantalla muestre información al abrirla.
 
 ### Qué puede hacer cada rol
 
@@ -88,6 +92,23 @@ los dos mecánicos, para que cada pantalla muestre información al abrirla.
 
 Estados de la orden: Recibido → Diagnóstico → En reparación → Terminado → Entregado (Esperando refacción es un desvío
 desde En reparación; una orden en curso puede cancelarse con motivo). Una orden entregada o cancelada ya no cambia.
+
+### Historial, mantenimientos e inventario (Sprint 3)
+
+| Rol | Historial del vehículo | Mantenimientos | Inventario | Refacciones en la orden |
+|-----|------------------------|----------------|------------|-------------------------|
+| Administrador | Consulta | Programa y edita | Gestiona (catálogo, movimientos, precio de compra) | Agrega, cambia y quita |
+| Recepcionista | Consulta | Consulta | Consulta (sin precio de compra) | — |
+| Mecánico | Consulta | Programa y edita | Consulta (sin precio de compra) | Solo en sus órdenes en curso |
+
+- El **historial** es una vista calculada: las órdenes Terminadas y Entregadas del vehículo, de la más reciente a la más
+  antigua, con el kilometraje del servicio (o el de entrada si falta).
+- Un **mantenimiento** se programa por fecha, por kilometraje o por ambos y se clasifica al consultarlo: **Vencido** si
+  la fecha pasó o el kilometraje actual alcanzó el próximo; **Próximo** si faltan 15 días o menos, o 500 km o menos;
+  **Normal** en otro caso. Registrar otro del mismo tipo deja el anterior como Atendido.
+- El **stock** de cada refacción solo cambia con movimientos inmutables (entrada, salida o ajuste) dentro de una
+  transacción que impide dejarlo negativo; siempre es igual a la suma de sus movimientos. Cada uso en una orden genera una
+  salida ligada a ella (con el precio de venta vigente, que se conserva) y cancelar la orden regresa las piezas.
 
 ### 4. Frontend
 

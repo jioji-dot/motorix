@@ -1337,6 +1337,24 @@ Antes de asumirlas como definitivas, el equipo debe decidir:
   columna calculada `ROUND(horas × tarifa, 2)` y el total de la orden se recalcula en cada cambio de línea.
 - **Datos de ejemplo**: el seed agrega la cuenta `mecanico2`, citas relativas a la fecha de carga y 7 órdenes de ejemplo.
 
+### Decisiones resueltas con Spec Kit para el Sprint 3 (2026-10-19)
+
+- **Historial del vehículo** (`/speckit-clarify`): vista calculada sobre las órdenes `TERMINADO` y `ENTREGADO`, sin tabla
+  propia; la fecha del servicio es la del cambio a Terminado y el kilometraje es `COALESCE(serviceMileage, entryMileage)`.
+  La orden tiene el nuevo campo opcional `serviceMileage` (entre el kilometraje de entrada y 1,500,000), que además sube
+  el kilometraje del vehículo sin bajarlo nunca.
+- **Mantenimientos** (`/speckit-clarify`): umbrales fijos de aviso de 15 días y 500 km. La clasificación Normal, Próximo o
+  Vencido se calcula al consultar con el kilometraje actual del vehículo; un mantenimiento nuevo del mismo vehículo y tipo
+  deja el pendiente anterior como Atendido. Solo mecánico y administrador programan; recepción consulta.
+- **Ajustes de inventario** (`/speckit-clarify`): son una diferencia con signo, distinta de cero y con motivo; se muestra el
+  stock resultante y nunca puede quedar negativo. Los movimientos son inmutables: las correcciones son ajustes.
+- **Precios** (`/speckit-clarify`): el precio de venta de una refacción en la orden es siempre el vigente del catálogo y solo
+  el administrador lo cambia; la orden conserva el precio, el código y el nombre del momento. El precio de compra solo lo ve
+  el administrador y el servidor no lo envía a otros roles.
+- **Total de la orden**: servicios + mano de obra + refacciones. Cancelar una orden devuelve sus refacciones al stock.
+- **Datos de ejemplo**: el seed agrega 14 refacciones (una agotada, dos con stock bajo), refacciones usadas en las órdenes
+  de ejemplo y 7 mantenimientos en cada clasificación.
+
 CLAUDE puede proponer opciones para estas decisiones, pero no debe
 introducir dependencias grandes sin justificar su necesidad.
 
