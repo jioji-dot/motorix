@@ -111,10 +111,12 @@ class ApiSimulada {
     }
 
     if (ruta == '/api/vehicles' && metodo == 'GET') {
+      final idCliente = peticion.url.queryParameters['clientId'];
       final filtrados = vehiculos.where((v) =>
-          busqueda.isEmpty ||
+          (idCliente == null || v['clientId'].toString() == idCliente) &&
+          (busqueda.isEmpty ||
           (v['licensePlate'] as String).toLowerCase().contains(busqueda) ||
-          (v['brand'] as String).toLowerCase().contains(busqueda));
+          (v['brand'] as String).toLowerCase().contains(busqueda)));
       return jsonResponse(200, listaJson(filtrados.toList()));
     }
     if (ruta == '/api/vehicles' && metodo == 'POST') {

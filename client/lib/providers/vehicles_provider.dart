@@ -60,6 +60,15 @@ class VehiclesProvider extends ChangeNotifier {
     load(page: 1);
   }
 
+  /// Vehículos de un cliente (para los formularios de citas y órdenes), sin modificar el listado en pantalla.
+  Future<List<Vehicle>> forClient(int clientId) async {
+    final respuesta = await api.get('/vehicles', query: {
+      'clientId': clientId.toString(),
+      'pageSize': '100',
+    }) as Map<String, dynamic>;
+    return (respuesta['data'] as List).map((v) => Vehicle.fromJson(v as Map<String, dynamic>)).toList();
+  }
+
   Future<Vehicle> fetchDetail(int id) async {
     final respuesta = await api.get('/vehicles/$id') as Map<String, dynamic>;
     return Vehicle.fromJson(respuesta['data'] as Map<String, dynamic>);

@@ -21,3 +21,23 @@ String formatDate(DateTime? fecha) {
   String dos(int n) => n.toString().padLeft(2, '0');
   return '${dos(fecha.day)}/${dos(fecha.month)}/${fecha.year}';
 }
+
+/// Fecha y hora corta: dd/mm/aaaa HH:mm.
+String formatDateTime(DateTime? fecha) {
+  if (fecha == null) return '—';
+  String dos(int n) => n.toString().padLeft(2, '0');
+  return '${formatDate(fecha)} ${dos(fecha.hour)}:${dos(fecha.minute)}';
+}
+
+/// Importe en pesos con dos decimales: "1250.5" → "$1,250.50".
+String formatMoney(Object? importe) {
+  final valor = double.tryParse(importe?.toString() ?? '') ?? 0;
+  final partes = valor.toStringAsFixed(2).split('.');
+  final entero = partes[0];
+  final buffer = StringBuffer();
+  for (var i = 0; i < entero.length; i++) {
+    if (i > 0 && (entero.length - i) % 3 == 0) buffer.write(',');
+    buffer.write(entero[i]);
+  }
+  return '\$$buffer.${partes[1]}';
+}

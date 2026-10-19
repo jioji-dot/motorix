@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
+import appointmentRoutes from './routes/appointmentRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -18,6 +19,7 @@ export function createApp() {
   app.use('/api/clients', clientRoutes);
   app.use('/api/vehicles', vehicleRoutes);
   app.use('/api/users', userRoutes);
+  app.use('/api/appointments', appointmentRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

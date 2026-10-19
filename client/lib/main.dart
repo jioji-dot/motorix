@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'providers/appointments_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/clients_provider.dart';
 import 'providers/users_provider.dart';
 import 'providers/vehicles_provider.dart';
 import 'providers/sidebar_provider.dart';
+import 'screens/appointments_screen.dart';
 import 'screens/clients_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
@@ -50,6 +52,13 @@ class MotorixApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (c) {
+            final provider = AppointmentsProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (c) {
             final provider = UsersProvider(api);
             c.read<AuthProvider>().addSessionEndListener(provider.reset);
             return provider;
@@ -81,6 +90,7 @@ class _AuthGate extends StatelessWidget {
               sectionBuilders: {
                 'Clientes': (_) => const ClientsScreen(),
                 'Vehículos': (_) => const VehiclesScreen(),
+                'Citas': (_) => const AppointmentsScreen(),
                 'Usuarios': (_) => const UsersScreen(),
               },
             )

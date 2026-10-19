@@ -42,8 +42,9 @@ void main() {
   testWidgets('los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta', (tester) async {
     final api = ApiSimulada(rol: 'ADMIN', clientes: clientes, vehiculos: vehiculos, usuarios: usuarios);
     await bombearApp(tester, api.call);
-    await entrar(tester);
+    // Una ventana angosta arranca con la barra lateral colapsada, así que se redimensiona antes de iniciar sesión.
     await cambiarTamano(tester, 600, 700);
+    await entrar(tester);
 
     // Formulario de cliente
     await tester.tap(find.widgetWithText(FilledButton, 'Registrar cliente').first);
