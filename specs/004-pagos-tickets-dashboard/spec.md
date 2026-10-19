@@ -8,6 +8,16 @@
 
 **Entrada**: Descripción del usuario: "Usa la descripcion de @docs/sprints/sprint-4-pagos-tickets-dashboard.md"
 
+## Aclaraciones
+
+### Sesión 2026-10-19
+
+- Q: ¿Qué forma debe tener el cobro con Mercado Pago en la demostración (sandbox)? → A: Enlace de pago: Motorix crea el cobro en Mercado Pago, recepción ve y copia el enlace (o su código QR) para el cliente, que paga en la página de Mercado Pago; el estado se actualiza por notificación o por consulta. Motorix nunca captura datos de tarjeta.
+- Q: ¿Cómo se entrega el ticket para imprimirlo: como una página imprimible en pantalla o como un archivo PDF que Motorix genera? → A: Como una vista de ticket imprimible que se arma al consultarlo con los datos actuales; "Imprimir" abre el diálogo del sistema, desde donde también se puede guardar como PDF. Motorix no genera ni almacena archivos PDF.
+- Q: ¿Se permiten pagos parciales en una orden o cada orden se cobra completa en un solo pago? → A: Se permiten pagos parciales: varios pagos hasta cubrir el total (por ejemplo, un anticipo y la liquidación, o parte en efectivo y parte con tarjeta); el estado de cobro de la orden es Sin pagos, Pago parcial o Pagada.
+- Q: ¿Qué hace Motorix cuando hay que devolver dinero o corregir un pago ya cobrado? → A: Nada: no hay reembolsos en Motorix. Un pago Pagado no se modifica ni se revierte; solo se pueden cancelar los pagos Pendientes de Mercado Pago. Las devoluciones se manejan fuera del sistema (caja o panel de Mercado Pago).
+- Q: ¿El panel de control usa periodos fijos o permite elegir el periodo? → A: Periodos fijos, sin selector de fechas: lo cobrado hoy y en el mes en curso, las citas de hoy y de los próximos 7 días, y el resto como foto del momento (órdenes por estado, mantenimientos y alertas de inventario).
+
 ## Escenarios de usuario y pruebas *(obligatorio)*
 
 ### Historia de usuario 1 - Registrar el pago de una orden (Prioridad: P1)
@@ -59,7 +69,7 @@ Como recepcionista, quiero gestionar pagos mediante Mercado Pago para ofrecer un
 
 **Escenarios de aceptación**:
 
-1. **Dado** una orden Terminada o Entregada con saldo pendiente, **Cuando** inicio un pago con Mercado Pago por un importe válido, **Entonces** el sistema crea el pago en estado Pendiente, solicita el cobro a Mercado Pago en modo de pruebas y muestra el enlace para que el cliente pague.
+1. **Dado** una orden Terminada o Entregada con saldo pendiente, **Cuando** inicio un pago con Mercado Pago por un importe válido, **Entonces** el sistema crea el pago en estado Pendiente, solicita el cobro a Mercado Pago en modo de pruebas y muestra el enlace de pago (y su código QR) para que el cliente pague en la página de Mercado Pago.
 2. **Dado** un pago de Mercado Pago Pendiente, **Cuando** Mercado Pago informa que fue aprobado, **Entonces** el pago pasa a Pagado y el saldo de la orden se actualiza.
 3. **Dado** un pago de Mercado Pago Pendiente, **Cuando** Mercado Pago informa que fue rechazado o cancelado, **Entonces** el pago pasa a Rechazado o Cancelado, no cuenta para el saldo y se puede iniciar otro.
 4. **Dado** un pago de Mercado Pago Pendiente, **Cuando** consulto su estado desde Motorix, **Entonces** el sistema verifica el estado actual con Mercado Pago y lo actualiza.
@@ -84,7 +94,7 @@ Como recepcionista, quiero generar tickets de servicio para entregar comprobante
 2. **Dado** un ticket generado, **Cuando** lo visualizo, **Entonces** muestra el folio, los datos básicos del taller, cliente, vehículo, placas, kilometraje, servicios, refacciones, mano de obra, subtotal, total, método de pago, estado del pago y fecha.
 3. **Dado** una orden con pagos de varios métodos, **Cuando** veo su ticket, **Entonces** el método de pago y el estado del pago reflejan lo registrado (por ejemplo, "Efectivo y tarjeta", "Pagado" o "Pago parcial").
 4. **Dado** una orden sin pagos, **Cuando** genero su ticket, **Entonces** se genera con estado de pago "Pendiente" y sin método de pago.
-5. **Dado** un ticket visualizado, **Cuando** elijo imprimir, **Entonces** obtengo una versión lista para imprimir (o guardar como PDF) con el mismo contenido y sin elementos de navegación.
+5. **Dado** un ticket visualizado, **Cuando** elijo imprimir, **Entonces** obtengo una versión lista para imprimir (o guardar como PDF) con el mismo contenido y sin elementos de navegación; el sistema no genera ni guarda archivos PDF.
 6. **Dado** una orden que ya tiene ticket, **Cuando** vuelvo a generarlo, **Entonces** el sistema no crea otro folio: devuelve el mismo ticket con la información actualizada de pago.
 7. **Dado** una orden en curso o Cancelada, **Cuando** intento generar su ticket, **Entonces** el sistema lo rechaza.
 8. **Dado** que soy mecánico, **Cuando** intento generar o consultar tickets, **Entonces** el sistema lo rechaza.
@@ -120,7 +130,7 @@ Como administrador, quiero visualizar órdenes, citas, mantenimientos y alertas 
 **Escenarios de aceptación**:
 
 1. **Dado** órdenes en varios estados, **Cuando** abro el panel, **Entonces** veo cuántas hay en cada estado y cuántas están terminadas sin cobrar completamente.
-2. **Dado** citas en varios estados, **Cuando** abro el panel, **Entonces** veo las citas de hoy y de los próximos días pendientes o confirmadas.
+2. **Dado** citas en varios estados, **Cuando** abro el panel, **Entonces** veo las citas pendientes o confirmadas de hoy y de los próximos 7 días.
 3. **Dado** mantenimientos programados, **Cuando** abro el panel, **Entonces** veo cuántos están vencidos y cuántos próximos.
 4. **Dado** refacciones con stock bajo o agotadas, **Cuando** abro el panel, **Entonces** veo cuántas son y cuáles son las más urgentes.
 5. **Dado** pagos registrados, **Cuando** abro el panel, **Entonces** veo lo cobrado hoy y en el mes en curso, y cuánto hay pendiente de cobrar de órdenes terminadas.
@@ -165,7 +175,7 @@ Como administrador, quiero visualizar órdenes, citas, mantenimientos y alertas 
 
 **Mercado Pago**
 
-- **FR-013**: El sistema DEBE permitir iniciar un pago con Mercado Pago para una orden con saldo pendiente, creando el pago en estado Pendiente y obteniendo de Mercado Pago, en modo de pruebas (sandbox), el enlace o medio para que el cliente pague.
+- **FR-013**: El sistema DEBE permitir iniciar un pago con Mercado Pago para una orden con saldo pendiente, creando el pago en estado Pendiente y obteniendo de Mercado Pago, en modo de pruebas (sandbox), un enlace de pago (con su código QR) que recepción comparte con el cliente; el cliente paga en la página de Mercado Pago y Motorix nunca captura datos de tarjeta.
 - **FR-014**: El sistema DEBE actualizar el estado de un pago de Mercado Pago cuando el servicio externo informe su resultado (aprobado, rechazado o cancelado) y DEBE permitir consultar y sincronizar su estado bajo demanda.
 - **FR-015**: Las notificaciones de Mercado Pago DEBEN procesarse de forma segura e idempotente: no duplican pagos, no aceptan datos que no puedan verificarse con Mercado Pago y no alteran pagos ajenos.
 - **FR-016**: Las credenciales de Mercado Pago DEBEN manejarse únicamente por variables de entorno y nunca aparecer en el repositorio, en las respuestas ni en los registros.
@@ -177,14 +187,14 @@ Como administrador, quiero visualizar órdenes, citas, mantenimientos y alertas 
 - **FR-019**: El sistema DEBE permitir generar el ticket de una orden Terminada o Entregada, con folio único y fecha de generación; las órdenes en curso o Canceladas NO tienen ticket.
 - **FR-020**: El ticket DEBE incluir folio, datos básicos del taller, cliente, vehículo, placas, kilometraje, servicios, refacciones, mano de obra, subtotal, total, método de pago, estado del pago y fecha.
 - **FR-021**: Cada orden DEBE tener a lo sumo un ticket: generarlo de nuevo devuelve el mismo folio con el método y el estado de pago actuales.
-- **FR-022**: El ticket DEBE poder visualizarse en pantalla y imprimirse (o guardarse como PDF) con el mismo contenido y sin elementos de navegación.
+- **FR-022**: El ticket DEBE poder visualizarse en pantalla y imprimirse (o guardarse como PDF desde el diálogo de impresión) con el mismo contenido y sin elementos de navegación; el sistema NO DEBE generar ni almacenar archivos PDF.
 - **FR-023**: Los importes del ticket DEBEN coincidir exactamente con los de la orden y sus pagos; el subtotal y el total DEBEN calcularse con la misma regla que el total de la orden.
 - **FR-024**: Solo recepción y administración DEBEN poder generar y consultar tickets; el mecánico NO DEBE tener acceso.
 
 **Panel de control**
 
 - **FR-025**: El administrador DEBE poder abrir un panel de control con datos reales de órdenes, citas, pagos, mantenimientos y alertas de inventario, calculados al abrirlo; recepción y mecánico NO DEBEN tener acceso, y el servidor DEBE rechazar su consulta.
-- **FR-026**: El panel DEBE mostrar: órdenes por estado y cuántas están terminadas con saldo pendiente; citas de hoy y de los próximos días; mantenimientos vencidos y próximos; refacciones con stock bajo y agotadas; y lo cobrado hoy y en el mes en curso junto con lo pendiente de cobrar.
+- **FR-026**: El panel DEBE mostrar: órdenes por estado y cuántas están terminadas con saldo pendiente; citas de hoy y de los próximos 7 días; mantenimientos vencidos y próximos; refacciones con stock bajo y agotadas; y lo cobrado hoy y en el mes en curso junto con lo pendiente de cobrar.
 - **FR-027**: Cada indicador del panel DEBE coincidir con la información de su módulo de origen, sin duplicarla ni guardar copias, y permitir ir al módulo correspondiente.
 - **FR-028**: El panel DEBE mostrar estados de carga, vacío y error con opción de reintentar, y funcionar sin errores cuando no hay datos.
 
@@ -219,14 +229,14 @@ Relaciones: una orden tiene muchos pagos y a lo sumo un ticket; un ticket se rel
 ## Supuestos
 
 - Se apoya en los clientes, vehículos, usuarios, citas y órdenes de los Sprints 1 y 2 y en el inventario, los mantenimientos y las refacciones usadas del Sprint 3; el total de la orden (servicios + mano de obra + refacciones) ya existe.
-- Los pagos pueden ser parciales (varios pagos que suman el total); es el valor por defecto de esta especificación y se confirmará en la aclaración.
+- Los pagos pueden ser parciales: varios pagos que suman el total, con combinación de métodos (aclaración del 2026-10-19).
 - Los pagos con efectivo, tarjeta y transferencia se registran al cobrarse (la tarjeta se cobra en una terminal externa); solo Mercado Pago pasa por el estado Pendiente.
-- Mercado Pago se usa solo en modo de pruebas (sandbox); el alcance exacto de la integración para la demostración (enlace de pago, checkout u otro) se resuelve en la aclaración.
-- No hay reembolsos ni devoluciones: un pago Pagado no se revierte desde Motorix; la política de reembolsos se decide en la aclaración y, por defecto, queda fuera de alcance.
+- Mercado Pago se usa solo en modo de pruebas (sandbox); la integración para la demostración es un enlace de pago (aclaración del 2026-10-19), sin formulario de tarjeta dentro de Motorix.
+- No hay reembolsos ni devoluciones: un pago Pagado no se modifica ni se revierte desde Motorix y las devoluciones se manejan fuera del sistema (aclaración del 2026-10-19).
 - No se maneja impuestos (IVA) ni facturación: subtotal y total son iguales salvo que se defina lo contrario en la aclaración.
 - Los datos básicos del taller (nombre, dirección, teléfono) vienen de la configuración del sistema, no de una pantalla de administración.
-- El ticket se genera a partir de la información de la orden y sus pagos; el formato concreto (PDF, página imprimible) y su almacenamiento se resuelven en la aclaración y en la planificación.
-- Los indicadores exactos del panel y su periodicidad son los de FR-026 con "hoy" y "mes en curso" como periodos; se confirmarán en la aclaración.
+- El ticket se genera a partir de la información de la orden y sus pagos; el ticket es una vista imprimible que se arma al consultarla (aclaración del 2026-10-19); desde el diálogo de impresión también se puede guardar como PDF, pero Motorix no genera ni almacena archivos.
+- Los indicadores del panel son los de FR-026 con periodos fijos ("hoy", "mes en curso" y "próximos 7 días") y sin selector de fechas (aclaración del 2026-10-19).
 - Una sola moneda (pesos mexicanos).
 - Fuera de alcance: chatbot de WhatsApp, facturación electrónica, envío automático de correos o mensajes al cliente, reportes avanzados o analítica histórica, y aplicación móvil nativa.
 - Dependencia: Sprints 1, 2 y 3 completados.

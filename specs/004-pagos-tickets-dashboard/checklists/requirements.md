@@ -31,6 +31,6 @@
 
 ## Notas
 
-- Validado en la primera iteración. Las cuatro decisiones que el insumo del sprint reserva para `/speckit-clarify` (formato y almacenamiento del ticket, alcance de Mercado Pago, indicadores del panel y política de reembolsos) tienen un valor por defecto documentado en los supuestos y en los requisitos, y se confirmarán en la aclaración; no bloquean la especificación.
+- Validado en la primera iteración. Las cinco aclaraciones del 2026-10-19 (alcance de Mercado Pago, formato del ticket, pagos parciales, reembolsos y periodos del panel) quedaron registradas en la especificación; no hay marcadores pendientes.
 - La especificación menciona "Mercado Pago" y "modo de pruebas (sandbox)" porque son parte del alcance acordado del producto (CA-2 y CA-3 del insumo), no una decisión de implementación.
 - El sprint no modifica reglas de sprints anteriores: se apoya en el total de la orden del Sprint 3 y en que la orden Entregada se conserva como historial (RN-9).
