@@ -30,7 +30,7 @@ siempre contra la base de pruebas (el nombre debe terminar en `_test`), nunca co
 
 ```powershell
 $env:MYSQL_ROOT_PASSWORD = (Get-Content C:\ruta\a\tu\contrasena.txt -Raw).Trim()
-./database/scripts/crear-entorno.ps1 -Puerto 3307 -Base motorix_sdd -BasePrueba motorix_sdd_test
+./database/scripts/crear-entorno.ps1 -Puerto 3307 -Base motorix_sdd -BasePrueba motorix_sdd_test -Usuario motorix_sdd_app
 ```
 
 El script crea las bases y el usuario dedicado `motorix_app` (la aplicación nunca usa `root`), y
