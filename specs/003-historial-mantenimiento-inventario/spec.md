@@ -8,6 +8,16 @@
 
 **Entrada**: Descripción del usuario: "Usa la descripcion de @docs/sprints/sprint-3-historial-inventario.md"
 
+## Aclaraciones
+
+### Sesión 2026-10-19
+
+- Q: ¿El historial del vehículo se calcula a partir de las órdenes o se guarda como un registro aparte? → A: Se calcula al consultarlo (vista calculada) a partir de las órdenes Terminadas o Entregadas del vehículo; no existe una tabla de historial ni una copia de la información.
+- Q: ¿Los umbrales para que un mantenimiento pase a "Próximo" son fijos del sistema o se definen en cada mantenimiento? → A: Son fijos del sistema: Próximo cuando faltan 15 días o menos, o 500 km o menos; Vencido cuando la próxima fecha ya pasó o el kilometraje actual alcanzó el próximo. Lo que cada mantenimiento define libremente es su próxima fecha y su próximo kilometraje.
+- Q: En un ajuste de inventario por conteo físico, ¿se captura la diferencia o la cantidad contada? → A: Se captura la diferencia con signo (entero distinto de cero, positivo o negativo) y un motivo obligatorio; el sistema muestra el stock resultante antes de guardar y rechaza el ajuste si lo dejaría negativo.
+- Q: Al agregar una refacción a una orden, ¿el mecánico puede cambiar su precio de venta? → A: No. Siempre se usa el precio de venta vigente de la refacción, que solo cambia el administrador en el catálogo; el precio queda guardado en la orden.
+- Q: ¿Quién puede ver el precio de compra de las refacciones? → A: Solo el administrador lo ve y lo captura; mecánico y recepción reciben únicamente el precio de venta, y el servidor no envía el precio de compra a esos roles.
+
 ## Escenarios de usuario y pruebas *(obligatorio)*
 
 ### Historia de usuario 1 - Consultar el historial de servicios de un vehículo (Prioridad: P1)
@@ -26,6 +36,7 @@ Como mecánico, quiero consultar el historial de servicios de un vehículo, con 
 4. **Dado** una orden en curso, **Cuando** el mecánico asignado registra el kilometraje del servicio, **Entonces** el valor queda guardado en la orden, el historial lo muestra y el kilometraje actual del vehículo se actualiza si es mayor.
 5. **Dado** que registro un kilometraje del servicio menor al de entrada de la orden, **Cuando** guardo, **Entonces** el sistema lo rechaza.
 6. **Dado** que una orden se termina, **Cuando** consulto el historial, **Entonces** aparece sin necesidad de capturar nada más (el historial se deriva de la orden, no se duplica).
+6b. **Dado** que se corrige un dato de una orden ya terminada (por ejemplo, su kilometraje del servicio), **Cuando** consulto el historial, **Entonces** muestra el dato corregido, porque no existe una copia aparte.
 7. **Dado** cualquier usuario del taller (administrador, recepcionista o mecánico), **Cuando** abre el historial de un vehículo, **Entonces** puede consultarlo aunque no sea de una orden suya.
 
 ---
@@ -62,7 +73,7 @@ Como recepcionista, quiero consultar los mantenimientos próximos y vencidos, co
 
 1. **Dado** mantenimientos pendientes, **Cuando** abro la lista, **Entonces** cada uno aparece como Normal, Próximo o Vencido según su fecha y el kilometraje actual del vehículo, con el cliente, su teléfono, el vehículo y cuánto falta o cuánto se pasó.
 2. **Dado** un mantenimiento con próxima fecha pasada, **Cuando** consulto la lista, **Entonces** aparece como Vencido; lo mismo si el kilometraje actual del vehículo alcanzó o superó el próximo kilometraje.
-3. **Dado** un mantenimiento cuya fecha está dentro del umbral de aviso, o cuyo kilometraje restante está dentro del umbral de aviso, **Cuando** consulto la lista, **Entonces** aparece como Próximo.
+3. **Dado** un mantenimiento al que le faltan 15 días o menos, o 500 km o menos, **Cuando** consulto la lista, **Entonces** aparece como Próximo; con 16 días y 501 km de margen aparece como Normal.
 4. **Dado** que filtro por Próximos o Vencidos, **Cuando** aplico el filtro, **Entonces** veo solo esos, ordenados del más urgente al menos urgente.
 5. **Dado** un mantenimiento atendido, **Cuando** consulto la lista de pendientes, **Entonces** no aparece.
 6. **Dado** un vehículo cuyo kilometraje actual sube por una nueva orden, **Cuando** consulto la lista, **Entonces** la clasificación se recalcula con el kilometraje nuevo.
@@ -83,12 +94,14 @@ Como administrador, quiero registrar refacciones y consultar su stock disponible
 1. **Dado** que soy administrador, **Cuando** registro una refacción con código o número de parte, nombre, categoría, marca, stock mínimo, precio de compra, precio de venta y existencia inicial, **Entonces** queda disponible y su stock actual es la existencia inicial.
 2. **Dado** que el código ya existe, **Cuando** intento registrarlo, **Entonces** el sistema lo rechaza.
 3. **Dado** una refacción, **Cuando** registro una entrada (compra) de cierta cantidad, **Entonces** el stock sube y queda un movimiento con fecha, usuario y motivo.
-4. **Dado** una refacción, **Cuando** registro un ajuste por conteo físico indicando la diferencia y un motivo obligatorio, **Entonces** el stock se corrige y queda el movimiento.
+4. **Dado** una refacción, **Cuando** registro un ajuste por conteo físico indicando la diferencia con signo (por ejemplo −2 o +3) y un motivo obligatorio, **Entonces** el sistema me muestra el stock resultante y, al confirmar, el stock se corrige y queda el movimiento.
+4b. **Dado** que la diferencia del ajuste es cero o no es un número entero, **Cuando** intento guardarlo, **Entonces** el sistema lo rechaza con un mensaje claro.
 5. **Dado** una refacción con stock 3, **Cuando** intento una salida o un ajuste que lo dejaría por debajo de cero, **Entonces** el sistema lo rechaza indicando el stock disponible.
 6. **Dado** el listado de refacciones, **Cuando** busco por código, nombre, categoría o marca, o filtro por categoría o por stock bajo, **Entonces** veo solo las coincidencias con su stock actual.
 7. **Dado** una refacción, **Cuando** abro su detalle, **Entonces** veo sus datos y el historial de movimientos (tipo, cantidad, motivo, orden relacionada, usuario y fecha).
 8. **Dado** que edito los datos de una refacción (nombre, categoría, marca, stock mínimo, precios), **Cuando** guardo, **Entonces** el cambio se aplica sin alterar el stock ni las órdenes pasadas; el stock solo cambia por movimientos.
-9. **Dado** que soy recepcionista o mecánico, **Cuando** consulto refacciones, **Entonces** puedo verlas pero no crearlas, editarlas ni registrar entradas o ajustes.
+9. **Dado** que soy recepcionista o mecánico, **Cuando** consulto refacciones, **Entonces** puedo verlas con su precio de venta pero no veo el precio de compra, y no puedo crearlas, editarlas ni registrar entradas o ajustes.
+9b. **Dado** que soy administrador, **Cuando** consulto o registro una refacción, **Entonces** veo y capturo tanto el precio de compra como el de venta.
 10. **Dado** una refacción que ya no se maneja, **Cuando** el administrador la desactiva (con confirmación), **Entonces** deja de ofrecerse para nuevas órdenes y se conserva su historial.
 
 ---
@@ -104,6 +117,7 @@ Como mecánico, quiero agregar a una orden las refacciones que utilizo para refl
 **Escenarios de aceptación**:
 
 1. **Dado** una orden en curso asignada a mí, **Cuando** agrego una refacción activa con una cantidad entera mayor a cero, **Entonces** se registra en la orden con el precio de venta vigente, se genera una salida de inventario ligada a la orden y el stock baja en esa cantidad.
+1b. **Dado** que agrego una refacción, **Cuando** intento indicar un precio distinto al vigente, **Entonces** el sistema lo ignora o lo rechaza: el precio lo fija siempre el catálogo.
 2. **Dado** una cantidad mayor al stock disponible, **Cuando** intento agregarla, **Entonces** el sistema lo rechaza indicando cuánto hay disponible y no cambia nada.
 3. **Dado** dos mecánicos que intentan usar la última pieza al mismo tiempo, **Cuando** ambos confirman, **Entonces** solo uno lo logra y el otro recibe el aviso de stock insuficiente.
 4. **Dado** una refacción ya agregada, **Cuando** cambio su cantidad, **Entonces** el inventario se ajusta con la diferencia (una salida o una entrada de reversa) y el stock sigue sin quedar negativo.
@@ -177,15 +191,16 @@ Como administrador, quiero visualizar alertas de stock bajo para reabastecer a t
 
 - **FR-015**: El administrador DEBE poder registrar refacciones con código o número de parte único, nombre, categoría, marca, stock mínimo, precio de compra, precio de venta y existencia inicial.
 - **FR-016**: El stock actual de una refacción DEBE ser siempre el resultado de sus movimientos; el stock NO se edita directamente.
-- **FR-017**: El sistema DEBE manejar movimientos de entrada (compras), salida (uso en una orden o salida manual con motivo) y ajuste (corrección por conteo físico con diferencia y motivo obligatorio), cada uno con cantidad entera, fecha, usuario, motivo y, si aplica, la orden relacionada.
+- **FR-017**: El sistema DEBE manejar movimientos de entrada (compras), salida (uso en una orden o salida manual con motivo) y ajuste (corrección por conteo físico con una diferencia entera con signo distinta de cero y motivo obligatorio), cada uno con cantidad entera, fecha, usuario, motivo y, si aplica, la orden relacionada.
 - **FR-018**: El sistema NO DEBE permitir que el stock quede negativo por ningún movimiento; DEBE rechazar la operación indicando el stock disponible.
 - **FR-019**: Los movimientos NO DEBEN poder editarse ni eliminarse; las correcciones se hacen con ajustes.
 - **FR-020**: El administrador DEBE poder editar los datos de una refacción y desactivarla (con confirmación) sin eliminarla; una refacción con movimientos no se elimina.
 - **FR-021**: Todos los usuarios autenticados DEBEN poder consultar refacciones, su stock y sus movimientos, con búsqueda por código, nombre, categoría o marca y filtros por categoría y por stock bajo; solo el administrador crea, edita, desactiva o registra entradas y ajustes.
+- **FR-021b**: El precio de compra de una refacción DEBE ser visible y editable solo para el administrador; el servidor NO DEBE enviarlo a los demás roles en ninguna respuesta.
 
 **Refacciones en las órdenes**
 
-- **FR-022**: El mecánico asignado (o el administrador) DEBE poder agregar a una orden en curso una refacción activa con una cantidad entera mayor a cero; el sistema DEBE registrar el precio de venta vigente en ese momento.
+- **FR-022**: El mecánico asignado (o el administrador) DEBE poder agregar a una orden en curso una refacción activa con una cantidad entera mayor a cero; el sistema DEBE registrar el precio de venta vigente en ese momento, que solo el administrador puede cambiar en el catálogo (nadie lo modifica dentro de la orden).
 - **FR-023**: Cada refacción agregada DEBE generar en la misma operación una salida de inventario ligada a la orden; si no hay stock suficiente, NO DEBE guardarse nada.
 - **FR-024**: Con usos simultáneos de la misma refacción, el sistema DEBE garantizar que el stock no se sobreasigne: solo se aplican los que alcanzan.
 - **FR-025**: Al cambiar la cantidad de una refacción usada el sistema DEBE registrar la diferencia como salida o entrada de reversa; al quitarla, DEBE regresar las piezas al stock con un movimiento ligado a la orden.
@@ -208,7 +223,7 @@ Como administrador, quiero visualizar alertas de stock bajo para reabastecer a t
 
 ### Entidades clave *(incluir si la funcionalidad involucra datos)*
 
-- **Refacción**: pieza del inventario. Tiene código o número de parte único, nombre, categoría, marca, stock mínimo, precio de compra, precio de venta y estado (activa o desactivada). Su stock actual se calcula con sus movimientos.
+- **Refacción**: pieza del inventario. Tiene código o número de parte único, nombre, categoría, marca, stock mínimo, precio de compra (visible solo para el administrador), precio de venta y estado (activa o desactivada). Su stock actual se calcula con sus movimientos.
 - **Movimiento de inventario**: registro inmutable de un cambio de stock. Tiene refacción, tipo (entrada, salida o ajuste), cantidad, motivo, orden relacionada (si aplica), usuario y fecha.
 - **Refacción utilizada**: refacción agregada a una orden, con cantidad, precio de venta al momento del uso e importe.
 - **Mantenimiento programado**: seguimiento de un servicio futuro de un vehículo. Tiene tipo de servicio, fecha y kilometraje del último servicio, próxima fecha, próximo kilometraje, notas y estado (pendiente o atendido). Su clasificación (Normal, Próximo, Vencido) se calcula.
@@ -232,13 +247,13 @@ Relaciones: una refacción tiene muchos movimientos; una orden tiene muchas refa
 ## Supuestos
 
 - Se apoya en los clientes, vehículos, usuarios, citas y órdenes de los Sprints 1 y 2.
-- El historial es una vista calculada a partir de las órdenes (no una tabla que se llene aparte), para no duplicar información.
+- El historial es una vista calculada a partir de las órdenes (decidido en la aclaración del 2026-10-19), sin tabla de historial ni copias, por lo que cualquier corrección a una orden se refleja en el historial.
 - El kilometraje del servicio es un dato opcional de la orden; si no se captura, el historial usa el de entrada.
-- Los umbrales de aviso de mantenimiento (15 días y 500 km) son valores del sistema por omisión; cada mantenimiento define libremente sus propios intervalos.
+- Los umbrales de aviso de mantenimiento (15 días y 500 km) son fijos del sistema (aclaración del 2026-10-19); cada mantenimiento define libremente sus propios intervalos, es decir, su próxima fecha y su próximo kilometraje.
 - El stock negativo está prohibido; no hay política de excepción.
 - Los movimientos de inventario son entrada, salida y ajuste; las cantidades son enteras (piezas completas).
 - Una sola bodega; no se manejan proveedores, órdenes de compra, lotes ni costos promedio.
 - Recepción puede consultar el inventario y los mantenimientos, pero no modificarlos; solo el administrador modifica el inventario.
-- Quedan por confirmar en `/speckit-clarify`: el modelo exacto del historial (vista calculada o registro propio), los umbrales de vencimiento de mantenimiento, la política de stock negativo y los tipos de movimiento con su uso exacto.
+- La política de stock negativo (prohibido, sin excepciones) y el uso de las salidas manuales (con motivo obligatorio) se mantienen como valores por defecto de la especificación, sin objeciones; pueden revisarse al planificar.
 - Fuera de alcance: pagos, Mercado Pago, tickets, dashboard y notificaciones externas (correo, WhatsApp).
 - Dependencia: Sprints 1 y 2 completados.
