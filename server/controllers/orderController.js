@@ -44,3 +44,7 @@ export async function removeLabor(req, res) {
   const { id, lineId } = req.valid.params;
   res.json({ data: await orderService.removeLabor(id, lineId, req.user) });
 }
+
+export async function changeStatus(req, res) {
+  res.json({ data: await orderService.changeStatus(req.valid.params.id, req.valid.body, req.user) });
+}

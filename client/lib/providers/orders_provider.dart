@@ -84,8 +84,12 @@ class OrdersProvider extends ChangeNotifier {
   Future<ServiceOrder> update(int id, Map<String, dynamic> datos) async =>
       _orden(await api.patch('/orders/$id', body: datos));
 
-  Future<ServiceOrder> changeStatus(int id, String status, {String? reason}) async =>
-      _orden(await api.post('/orders/$id/status', body: {'status': status, 'reason': ?reason}));
+  Future<ServiceOrder> changeStatus(int id, String status, {String? reason, String? expectedStatus}) async =>
+      _orden(await api.post('/orders/$id/status', body: {
+        'status': status,
+        'reason': ?reason,
+        'expectedStatus': ?expectedStatus,
+      }));
 
   Future<ServiceOrder> addService(int id, Map<String, dynamic> datos) async =>
       _orden(await api.post('/orders/$id/services', body: datos));

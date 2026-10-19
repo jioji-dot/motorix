@@ -163,7 +163,7 @@ export async function list({ status, mechanicId, from, to, search, page, pageSiz
 // Bloquea la orden durante la transacción para que ediciones y cambios de estado no se pisen.
 export async function lockOrder(conexion, id) {
   const [filas] = await conexion.execute(
-    'SELECT id, status, mechanicId FROM service_orders WHERE id = ? FOR UPDATE',
+    'SELECT id, status, mechanicId, appointmentId, diagnosis FROM service_orders WHERE id = ? FOR UPDATE',
     [id],
   );
   return filas[0] ?? null;
@@ -252,5 +252,39 @@ export async function updateLabor(conexion, orderId, lineId, datos) {
 
 export async function removeLabor(conexion, orderId, lineId) {
   const [resultado] = await conexion.execute('DELETE FROM order_labor WHERE id = ? AND orderId = ?', [lineId, orderId]);
+  return resultado.affectedRows;
+}
+
+// Cuántos servicios y manos de obra tiene la orden (para validar que se pueda terminar).
+export async function countLines(conexion, orderId) {
+  const [[fila]] = await conexion.execute(
+    `SELECT (SELECT COUNT(*) FROM order_services WHERE orderId = ?) AS services,
+            (SELECT COUNT(*) FROM order_labor WHERE orderId = ?) AS labor`,
+    [orderId, orderId],
+  );
+  return { services: Number(fila.services), labor: Number(fila.labor) };
+}
+
+// Cambia el estado solo si la orden sigue en el estado esperado (bloqueo optimista) y registra el historial.
+// Devuelve las filas afectadas: 0 significa que alguien cambió la orden antes.
+export async function changeStatus(conexion, { id, from, to, userId, reason }) {
+  const asignaciones = ['status = ?'];
+  const parametros = [to];
+  if (to === 'CANCELADA') {
+    asignaciones.push('cancellationReason = ?');
+    parametros.push(reason);
+  }
+  if (to === 'ENTREGADO') asignaciones.push('deliveredAt = NOW()');
+
+  const [resultado] = await conexion.execute(
+    `UPDATE service_orders SET ${asignaciones.join(', ')} WHERE id = ? AND status = ?`,
+    [...parametros, id, from],
+  );
+  if (resultado.affectedRows === 1) {
+    await conexion.execute(
+      'INSERT INTO order_status_history (orderId, fromStatus, toStatus, changedBy, reason) VALUES (?, ?, ?, ?, ?)',
+      [id, from, to, userId, reason ?? null],
+    );
+  }
   return resultado.affectedRows;
 }

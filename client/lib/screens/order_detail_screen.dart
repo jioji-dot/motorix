@@ -185,6 +185,44 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     await _ejecutar((p) => p.removeLabor(widget.orderId, mano.id), 'Mano de obra quitada.');
   }
 
+  // ---- Cambio de estado
+
+  Future<String?> _pedirMotivoDeCancelacion() => showDialog<String>(
+        context: context,
+        builder: (_) => const _MotivoCancelacionDialog(),
+      );
+
+  Future<void> _cambiarEstado(String destino) async {
+    final orden = _order!;
+    String? motivo;
+
+    if (destino == 'ENTREGADO') {
+      final confirmado = await showConfirmDialog(
+        context,
+        title: 'Entregar vehículo',
+        message: 'La orden quedará Entregada y ya no podrá modificarse. ¿Confirmas la entrega?',
+      );
+      if (!confirmado || !mounted) return;
+    } else if (destino == 'CANCELADA') {
+      motivo = await _pedirMotivoDeCancelacion();
+      if (motivo == null || !mounted) return;
+    }
+
+    try {
+      final actualizada = await context
+          .read<OrdersProvider>()
+          .changeStatus(widget.orderId, destino, reason: motivo, expectedStatus: orden.status);
+      if (!mounted) return;
+      setState(() => _order = actualizada);
+      showFeedback(context, 'Estado actualizado: ${orderStatusLabel(destino)}.');
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      showFeedback(context, e.message, error: true);
+      // Si alguien más cambió la orden, se vuelve a cargar para mostrar su estado real.
+      if (e.code == 'STATE_CONFLICT') await _load();
+    }
+  }
+
   // ---- Datos de la orden
 
   Future<void> _editarDatos() async {
@@ -225,6 +263,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _DatosGenerales(orden: orden, onEdit: _canEditData ? _editarDatos : null),
+              if (orden.allowedTransitions.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.lg),
+                _AccionesDeEstado(orden: orden, onChange: _cambiarEstado),
+              ],
               const SizedBox(height: AppSpacing.lg),
               _editingWork
                   ? _EdicionDeTrabajo(
@@ -592,6 +634,118 @@ class _Historial extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Botones para las transiciones que el usuario actual puede aplicar (las calcula el servidor).
+class _AccionesDeEstado extends StatelessWidget {
+  const _AccionesDeEstado({required this.orden, required this.onChange});
+
+  final ServiceOrder orden;
+  final void Function(String destino) onChange;
+
+  // Orden en que se presentan los botones y su texto (el texto de "En reparación" depende de dónde se viene).
+  static const _orden = ['DIAGNOSTICO', 'EN_REPARACION', 'TERMINADO', 'ESPERANDO_REFACCION', 'ENTREGADO', 'CANCELADA'];
+
+  String _etiqueta(String destino) {
+    switch (destino) {
+      case 'DIAGNOSTICO':
+        return 'Iniciar diagnóstico';
+      case 'EN_REPARACION':
+        return orden.status == 'ESPERANDO_REFACCION' ? 'Reanudar reparación' : 'Iniciar reparación';
+      case 'ESPERANDO_REFACCION':
+        return 'Esperar refacción';
+      case 'TERMINADO':
+        return 'Marcar como terminada';
+      case 'ENTREGADO':
+        return 'Entregar vehículo';
+      default:
+        return 'Cancelar orden';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final destinos = [for (final d in _orden) if (orden.allowedTransitions.contains(d)) d];
+    return Card(
+      key: const Key('acciones-de-estado'),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Wrap(
+          spacing: AppSpacing.md,
+          runSpacing: AppSpacing.md,
+          children: [
+            for (final destino in destinos)
+              if (destino == 'ESPERANDO_REFACCION' || destino == 'CANCELADA')
+                OutlinedButton(
+                  style: destino == 'CANCELADA' ? OutlinedButton.styleFrom(foregroundColor: AppColors.danger) : null,
+                  onPressed: () => onChange(destino),
+                  child: Text(_etiqueta(destino)),
+                )
+              else
+                FilledButton(onPressed: () => onChange(destino), child: Text(_etiqueta(destino))),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Pide el motivo (obligatorio) al cancelar una orden. Devuelve el texto o `null` si se cancela el diálogo.
+class _MotivoCancelacionDialog extends StatefulWidget {
+  const _MotivoCancelacionDialog();
+
+  @override
+  State<_MotivoCancelacionDialog> createState() => _MotivoCancelacionDialogState();
+}
+
+class _MotivoCancelacionDialogState extends State<_MotivoCancelacionDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _reason = TextEditingController();
+
+  @override
+  void dispose() {
+    _reason.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Cancelar orden'),
+      content: SizedBox(
+        width: 420,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text('La orden se conservará como historial con todo lo registrado y ya no podrá modificarse.'),
+              const SizedBox(height: AppSpacing.lg),
+              TextFormField(
+                key: const Key('campo-motivo-cancelacion'),
+                controller: _reason,
+                autofocus: true,
+                maxLength: 255,
+                decoration: const InputDecoration(labelText: 'Motivo de la cancelación', counterText: ''),
+                validator: (v) => (v ?? '').trim().isEmpty ? 'Indica el motivo de la cancelación.' : null,
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        OutlinedButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancelar')),
+        FilledButton(
+          style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
+          onPressed: () {
+            if (_formKey.currentState!.validate()) Navigator.of(context).pop(_reason.text.trim());
+          },
+          child: const Text('Confirmar'),
+        ),
+      ],
     );
   }
 }

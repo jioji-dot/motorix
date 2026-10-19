@@ -6,6 +6,7 @@ import { validate } from '../middlewares/validate.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { idParamSchema } from '../validators/commonValidator.js';
 import {
+  changeStatusSchema,
   createOrderSchema,
   laborSchema,
   lineParamsSchema,
@@ -31,6 +32,9 @@ router.post('/', authorize('ADMIN', 'RECEPTIONIST'), validate(createOrderSchema)
 
 // El permiso por campo (mecánico asignado o recepción) lo aplica el servicio; aquí solo se exige un rol válido.
 router.patch('/:id', todos, validate(idParamSchema, 'params'), validate(updateOrderSchema), asyncHandler(controlador.update));
+
+// Cambio de estado: la máquina de estados decide qué rol y qué asignación puede aplicar cada transición.
+router.post('/:id/status', todos, validate(idParamSchema, 'params'), validate(changeStatusSchema), asyncHandler(controlador.changeStatus));
 
 // Servicios y mano de obra: solo el mecánico asignado o el administrador (el servicio comprueba la asignación).
 const documenta = authorize('ADMIN', 'MECHANIC');

@@ -99,3 +99,25 @@ export const lineParamsSchema = z.object({
   id: z.coerce.number().int().positive('El identificador no es válido.'),
   lineId: z.coerce.number().int().positive('El identificador de la línea no es válido.'),
 });
+
+// Cambio de estado. Al cancelar el motivo es obligatorio; `expectedStatus` permite detectar cambios simultáneos.
+export const changeStatusSchema = z
+  .object({
+    status: z.enum(ORDER_STATUSES, {
+      errorMap: () => ({ message: 'El estado de la orden no es válido.' }),
+    }),
+    reason: z.preprocess(
+      (valor) => (typeof valor === 'string' && valor.trim() === '' ? undefined : valor),
+      z
+        .string({ invalid_type_error: 'El motivo no es válido.' })
+        .trim()
+        .max(255, 'El motivo no puede tener más de 255 caracteres.')
+        .optional(),
+    ),
+    expectedStatus: z.enum(ORDER_STATUSES, { errorMap: () => ({ message: 'El estado esperado no es válido.' }) }).optional(),
+  })
+  .superRefine((datos, contexto) => {
+    if (datos.status === 'CANCELADA' && datos.reason === undefined) {
+      contexto.addIssue({ code: z.ZodIssueCode.custom, path: ['reason'], message: 'Indica el motivo de la cancelación.' });
+    }
+  });

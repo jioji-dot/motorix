@@ -7,6 +7,7 @@ import * as modeloUsuarios from '../models/userModel.js';
 import * as modeloVehiculos from '../models/vehicleModel.js';
 import { APPOINTMENT_STATUS, ORDER_FINAL_STATUSES, ORDER_OPEN_STATUSES } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
+import { allowedTransitions, canTransition, transitionExists } from './orderStateMachine.js';
 
 function errorDeCampo(campo, mensaje) {
   return HttpError.validation('Revisa los datos enviados.', [{ field: campo, message: mensaje }]);
@@ -20,13 +21,9 @@ export function createOrderService({
   userModel = modeloUsuarios,
   transaction = withTransaction,
 } = {}) {
-  // Transiciones que el usuario puede aplicar ahora; la máquina de estados las calcula (historia 5).
-  function transicionesPermitidas() {
-    return [];
-  }
-
+  // Cada orden se devuelve con las transiciones que el usuario actual puede aplicar ahora.
   function conPermisos(orden, usuario) {
-    return { ...orden, allowedTransitions: transicionesPermitidas(orden, usuario) };
+    return { ...orden, allowedTransitions: allowedTransitions(orden, usuario) };
   }
 
   // Crea la orden, actualiza el kilometraje del vehículo y, si viene de una cita, la pasa a En proceso.
@@ -201,7 +198,74 @@ export function createOrderService({
     sobreLineas(id, usuario, (c) => orderModel.updateLabor(c, id, lineId, datos));
   const removeLabor = (id, lineId, usuario) => sobreLineas(id, usuario, (c) => orderModel.removeLabor(c, id, lineId));
 
+  // ---- Cambio de estado (historia 5)
+
+  function faltantesParaTerminar(orden, lineas) {
+    const faltan = [];
+    if (!orden.diagnosis || orden.diagnosis.trim() === '') faltan.push('el diagnóstico');
+    if (lineas.services + lineas.labor === 0) faltan.push('al menos un servicio o mano de obra');
+    return faltan;
+  }
+
+  async function changeStatus(id, { status, reason, expectedStatus }, usuario) {
+    await transaction(async (conexion) => {
+      const orden = await bloquear(conexion, id);
+
+      if (usuario.role === 'MECHANIC' && orden.mechanicId !== usuario.id) {
+        throw HttpError.forbidden('Esta orden está asignada a otro mecánico.');
+      }
+      // Alguien más cambió la orden entre que esta persona la vio y que envió su cambio.
+      if (expectedStatus !== undefined && orden.status !== expectedStatus) {
+        throw new HttpError(
+          409,
+          'STATE_CONFLICT',
+          'La orden cambió de estado mientras la revisabas. Recarga la pantalla para ver su estado actual.',
+        );
+      }
+      if (!transitionExists(orden.status, status)) {
+        const permitidas = allowedTransitions(orden, usuario);
+        throw new HttpError(
+          409,
+          'INVALID_TRANSITION',
+          permitidas.length === 0
+            ? `La orden está en estado ${orden.status} y no admite cambios de estado.`
+            : `No se puede pasar de ${orden.status} a ${status}. Estados permitidos: ${permitidas.join(', ')}.`,
+          permitidas,
+        );
+      }
+      if (!canTransition(orden.status, status, usuario, orden)) {
+        throw HttpError.forbidden('Tu rol no puede aplicar este cambio de estado.');
+      }
+
+      if (status === 'TERMINADO') {
+        const faltan = faltantesParaTerminar(orden, await orderModel.countLines(conexion, id));
+        if (faltan.length > 0) {
+          throw new HttpError(409, 'ORDER_INCOMPLETE', `Para terminar la orden falta registrar ${faltan.join(' y ')}.`);
+        }
+      }
+
+      const filas = await orderModel.changeStatus(conexion, {
+        id,
+        from: orden.status,
+        to: status,
+        userId: usuario.id,
+        reason: reason ?? null,
+      });
+      if (filas === 0) {
+        throw new HttpError(409, 'STATE_CONFLICT', 'La orden cambió de estado mientras se procesaba tu petición. Recarga la pantalla.');
+      }
+
+      // Efectos sobre la cita asociada: sin cancelaciones en cascada (aclaración del 2026-10-19).
+      if (orden.appointmentId) {
+        if (status === 'CANCELADA') await appointmentModel.setStatus(orden.appointmentId, APPOINTMENT_STATUS.CONFIRMED, conexion);
+        if (status === 'ENTREGADO') await appointmentModel.setStatus(orden.appointmentId, APPOINTMENT_STATUS.COMPLETED, conexion);
+      }
+    });
+    return conPermisos(await orderModel.findDetail(id), usuario);
+  }
+
   return {
+    changeStatus,
     create,
     list,
     get,
