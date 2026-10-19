@@ -10,7 +10,7 @@ import '../widgets/confirm_dialog.dart';
 import 'change_password_screen.dart';
 import '../widgets/state_views.dart';
 
-/// Secciones del Sprint 1. Solo se muestran las que corresponden al rol (FR-029).
+/// Secciones de la aplicación. Solo se muestran las que corresponden al rol (FR-029 del Sprint 1 y FR-028 del Sprint 2).
 const _todasLasSecciones = [
   ShellSection(
     label: 'Clientes',
@@ -20,6 +20,16 @@ const _todasLasSecciones = [
   ShellSection(
     label: 'Vehículos',
     icon: LucideIcons.car,
+    roles: {UserRole.admin, UserRole.receptionist, UserRole.mechanic},
+  ),
+  ShellSection(
+    label: 'Citas',
+    icon: LucideIcons.calendarDays,
+    roles: {UserRole.admin, UserRole.receptionist},
+  ),
+  ShellSection(
+    label: 'Órdenes de servicio',
+    icon: LucideIcons.clipboardList,
     roles: {UserRole.admin, UserRole.receptionist, UserRole.mechanic},
   ),
   ShellSection(
