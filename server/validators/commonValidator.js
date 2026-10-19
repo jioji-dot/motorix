@@ -72,3 +72,14 @@ export function aDatetimeLocal(fecha) {
   const dos = (n) => String(n).padStart(2, '0');
   return `${fecha.getFullYear()}-${dos(fecha.getMonth() + 1)}-${dos(fecha.getDate())} ${dos(fecha.getHours())}:${dos(fecha.getMinutes())}:00`;
 }
+
+// Paginación sencilla para consultas sin filtros (historial, movimientos).
+export const historyQuerySchema = z.object({
+  page: z.coerce.number().int().min(1, 'La página debe ser 1 o mayor.').default(1),
+  pageSize: z.coerce
+    .number()
+    .int()
+    .min(1, 'El tamaño de página debe ser 1 o mayor.')
+    .max(100, 'El tamaño de página no puede ser mayor a 100.')
+    .default(20),
+});

@@ -18,6 +18,10 @@ export async function limpiarBase() {
   asegurarBaseDePruebas();
   await pool.query('SET FOREIGN_KEY_CHECKS = 0');
   for (const tabla of [
+    'maintenance',
+    'inventory_movements',
+    'order_parts',
+    'parts',
     'order_status_history',
     'order_labor',
     'order_services',
@@ -135,6 +139,73 @@ export async function crearOrden({
     createdBy,
   ]);
   return id;
+}
+
+let contadorRefacciones = 0;
+
+// Inserta una refacción; si trae existencia inicial, registra su movimiento para mantener la invariante del stock.
+export async function crearRefaccion({
+  stock = 10,
+  minimumStock = 2,
+  purchasePrice = 80,
+  salePrice = 120,
+  active = 1,
+  name,
+  category = 'Aceites y filtros',
+  createdBy,
+} = {}) {
+  asegurarBaseDePruebas();
+  contadorRefacciones += 1;
+  const n = String(contadorRefacciones).padStart(4, '0');
+  const [resultado] = await pool.execute(
+    `INSERT INTO parts (code, name, category, brand, stock, minimumStock, purchasePrice, salePrice, active)
+     VALUES (?, ?, ?, 'Marca de prueba', ?, ?, ?, ?, ?)`,
+    [`REF-${n}`, name ?? `Refacción de prueba ${n}`, category, stock, minimumStock, purchasePrice, salePrice, active],
+  );
+  if (stock > 0) {
+    const [[usuario]] = await pool.query('SELECT id FROM users ORDER BY id LIMIT 1');
+    await pool.execute(
+      `INSERT INTO inventory_movements (partId, type, quantity, stockAfter, reason, createdBy)
+       VALUES (?, 'IN', ?, ?, 'Existencia inicial', ?)`,
+      [resultado.insertId, stock, stock, createdBy ?? usuario.id],
+    );
+  }
+  return { id: resultado.insertId, code: `REF-${n}` };
+}
+
+// stock guardado y suma de sus movimientos (deben coincidir siempre).
+export async function sumaDeMovimientos(partId) {
+  const [[fila]] = await pool.execute(
+    `SELECT p.stock AS stock, COALESCE(SUM(m.quantity), 0) AS suma
+       FROM parts p LEFT JOIN inventory_movements m ON m.partId = p.id WHERE p.id = ? GROUP BY p.id`,
+    [partId],
+  );
+  return { stock: Number(fila.stock), suma: Number(fila.suma) };
+}
+
+// Fecha 'YYYY-MM-DD' en hora local a `dias` días desde hoy.
+export function fechaDia(dias = 0) {
+  return fechaLocal(dias).slice(0, 10);
+}
+
+// Inserta un mantenimiento directamente en la base.
+export async function crearMantenimiento({
+  vehicleId,
+  createdBy,
+  serviceType = 'Cambio de aceite',
+  lastServiceDate = fechaDia(-60),
+  lastMileage = 30000,
+  nextDate = null,
+  nextMileage = null,
+  status = 'PENDIENTE',
+}) {
+  asegurarBaseDePruebas();
+  const [resultado] = await pool.execute(
+    `INSERT INTO maintenance (vehicleId, serviceType, lastServiceDate, lastMileage, nextDate, nextMileage, status, createdBy)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [vehicleId, serviceType, lastServiceDate, lastMileage, nextDate, nextMileage, status, createdBy],
+  );
+  return resultado.insertId;
 }
 
 export async function cerrarConexiones() {

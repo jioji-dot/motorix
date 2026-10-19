@@ -4,7 +4,7 @@ import { pool } from '../config/db.js';
 import { escaparLike } from '../validators/commonValidator.js';
 
 const SELECT_ORDEN = `
-  SELECT o.id, o.folio, o.appointmentId, o.clientId, o.vehicleId, o.mechanicId, o.entryMileage,
+  SELECT o.id, o.folio, o.appointmentId, o.clientId, o.vehicleId, o.mechanicId, o.entryMileage, o.serviceMileage,
          o.reportedProblem, o.diagnosis, o.notes, o.recommendations, o.status, o.cancellationReason,
          o.total, o.deliveredAt, o.createdAt, o.updatedAt,
          c.name AS clientName,
@@ -40,6 +40,7 @@ function toOrder(fila) {
     vehicleId: fila.vehicleId,
     mechanicId: fila.mechanicId,
     entryMileage: fila.entryMileage,
+    serviceMileage: fila.serviceMileage ?? null,
     reportedProblem: fila.reportedProblem,
     diagnosis: fila.diagnosis,
     notes: fila.notes,
@@ -98,6 +99,10 @@ export async function findDetail(id, conexion = pool) {
     'SELECT id, description, hours, hourlyRate, amount FROM order_labor WHERE orderId = ? ORDER BY id',
     [id],
   );
+  const [parts] = await conexion.execute(
+    'SELECT id, partId, partCode AS code, partName AS name, quantity, unitPrice, amount FROM order_parts WHERE orderId = ? ORDER BY id',
+    [id],
+  );
   const [historial] = await conexion.execute(
     `SELECT h.fromStatus, h.toStatus, h.reason, h.changedAt, u.id AS userId, u.name AS userName
        FROM order_status_history h
@@ -110,6 +115,7 @@ export async function findDetail(id, conexion = pool) {
     ...toOrder(filas[0]),
     services,
     labor,
+    parts,
     history: historial.map((h) => ({
       fromStatus: h.fromStatus,
       toStatus: h.toStatus,
@@ -163,13 +169,13 @@ export async function list({ status, mechanicId, from, to, search, page, pageSiz
 // Bloquea la orden durante la transacción para que ediciones y cambios de estado no se pisen.
 export async function lockOrder(conexion, id) {
   const [filas] = await conexion.execute(
-    'SELECT id, status, mechanicId, appointmentId, diagnosis FROM service_orders WHERE id = ? FOR UPDATE',
+    'SELECT id, folio, status, mechanicId, appointmentId, vehicleId, entryMileage, diagnosis FROM service_orders WHERE id = ? FOR UPDATE',
     [id],
   );
   return filas[0] ?? null;
 }
 
-const CAMPOS_EDITABLES = ['diagnosis', 'notes', 'recommendations', 'reportedProblem', 'mechanicId'];
+const CAMPOS_EDITABLES = ['diagnosis', 'notes', 'recommendations', 'reportedProblem', 'mechanicId', 'serviceMileage'];
 
 export async function updateFields(conexion, id, datos) {
   const asignaciones = [];
@@ -185,14 +191,15 @@ export async function updateFields(conexion, id, datos) {
   }
 }
 
-// Total = servicios + mano de obra, recalculado dentro de la misma transacción de cada cambio de línea.
+// Total = servicios + mano de obra + refacciones, recalculado dentro de la misma transacción de cada cambio de línea.
 export async function recalculateTotal(conexion, orderId) {
   await conexion.execute(
     `UPDATE service_orders
         SET total = (SELECT COALESCE(SUM(amount), 0) FROM order_services WHERE orderId = ?)
                   + (SELECT COALESCE(SUM(amount), 0) FROM order_labor WHERE orderId = ?)
+                  + (SELECT COALESCE(SUM(amount), 0) FROM order_parts WHERE orderId = ?)
       WHERE id = ?`,
-    [orderId, orderId, orderId],
+    [orderId, orderId, orderId, orderId],
   );
 }
 

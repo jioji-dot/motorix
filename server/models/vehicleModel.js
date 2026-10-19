@@ -86,6 +86,11 @@ export async function update(id, datos) {
   return findById(id);
 }
 
+// Sube el kilometraje actual sin bajarlo nunca (por ejemplo, al registrar el kilometraje de un servicio).
+export async function raiseMileage(id, mileage, conexion = pool) {
+  await conexion.execute('UPDATE vehicles SET currentMileage = GREATEST(currentMileage, ?) WHERE id = ?', [mileage, id]);
+}
+
 // Actualiza el kilometraje actual (por ejemplo, al crear una orden). Acepta la conexión de una transacción.
 export async function updateMileage(id, currentMileage, conexion = pool) {
   await conexion.execute('UPDATE vehicles SET currentMileage = ? WHERE id = ?', [currentMileage, id]);

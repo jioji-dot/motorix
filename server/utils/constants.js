@@ -33,3 +33,22 @@ export const ORDER_OPEN_STATUSES = Object.freeze([
 export const ORDER_FINAL_STATUSES = Object.freeze([ORDER_STATUS.DELIVERED, ORDER_STATUS.CANCELLED]);
 
 export const MAX_MILEAGE = 1500000;
+
+// ---- Sprint 3: inventario y mantenimientos
+
+export const MOVEMENT_TYPE = Object.freeze({ IN: 'IN', OUT: 'OUT', ADJUSTMENT: 'ADJUSTMENT' });
+export const MOVEMENT_TYPES = Object.values(MOVEMENT_TYPE);
+
+export const STOCK_LEVEL = Object.freeze({ OK: 'OK', LOW: 'LOW', OUT: 'OUT' });
+export const STOCK_LEVELS = Object.values(STOCK_LEVEL);
+
+export const MAINTENANCE_CLASS = Object.freeze({ NORMAL: 'NORMAL', SOON: 'PROXIMO', OVERDUE: 'VENCIDO' });
+export const MAINTENANCE_CLASSES = Object.values(MAINTENANCE_CLASS);
+
+export const MAINTENANCE_STATUS = Object.freeze({ PENDING: 'PENDIENTE', DONE: 'ATENDIDO' });
+
+// Umbrales fijos de aviso (aclaración del Sprint 3): 15 días o 500 km antes del vencimiento.
+export const MAINTENANCE_WARNING_DAYS = 15;
+export const MAINTENANCE_WARNING_KM = 500;
+
+export const MAX_STOCK = 1000000;

@@ -60,6 +60,14 @@ const textoLargo = (etiqueta) =>
       .optional(),
   );
 
+const MENSAJE_KM_SERVICIO = `El kilometraje del servicio debe ser un número entero entre el kilometraje de entrada y ${MAX_MILEAGE.toLocaleString('en-US')} km.`;
+
+const kilometrajeDelServicio = z
+  .number({ invalid_type_error: MENSAJE_KM_SERVICIO })
+  .int(MENSAJE_KM_SERVICIO)
+  .min(0, MENSAJE_KM_SERVICIO)
+  .max(MAX_MILEAGE, MENSAJE_KM_SERVICIO);
+
 const alMenosUnCampo = (datos) => Object.values(datos).some((valor) => valor !== undefined);
 const MENSAJE_SIN_CAMPOS = { message: 'Envía al menos un campo para actualizar.' };
 
@@ -70,6 +78,7 @@ export const updateOrderSchema = z
     recommendations: textoLargo('Las recomendaciones'),
     reportedProblem: problemaReportado.optional(),
     mechanicId: identificador('El mecánico no es válido.').optional(),
+    serviceMileage: kilometrajeDelServicio.optional(),
   })
   .refine(alMenosUnCampo, MENSAJE_SIN_CAMPOS);
 

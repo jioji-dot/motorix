@@ -140,7 +140,7 @@ export function createOrderService({
     }
   }
 
-  const CAMPOS_DE_TRABAJO = ['diagnosis', 'notes', 'recommendations'];
+  const CAMPOS_DE_TRABAJO = ['diagnosis', 'notes', 'recommendations', 'serviceMileage'];
   const CAMPOS_DE_RECEPCION = ['reportedProblem', 'mechanicId'];
 
   async function update(id, datos, usuario) {
@@ -171,7 +171,17 @@ export function createOrderService({
           }
         }
       }
+      if (datos.serviceMileage !== undefined && datos.serviceMileage < orden.entryMileage) {
+        throw errorDeCampo(
+          'serviceMileage',
+          `El kilometraje del servicio no puede ser menor al de entrada (${orden.entryMileage} km).`,
+        );
+      }
       await orderModel.updateFields(conexion, id, datos);
+      // El kilometraje del vehículo sube con el del servicio, pero nunca baja.
+      if (datos.serviceMileage !== undefined) {
+        await vehicleModel.raiseMileage(orden.vehicleId, datos.serviceMileage, conexion);
+      }
     });
     return conPermisos(await orderModel.findDetail(id), usuario);
   }
