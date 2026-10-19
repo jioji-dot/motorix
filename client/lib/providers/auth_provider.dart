@@ -24,6 +24,9 @@ class AuthProvider extends ChangeNotifier {
 
   UserRole? get role => _user?.role;
 
+  /// Permisos de escritura sobre clientes y vehículos (también se validan en el backend).
+  bool get canManageRecords => _user?.canManageRecords ?? false;
+
   /// Inicia sesión con usuario o correo en el mismo campo.
   Future<void> login(String identifier, String password) async {
     _loading = true;
@@ -52,16 +55,25 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void logout() {
-    api.token = null;
-    _user = null;
-    _message = null;
-    notifyListeners();
+    _terminarSesion(null);
   }
 
   void _sesionVencida() {
+    _terminarSesion('Tu sesión expiró. Inicia sesión de nuevo.');
+  }
+
+  /// Los providers de datos se registran aquí para vaciar su estado cuando termina la sesión.
+  final List<VoidCallback> _alTerminarSesion = [];
+
+  void addSessionEndListener(VoidCallback accion) => _alTerminarSesion.add(accion);
+
+  void _terminarSesion(String? mensaje) {
     api.token = null;
     _user = null;
-    _message = 'Tu sesión expiró. Inicia sesión de nuevo.';
+    _message = mensaje;
+    for (final accion in _alTerminarSesion) {
+      accion();
+    }
     notifyListeners();
   }
 }

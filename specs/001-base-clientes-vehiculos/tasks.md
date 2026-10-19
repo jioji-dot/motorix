@@ -107,21 +107,21 @@ description: "Lista de tareas para implementar el Sprint 1: base del sistema, cl
 
 ### Pruebas de la historia 2 ⚠️
 
-- [ ] T038 [P] [US2] Prueba unitaria del servicio de clientes (normalización de teléfono a "10 dígitos", `name` obligatorio de hasta 120 caracteres, `email` opcional con formato válido, aviso por teléfono repetido) en `server/tests/unit/clientService.test.js`
-- [ ] T039 [P] [US2] Prueba de contrato de `GET /clients`, `GET /clients/:id`, `POST /clients` y `PATCH /clients/:id`, incluido 409 `DUPLICATE_PHONE`, en `server/tests/contract/clients.contract.test.js`
-- [ ] T040 [P] [US2] Prueba de integración de clientes: ADMIN y RECEPTIONIST crean y editan, MECHANIC solo consulta (403 al escribir), búsqueda por nombre, teléfono y correo, y el detalle incluye `vehicles`, en `server/tests/integration/clients.test.js`
-- [ ] T041 [P] [US2] Prueba de provider y de widgets de la lista y el formulario de clientes en `client/test/screens/clients_screen_test.dart`
+- [X] T038 [P] [US2] Prueba unitaria del servicio de clientes (normalización de teléfono a "10 dígitos", `name` obligatorio de hasta 120 caracteres, `email` opcional con formato válido, aviso por teléfono repetido) en `server/tests/unit/clientService.test.js`
+- [X] T039 [P] [US2] Prueba de contrato de `GET /clients`, `GET /clients/:id`, `POST /clients` y `PATCH /clients/:id`, incluido 409 `DUPLICATE_PHONE`, en `server/tests/contract/clients.contract.test.js`
+- [X] T040 [P] [US2] Prueba de integración de clientes: ADMIN y RECEPTIONIST crean y editan, MECHANIC solo consulta (403 al escribir), búsqueda por nombre, teléfono y correo, y el detalle incluye `vehicles`, en `server/tests/integration/clients.test.js`
+- [X] T041 [P] [US2] Prueba de provider y de widgets de la lista y el formulario de clientes en `client/test/screens/clients_screen_test.dart`
 
 ### Implementación de la historia 2
 
-- [ ] T042 [P] [US2] Crear `server/models/clientModel.js` con búsqueda (`search`, `active`, paginación), detalle con vehículos asociados, alta y edición
-- [ ] T043 [P] [US2] Crear `server/validators/clientValidator.js` con los esquemas de alta y edición, incluida la confirmación `confirmDuplicatePhone`
-- [ ] T044 [US2] Implementar `server/services/clientService.js` con la regla de teléfono repetido (409 `DUPLICATE_PHONE` con coincidencias en `details` salvo confirmación) y desactivación lógica sin borrar información
-- [ ] T045 [US2] Implementar `server/controllers/clientController.js` y `server/routes/clientRoutes.js` con `authenticate` y `authorize` por rol (lectura: los tres roles; escritura: ADMIN y RECEPTIONIST) y registrarlas en `server/app.js`
-- [ ] T046 [P] [US2] Crear `client/lib/models/client.dart` y `client/lib/providers/clients_provider.dart`
-- [ ] T047 [US2] Crear `client/lib/screens/clients_screen.dart` (tabla con búsqueda, chips de estado y acciones al final, estados vacío/cargando/error) y `client/lib/screens/client_form_screen.dart` (alta y edición con aviso de teléfono repetido y confirmación al desactivar o salir con cambios)
-- [ ] T048 [US2] Crear `client/lib/screens/client_detail_screen.dart` con los datos del cliente, sus vehículos y el estado vacío con la opción de registrar uno; ocultar las acciones de escritura al rol MECHANIC
-- [ ] T049 [US2] Agregar a `database/seeds/` los clientes de ejemplo (al menos 5, uno sin vehículos) de forma idempotente
+- [X] T042 [P] [US2] Crear `server/models/clientModel.js` con búsqueda (`search`, `active`, paginación), detalle con vehículos asociados, alta y edición
+- [X] T043 [P] [US2] Crear `server/validators/clientValidator.js` con los esquemas de alta y edición, incluida la confirmación `confirmDuplicatePhone`
+- [X] T044 [US2] Implementar `server/services/clientService.js` con la regla de teléfono repetido (409 `DUPLICATE_PHONE` con coincidencias en `details` salvo confirmación) y desactivación lógica sin borrar información
+- [X] T045 [US2] Implementar `server/controllers/clientController.js` y `server/routes/clientRoutes.js` con `authenticate` y `authorize` por rol (lectura: los tres roles; escritura: ADMIN y RECEPTIONIST) y registrarlas en `server/app.js`
+- [X] T046 [P] [US2] Crear `client/lib/models/client.dart` y `client/lib/providers/clients_provider.dart`
+- [X] T047 [US2] Crear `client/lib/screens/clients_screen.dart` (tabla con búsqueda, chips de estado y acciones al final, estados vacío/cargando/error) y `client/lib/screens/client_form_screen.dart` (alta y edición con aviso de teléfono repetido y confirmación al desactivar o salir con cambios)
+- [X] T048 [US2] Crear `client/lib/screens/client_detail_screen.dart` con los datos del cliente, sus vehículos y el estado vacío con la opción de registrar uno; ocultar las acciones de escritura al rol MECHANIC
+- [X] T049 [US2] Agregar a `database/seeds/` los clientes de ejemplo (al menos 5, uno sin vehículos) de forma idempotente
 
 **Punto de control**: Las historias 1 y 2 funcionan de forma independiente
 

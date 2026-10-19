@@ -64,7 +64,7 @@ void main() {
       final peticiones = <String>[];
       await bombearApp(tester, (peticion) async {
         peticiones.add('${peticion.method} ${peticion.url.path}');
-        return loginOk('recepcion', 'RECEPTIONIST');
+        return apiBasica('RECEPTIONIST')(peticion);
       });
 
       await tester.enterText(find.byKey(const Key('campo-identificador')), 'recepcion@motorix.mx');
@@ -95,7 +95,7 @@ void main() {
     }
 
     testWidgets('pide_confirmacion_y_conserva_la_sesion_si_se_cancela', (tester) async {
-      await bombearApp(tester, (_) async => loginOk('recepcion', 'RECEPTIONIST'));
+      await bombearApp(tester, apiBasica('RECEPTIONIST'));
       await iniciarSesion(tester);
       await elegirCerrarSesion(tester);
 
@@ -109,7 +109,7 @@ void main() {
     });
 
     testWidgets('termina_la_sesion_al_confirmar', (tester) async {
-      final api = await bombearApp(tester, (_) async => loginOk('recepcion', 'RECEPTIONIST'));
+      final api = await bombearApp(tester, apiBasica('RECEPTIONIST'));
       await iniciarSesion(tester);
       await elegirCerrarSesion(tester);
 

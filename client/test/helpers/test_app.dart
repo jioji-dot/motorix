@@ -47,3 +47,17 @@ Future<ApiClient> bombearApp(
   await tester.pumpAndSettle();
   return api;
 }
+
+/// API simulada mínima: inicio de sesión correcto y listados vacíos.
+Future<http.Response> Function(http.Request) apiBasica(String role) => (peticion) async {
+      if (peticion.url.path == '/api/auth/login') {
+        return loginOk(role == 'MECHANIC' ? 'mecanico' : 'recepcion', role);
+      }
+      if (peticion.method == 'GET') {
+        return jsonResponse(200, {
+          'data': [],
+          'meta': {'page': 1, 'pageSize': 20, 'total': 0},
+        });
+      }
+      return jsonResponse(404, {'error': {'code': 'NOT_FOUND', 'message': 'No encontrado.'}});
+    };

@@ -31,6 +31,9 @@ class User {
   final UserRole role;
   final bool active;
 
+  /// ADMIN y RECEPTIONIST pueden crear y editar clientes y vehículos; MECHANIC solo consulta.
+  bool get canManageRecords => role == UserRole.admin || role == UserRole.receptionist;
+
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json['id'] as int,
         username: json['username'] as String,

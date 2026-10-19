@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/auth_provider.dart';
+import 'providers/clients_provider.dart';
 import 'providers/sidebar_provider.dart';
+import 'screens/clients_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'services/api_client.dart';
@@ -26,6 +28,15 @@ class MotorixApp extends StatelessWidget {
         Provider<ApiClient>.value(value: api),
         ChangeNotifierProvider(create: (_) => AuthProvider(api)),
         ChangeNotifierProvider(create: (_) => SidebarProvider()),
+        // Providers de datos: viven sobre el Navigator para que los vean las pantallas que se abren
+        // con push, y se vacían al terminar la sesión.
+        ChangeNotifierProvider(
+          create: (c) {
+            final provider = ClientsProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
       ],
       child: MaterialApp(
         title: 'Motorix',
@@ -47,7 +58,12 @@ class _AuthGate extends StatelessWidget {
     return AnimatedSwitcher(
       duration: AppMotion.navigation,
       child: autenticado
-          ? const HomeScreen(key: ValueKey('home'))
+          ? HomeScreen(
+              key: const ValueKey('home'),
+              sectionBuilders: {
+                'Clientes': (_) => const ClientsScreen(),
+              },
+            )
           : const LoginScreen(key: ValueKey('login')),
     );
   }
