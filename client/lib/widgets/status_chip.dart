@@ -36,6 +36,22 @@ const _clasificaciones = <String, (String, Color)>{
   'VENCIDO': ('Vencido', AppColors.danger),
 };
 
+/// Estado de un pago (Sprint 4).
+const _estadosPago = <String, (String, Color)>{
+  'PENDIENTE': ('Pendiente', AppColors.warning),
+  'PAGADO': ('Pagado', AppColors.success),
+  'RECHAZADO': ('Rechazado', AppColors.danger),
+  'CANCELADO': ('Cancelado', AppColors.textSecondary),
+};
+
+/// Estado de cobro de una orden (calculado con sus pagos).
+const _estadosDeCobro = <String, (String, Color)>{
+  'SIN_COBRO': ('Sin cobro', AppColors.textSecondary),
+  'SIN_PAGOS': ('Sin pagos', AppColors.textSecondary),
+  'PARCIAL': ('Pago parcial', AppColors.warning),
+  'PAGADA': ('Pagada', AppColors.success),
+};
+
 /// Etiqueta en español de un nivel de stock.
 String stockLevelLabel(String nivel) => _nivelesDeStock[nivel]?.$1 ?? nivel;
 
@@ -79,6 +95,18 @@ class StatusChip extends StatelessWidget {
     if (clase == null) return const StatusChip(label: 'Atendido', color: AppColors.success);
     final datos = _clasificaciones[clase];
     return StatusChip(label: datos?.$1 ?? clase, color: datos?.$2 ?? AppColors.textSecondary);
+  }
+
+  /// Estado de un pago (Pendiente, Pagado, Rechazado o Cancelado).
+  factory StatusChip.payment(String estado) {
+    final datos = _estadosPago[estado];
+    return StatusChip(label: datos?.$1 ?? estado, color: datos?.$2 ?? AppColors.textSecondary);
+  }
+
+  /// Estado de cobro de la orden (Sin pagos, Pago parcial, Pagada o Sin cobro).
+  factory StatusChip.collection(String estado) {
+    final datos = _estadosDeCobro[estado];
+    return StatusChip(label: datos?.$1 ?? estado, color: datos?.$2 ?? AppColors.textSecondary);
   }
 
   final String label;

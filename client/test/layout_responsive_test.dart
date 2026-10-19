@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'helpers/fake_api.dart';
 import 'helpers/fake_api_s2.dart';
 import 'helpers/fake_api_s3.dart';
+import 'helpers/fake_api_s4.dart';
 import 'helpers/test_app.dart';
 
 Future<void> cambiarTamano(WidgetTester tester, double ancho, double alto) async {
@@ -15,7 +16,7 @@ Future<void> cambiarTamano(WidgetTester tester, double ancho, double alto) async
 }
 
 /// Datos con textos largos para provocar desbordamientos si los hubiera.
-ApiInventario crearApi() {
+ApiCobros crearApi() {
   final orden = ordenJson(
     7,
     estado: 'EN_REPARACION',
@@ -26,7 +27,14 @@ ApiInventario crearApi() {
   );
   orden['parts'] = [refaccionDeOrdenJson(1, 1, 'Filtro de aceite de alto rendimiento con empaque incluido', 2, '110.00')];
   orden['total'] = '1425.00';
-  return ApiInventario(
+  final cobrable = ordenJson(
+    8,
+    estado: 'TERMINADO',
+    cliente: 'Roberto Hernández Cruz de la Fuente y Asociados',
+    servicios: [servicioJson(1, 'Banda de accesorios nueva con instalación incluida', '1425.00')],
+  );
+  cobrable['total'] = '1425.00';
+  return ApiCobros(
     rol: 'ADMIN',
     clientes: [clienteJson(1, 'Roberto Hernández Cruz de la Fuente y Asociados'), clienteJson(2, 'María Fernanda López Díaz')],
     vehiculos: [
@@ -38,7 +46,13 @@ ApiInventario crearApi() {
       citaJson(1, estado: 'CONFIRMADA', motivo: 'Revisión general de frenos, suspensión y dirección del vehículo'),
       citaJson(2, clientId: 2, vehicleId: 2, estado: 'PENDIENTE', cliente: 'María Fernanda López Díaz', placas: 'DEF-456-B'),
     ],
-    ordenes: [orden],
+    ordenes: [orden, cobrable],
+    pagos: {
+      8: [
+        pagoJson(1, 8, importe: '500.00', referencia: 'Número de autorización muy largo para provocar desbordamientos 123456'),
+        pagoJson(2, 8, importe: '300.00', metodo: 'MERCADO_PAGO', estado: 'PENDIENTE', enlace: 'https://sandbox.mercadopago.test/pagar/una-referencia-muy-larga-para-el-enlace-de-pago'),
+      ],
+    },
     partes: [
       parteJson(1, 'Filtro de aceite de alto rendimiento con empaque incluido', stock: 25, minimo: 8, categoria: 'Aceites y filtros de alto rendimiento'),
       parteJson(2, 'Disco de freno delantero ventilado', stock: 3, minimo: 4, categoria: 'Frenos'),
@@ -66,7 +80,7 @@ ApiInventario crearApi() {
 }
 
 void main() {
-  const secciones = ['Clientes', 'Vehículos', 'Citas', 'Órdenes de servicio', 'Mantenimientos', 'Inventario', 'Usuarios'];
+  const secciones = ['Clientes', 'Vehículos', 'Citas', 'Órdenes de servicio', 'Mantenimientos', 'Inventario', 'Panel de control', 'Usuarios'];
 
   for (final ancho in [1400.0, 1000.0, 760.0]) {
     testWidgets('las_secciones_no_desbordan_con_ancho_${ancho.toInt()}_y_barra_expandida_o_colapsada', (tester) async {
@@ -222,6 +236,56 @@ void main() {
       await tester.tap(find.byKey(const Key('refaccion-1')));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull, reason: 'refacción elegida');
+    });
+  }
+
+  for (final ancho in [1400.0, 1000.0, 760.0, 600.0]) {
+    testWidgets('las_pantallas_del_sprint_4_no_desbordan_con_ancho_${ancho.toInt()}', (tester) async {
+      await bombearApp(tester, crearApi().call);
+      await cambiarTamano(tester, ancho, 800);
+      await entrar(tester);
+
+      // Panel de control
+      await tester.tap(find.byTooltip('Panel de control').first);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'panel de control');
+
+      // Orden terminada: bloque de pagos, registro de pago, enlace de Mercado Pago y ticket
+      await tester.tap(find.byTooltip('Órdenes de servicio').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('OS-000008'));
+      await tester.pumpAndSettle();
+      final registrar = find.byKey(const Key('boton-registrar-pago'));
+      await tester.ensureVisible(registrar);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'bloque de pagos');
+
+      await tester.tap(registrar);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'diálogo de pago');
+      await tester.tap(find.byKey(const Key('campo-metodo-pago')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Tarjeta').last);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'diálogo de pago con tarjeta');
+      await tester.tap(find.widgetWithText(OutlinedButton, 'Cancelar').last);
+      await tester.pumpAndSettle();
+
+      final verEnlace = find.byKey(const Key('ver-enlace-2'));
+      await tester.ensureVisible(verEnlace);
+      await tester.pumpAndSettle();
+      await tester.tap(verEnlace);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'enlace de Mercado Pago');
+      await tester.tap(find.widgetWithText(FilledButton, 'Listo'));
+      await tester.pumpAndSettle();
+
+      final ticket = find.byKey(const Key('boton-ticket'));
+      await tester.ensureVisible(ticket);
+      await tester.pumpAndSettle();
+      await tester.tap(ticket);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'ticket');
     });
   }
 

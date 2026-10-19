@@ -4,14 +4,17 @@ import 'package:provider/provider.dart';
 import 'providers/appointments_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/clients_provider.dart';
+import 'providers/dashboard_provider.dart';
 import 'providers/maintenance_provider.dart';
 import 'providers/parts_provider.dart';
 import 'providers/orders_provider.dart';
+import 'providers/payments_provider.dart';
 import 'providers/users_provider.dart';
 import 'providers/vehicles_provider.dart';
 import 'providers/sidebar_provider.dart';
 import 'screens/appointments_screen.dart';
 import 'screens/clients_screen.dart';
+import 'screens/dashboard_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/maintenance_screen.dart';
@@ -86,6 +89,20 @@ class MotorixApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (c) {
+            final provider = PaymentsProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (c) {
+            final provider = DashboardProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (c) {
             final provider = UsersProvider(api);
             c.read<AuthProvider>().addSessionEndListener(provider.reset);
             return provider;
@@ -121,6 +138,7 @@ class _AuthGate extends StatelessWidget {
                 'Órdenes de servicio': (_) => const OrdersScreen(),
                 'Mantenimientos': (_) => const MaintenanceScreen(),
                 'Inventario': (_) => const PartsScreen(),
+                'Panel de control': (_) => const DashboardScreen(),
                 'Usuarios': (_) => const UsersScreen(),
               },
             )

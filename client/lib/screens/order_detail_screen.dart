@@ -13,6 +13,7 @@ import '../widgets/button_spinner.dart';
 import '../widgets/confirm_dialog.dart';
 import '../widgets/order_line_dialogs.dart';
 import '../widgets/part_picker_dialog.dart';
+import '../widgets/payment_section.dart';
 import '../widgets/state_views.dart';
 import '../widgets/status_chip.dart';
 import 'maintenance_form_screen.dart';
@@ -224,6 +225,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   // ---- Próximo mantenimiento
 
+  /// Los pagos y el ticket son de recepción y administración, con la orden Terminada o Entregada.
+  bool get _canCollect {
+    final orden = _order;
+    if (orden == null || !orden.isCompleted) return false;
+    final rol = _user.role;
+    return rol == UserRole.admin || rol == UserRole.receptionist;
+  }
+
   bool get _canScheduleMaintenance {
     final orden = _order;
     if (orden == null || !orden.isCompleted) return false;
@@ -362,6 +371,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 onEditPart: _editarRefaccion,
                 onRemovePart: _quitarRefaccion,
               ),
+              if (_canCollect) ...[
+                const SizedBox(height: AppSpacing.lg),
+                PaymentSection(orderId: widget.orderId),
+              ],
               if (_canScheduleMaintenance) ...[
                 const SizedBox(height: AppSpacing.lg),
                 _ProgramarMantenimiento(onPressed: _programarMantenimiento),

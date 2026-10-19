@@ -43,11 +43,29 @@ const _todasLasSecciones = [
     roles: {UserRole.admin, UserRole.receptionist, UserRole.mechanic},
   ),
   ShellSection(
+    label: 'Panel de control',
+    icon: LucideIcons.layoutDashboard,
+    roles: {UserRole.admin},
+  ),
+  ShellSection(
     label: 'Usuarios',
     icon: LucideIcons.userCog,
     roles: {UserRole.admin},
   ),
 ];
+
+/// Permite que una pantalla de una sección lleve a otra (por ejemplo, las tarjetas del panel de control).
+class HomeNavigation extends InheritedWidget {
+  const HomeNavigation({super.key, required this.goTo, required super.child});
+
+  /// Cambia a la sección con esa etiqueta, si el rol del usuario la puede ver.
+  final void Function(String etiqueta) goTo;
+
+  static HomeNavigation? maybeOf(BuildContext context) => context.dependOnInheritedWidgetOfExactType<HomeNavigation>();
+
+  @override
+  bool updateShouldNotify(HomeNavigation old) => false;
+}
 
 /// Pantalla principal tras iniciar sesión. La pantalla inicial es Clientes.
 class HomeScreen extends StatefulWidget {
@@ -109,9 +127,15 @@ class _HomeScreenState extends State<HomeScreen> {
         switchInCurve: AppMotion.curve,
         child: KeyedSubtree(
           key: ValueKey(actual.label),
-          child: constructor != null
-              ? constructor(context)
-              : const EmptyState(title: 'Sección en construcción'),
+          child: HomeNavigation(
+            goTo: (etiqueta) {
+              final destino = secciones.indexWhere((s) => s.label == etiqueta);
+              if (destino >= 0) setState(() => _index = destino);
+            },
+            child: constructor != null
+                ? constructor(context)
+                : const EmptyState(title: 'Sección en construcción'),
+          ),
         ),
       ),
     );
