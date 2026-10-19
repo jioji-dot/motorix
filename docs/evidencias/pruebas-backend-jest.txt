@@ -1,0 +1,1502 @@
+# Salida de las pruebas del backend (Jest + supertest)
+# Fecha: 2026-10-19 04:33  ·  Comando: npm test (en server/)  ·  Base de pruebas: motorix_sdd_test
+
+> motorix-server@1.0.0 test
+> node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit
+(node:27148) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/integration/users.test.js
+  Usuarios (integración)
+    √ el_rol_RECEPTIONIST_recibe_403_en_todas_las_rutas_de_usuarios (43 ms)
+    √ el_rol_MECHANIC_recibe_403_en_todas_las_rutas_de_usuarios (12 ms)
+    √ rechaza_peticiones_sin_token (3 ms)
+    √ el_administrador_crea_un_usuario_que_puede_iniciar_sesion_con_su_rol (207 ms)
+    √ rechaza_usuario_o_correo_duplicados_sin_distinguir_mayusculas (6 ms)
+    √ rechaza_una_contrasena_que_no_cumple_la_politica (3 ms)
+    √ lista_con_filtros_y_nunca_devuelve_el_hash (6 ms)
+    √ un_cambio_de_rol_surte_efecto_en_la_siguiente_peticion_sin_esperar_la_expiracion (21 ms)
+    √ desactivar_un_usuario_le_impide_seguir_usando_su_token_y_volver_a_entrar (21 ms)
+    √ el_administrador_restablece_la_contrasena_de_otro_usuario (217 ms)
+    √ impide_dejar_al_taller_sin_administrador_activo (10 ms)
+    √ con_un_segundo_administrador_activo_ya_se_puede_desactivar_al_primero (153 ms)
+    √ devuelve_404_para_un_usuario_inexistente_y_400_para_un_id_invalido (79 ms)
+PASS tests/integration/permissions.test.js
+  Matriz de permisos por rol (SC-003)
+    √ get /api/auth/me sin token responde 401 (7 ms)
+    √ post /api/auth/change-password sin token responde 401 (7 ms)
+    √ get /api/users sin token responde 401 (3 ms)
+    √ get /api/users/1 sin token responde 401 (2 ms)
+    √ post /api/users sin token responde 401 (2 ms)
+    √ patch /api/users/1 sin token responde 401 (3 ms)
+    √ get /api/clients sin token responde 401 (3 ms)
+    √ get /api/clients/1 sin token responde 401 (3 ms)
+    √ post /api/clients sin token responde 401 (3 ms)
+    √ patch /api/clients/1 sin token responde 401 (3 ms)
+    √ get /api/vehicles sin token responde 401 (3 ms)
+    √ get /api/vehicles/1 sin token responde 401 (2 ms)
+    √ post /api/vehicles sin token responde 401 (2 ms)
+    √ patch /api/vehicles/1 sin token responde 401 (2 ms)
+    √ get /api/appointments sin token responde 401 (2 ms)
+    √ get /api/appointments/1 sin token responde 401 (2 ms)
+    √ post /api/appointments sin token responde 401 (1 ms)
+    √ patch /api/appointments/1 sin token responde 401 (2 ms)
+    √ post /api/appointments/1/confirm sin token responde 401 (1 ms)
+    √ post /api/appointments/1/cancel sin token responde 401 (3 ms)
+    √ get /api/mechanics sin token responde 401 (2 ms)
+    √ get /api/orders sin token responde 401 (2 ms)
+    √ get /api/orders/1 sin token responde 401 (3 ms)
+    √ post /api/orders sin token responde 401 (3 ms)
+    √ patch /api/orders/1 sin token responde 401 (2 ms)
+    √ post /api/orders/1/status sin token responde 401 (3 ms)
+    √ post /api/orders/1/services sin token responde 401 (1 ms)
+    √ patch /api/orders/1/services/1 sin token responde 401 (3 ms)
+    √ delete /api/orders/1/services/1 sin token responde 401 (2 ms)
+    √ post /api/orders/1/labor sin token responde 401 (3 ms)
+    √ patch /api/orders/1/labor/1 sin token responde 401 (2 ms)
+    √ delete /api/orders/1/labor/1 sin token responde 401 (3 ms)
+    √ get /api/vehicles/1/history sin token responde 401 (2 ms)
+    √ get /api/maintenance sin token responde 401 (2 ms)
+    √ get /api/maintenance/1 sin token responde 401 (3 ms)
+    √ post /api/maintenance sin token responde 401 (2 ms)
+    √ patch /api/maintenance/1 sin token responde 401 (3 ms)
+    √ get /api/parts sin token responde 401 (2 ms)
+    √ get /api/parts/summary sin token responde 401 (3 ms)
+    √ get /api/parts/categories sin token responde 401 (2 ms)
+    √ get /api/parts/1 sin token responde 401 (3 ms)
+    √ get /api/parts/1/movements sin token responde 401 (2 ms)
+    √ post /api/parts sin token responde 401 (2 ms)
+    √ patch /api/parts/1 sin token responde 401 (3 ms)
+    √ post /api/parts/1/movements sin token responde 401 (2 ms)
+    √ post /api/orders/1/parts sin token responde 401 (2 ms)
+    √ patch /api/orders/1/parts/1 sin token responde 401 (2 ms)
+    √ delete /api/orders/1/parts/1 sin token responde 401 (2 ms)
+    √ get /api/orders/1/payments sin token responde 401 (1 ms)
+    √ post /api/orders/1/payments sin token responde 401 (1 ms)
+    √ post /api/payments/1/sync sin token responde 401 (2 ms)
+    √ post /api/payments/1/cancel sin token responde 401 (3 ms)
+    √ post /api/orders/1/ticket sin token responde 401 (2 ms)
+    √ get /api/orders/1/ticket sin token responde 401 (3 ms)
+    √ post /api/orders/1/ticket/print-link sin token responde 401 (2 ms)
+    √ get /api/dashboard sin token responde 401 (2 ms)
+    √ get /api/auth/me con un token inválido responde 401 (3 ms)
+    √ post /api/auth/change-password con un token inválido responde 401 (3 ms)
+    √ get /api/users con un token inválido responde 401 (3 ms)
+    √ get /api/users/1 con un token inválido responde 401 (1 ms)
+    √ post /api/users con un token inválido responde 401 (2 ms)
+    √ patch /api/users/1 con un token inválido responde 401 (3 ms)
+    √ get /api/clients con un token inválido responde 401 (3 ms)
+    √ get /api/clients/1 con un token inválido responde 401 (3 ms)
+    √ post /api/clients con un token inválido responde 401 (2 ms)
+    √ patch /api/clients/1 con un token inválido responde 401 (3 ms)
+    √ get /api/vehicles con un token inválido responde 401 (3 ms)
+    √ get /api/vehicles/1 con un token inválido responde 401 (2 ms)
+    √ post /api/vehicles con un token inválido responde 401 (3 ms)
+    √ patch /api/vehicles/1 con un token inválido responde 401 (3 ms)
+    √ get /api/appointments con un token inválido responde 401 (2 ms)
+    √ get /api/appointments/1 con un token inválido responde 401 (2 ms)
+    √ post /api/appointments con un token inválido responde 401 (3 ms)
+    √ patch /api/appointments/1 con un token inválido responde 401 (3 ms)
+    √ post /api/appointments/1/confirm con un token inválido responde 401 (2 ms)
+    √ post /api/appointments/1/cancel con un token inválido responde 401 (3 ms)
+    √ get /api/mechanics con un token inválido responde 401 (3 ms)
+    √ get /api/orders con un token inválido responde 401 (3 ms)
+    √ get /api/orders/1 con un token inválido responde 401 (2 ms)
+    √ post /api/orders con un token inválido responde 401 (2 ms)
+    √ patch /api/orders/1 con un token inválido responde 401 (3 ms)
+    √ post /api/orders/1/status con un token inválido responde 401 (3 ms)
+    √ post /api/orders/1/services con un token inválido responde 401 (2 ms)
+    √ patch /api/orders/1/services/1 con un token inválido responde 401 (3 ms)
+    √ delete /api/orders/1/services/1 con un token inválido responde 401 (3 ms)
+    √ post /api/orders/1/labor con un token inválido responde 401 (3 ms)
+    √ patch /api/orders/1/labor/1 con un token inválido responde 401 (2 ms)
+    √ delete /api/orders/1/labor/1 con un token inválido responde 401 (3 ms)
+    √ get /api/vehicles/1/history con un token inválido responde 401 (2 ms)
+    √ get /api/maintenance con un token inválido responde 401 (2 ms)
+    √ get /api/maintenance/1 con un token inválido responde 401 (2 ms)
+    √ post /api/maintenance con un token inválido responde 401 (2 ms)
+    √ patch /api/maintenance/1 con un token inválido responde 401 (3 ms)
+    √ get /api/parts con un token inválido responde 401 (3 ms)
+    √ get /api/parts/summary con un token inválido responde 401 (3 ms)
+    √ get /api/parts/categories con un token inválido responde 401 (2 ms)
+    √ get /api/parts/1 con un token inválido responde 401 (2 ms)
+    √ get /api/parts/1/movements con un token inválido responde 401 (2 ms)
+    √ post /api/parts con un token inválido responde 401 (2 ms)
+    √ patch /api/parts/1 con un token inválido responde 401 (2 ms)
+    √ post /api/parts/1/movements con un token inválido responde 401 (3 ms)
+    √ post /api/orders/1/parts con un token inválido responde 401 (2 ms)
+    √ patch /api/orders/1/parts/1 con un token inválido responde 401 (3 ms)
+    √ delete /api/orders/1/parts/1 con un token inválido responde 401 (3 ms)
+    √ get /api/orders/1/payments con un token inválido responde 401 (3 ms)
+    √ post /api/orders/1/payments con un token inválido responde 401 (2 ms)
+    √ post /api/payments/1/sync con un token inválido responde 401 (3 ms)
+    √ post /api/payments/1/cancel con un token inválido responde 401 (3 ms)
+    √ post /api/orders/1/ticket con un token inválido responde 401 (2 ms)
+    √ get /api/orders/1/ticket con un token inválido responde 401 (3 ms)
+    √ post /api/orders/1/ticket/print-link con un token inválido responde 401 (3 ms)
+    √ get /api/dashboard con un token inválido responde 401 (3 ms)
+    √ el_inicio_de_sesion_es_la_unica_ruta_publica (5 ms)
+    √ una_ruta_inexistente_responde_404_con_formato_estandar_y_sin_trazas (3 ms)
+    rol ADMIN
+      √ get /api/auth/me respeta el permiso del rol (7 ms)
+      √ post /api/auth/change-password respeta el permiso del rol (5 ms)
+      √ get /api/users respeta el permiso del rol (6 ms)
+      √ get /api/users/1 respeta el permiso del rol (4 ms)
+      √ post /api/users respeta el permiso del rol (3 ms)
+      √ patch /api/users/1 respeta el permiso del rol (3 ms)
+      √ get /api/clients respeta el permiso del rol (5 ms)
+      √ get /api/clients/1 respeta el permiso del rol (5 ms)
+      √ post /api/clients respeta el permiso del rol (3 ms)
+      √ patch /api/clients/1 respeta el permiso del rol (4 ms)
+      √ get /api/vehicles respeta el permiso del rol (5 ms)
+      √ get /api/vehicles/1 respeta el permiso del rol (3 ms)
+      √ post /api/vehicles respeta el permiso del rol (3 ms)
+      √ patch /api/vehicles/1 respeta el permiso del rol (3 ms)
+      √ get /api/appointments respeta el permiso del rol (5 ms)
+      √ get /api/appointments/1 respeta el permiso del rol (5 ms)
+      √ post /api/appointments respeta el permiso del rol (4 ms)
+      √ patch /api/appointments/1 respeta el permiso del rol (3 ms)
+      √ post /api/appointments/1/confirm respeta el permiso del rol (4 ms)
+      √ post /api/appointments/1/cancel respeta el permiso del rol (4 ms)
+      √ get /api/mechanics respeta el permiso del rol (4 ms)
+      √ get /api/orders respeta el permiso del rol (4 ms)
+      √ get /api/orders/1 respeta el permiso del rol (4 ms)
+      √ post /api/orders respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1 respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/status respeta el permiso del rol (4 ms)
+      √ post /api/orders/1/services respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1/services/1 respeta el permiso del rol (3 ms)
+      √ delete /api/orders/1/services/1 respeta el permiso del rol (5 ms)
+      √ post /api/orders/1/labor respeta el permiso del rol (4 ms)
+      √ patch /api/orders/1/labor/1 respeta el permiso del rol (3 ms)
+      √ delete /api/orders/1/labor/1 respeta el permiso del rol (3 ms)
+      √ get /api/vehicles/1/history respeta el permiso del rol (3 ms)
+      √ get /api/maintenance respeta el permiso del rol (5 ms)
+      √ get /api/maintenance/1 respeta el permiso del rol (4 ms)
+      √ post /api/maintenance respeta el permiso del rol (3 ms)
+      √ patch /api/maintenance/1 respeta el permiso del rol (3 ms)
+      √ get /api/parts respeta el permiso del rol (5 ms)
+      √ get /api/parts/summary respeta el permiso del rol (4 ms)
+      √ get /api/parts/categories respeta el permiso del rol (3 ms)
+      √ get /api/parts/1 respeta el permiso del rol (4 ms)
+      √ get /api/parts/1/movements respeta el permiso del rol (4 ms)
+      √ post /api/parts respeta el permiso del rol (3 ms)
+      √ patch /api/parts/1 respeta el permiso del rol (4 ms)
+      √ post /api/parts/1/movements respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/parts respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1/parts/1 respeta el permiso del rol (3 ms)
+      √ delete /api/orders/1/parts/1 respeta el permiso del rol (4 ms)
+      √ get /api/orders/1/payments respeta el permiso del rol (4 ms)
+      √ post /api/orders/1/payments respeta el permiso del rol (3 ms)
+      √ post /api/payments/1/sync respeta el permiso del rol (5 ms)
+      √ post /api/payments/1/cancel respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/ticket respeta el permiso del rol (4 ms)
+      √ get /api/orders/1/ticket respeta el permiso del rol (2 ms)
+      √ post /api/orders/1/ticket/print-link respeta el permiso del rol (4 ms)
+      √ get /api/dashboard respeta el permiso del rol (16 ms)
+    rol RECEPTIONIST
+      √ get /api/auth/me respeta el permiso del rol (3 ms)
+      √ post /api/auth/change-password respeta el permiso del rol (3 ms)
+      √ get /api/users respeta el permiso del rol (2 ms)
+      √ get /api/users/1 respeta el permiso del rol (3 ms)
+      √ post /api/users respeta el permiso del rol (3 ms)
+      √ patch /api/users/1 respeta el permiso del rol (5 ms)
+      √ get /api/clients respeta el permiso del rol (3 ms)
+      √ get /api/clients/1 respeta el permiso del rol (4 ms)
+      √ post /api/clients respeta el permiso del rol (2 ms)
+      √ patch /api/clients/1 respeta el permiso del rol (3 ms)
+      √ get /api/vehicles respeta el permiso del rol (3 ms)
+      √ get /api/vehicles/1 respeta el permiso del rol (3 ms)
+      √ post /api/vehicles respeta el permiso del rol (2 ms)
+      √ patch /api/vehicles/1 respeta el permiso del rol (3 ms)
+      √ get /api/appointments respeta el permiso del rol (4 ms)
+      √ get /api/appointments/1 respeta el permiso del rol (3 ms)
+      √ post /api/appointments respeta el permiso del rol (3 ms)
+      √ patch /api/appointments/1 respeta el permiso del rol (2 ms)
+      √ post /api/appointments/1/confirm respeta el permiso del rol (3 ms)
+      √ post /api/appointments/1/cancel respeta el permiso del rol (3 ms)
+      √ get /api/mechanics respeta el permiso del rol (3 ms)
+      √ get /api/orders respeta el permiso del rol (4 ms)
+      √ get /api/orders/1 respeta el permiso del rol (4 ms)
+      √ post /api/orders respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1 respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/status respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/services respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1/services/1 respeta el permiso del rol (3 ms)
+      √ delete /api/orders/1/services/1 respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/labor respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1/labor/1 respeta el permiso del rol (3 ms)
+      √ delete /api/orders/1/labor/1 respeta el permiso del rol (3 ms)
+      √ get /api/vehicles/1/history respeta el permiso del rol (3 ms)
+      √ get /api/maintenance respeta el permiso del rol (4 ms)
+      √ get /api/maintenance/1 respeta el permiso del rol (4 ms)
+      √ post /api/maintenance respeta el permiso del rol (3 ms)
+      √ patch /api/maintenance/1 respeta el permiso del rol (3 ms)
+      √ get /api/parts respeta el permiso del rol (3 ms)
+      √ get /api/parts/summary respeta el permiso del rol (4 ms)
+      √ get /api/parts/categories respeta el permiso del rol (3 ms)
+      √ get /api/parts/1 respeta el permiso del rol (4 ms)
+      √ get /api/parts/1/movements respeta el permiso del rol (3 ms)
+      √ post /api/parts respeta el permiso del rol (3 ms)
+      √ patch /api/parts/1 respeta el permiso del rol (3 ms)
+      √ post /api/parts/1/movements respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/parts respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1/parts/1 respeta el permiso del rol (2 ms)
+      √ delete /api/orders/1/parts/1 respeta el permiso del rol (3 ms)
+      √ get /api/orders/1/payments respeta el permiso del rol (4 ms)
+      √ post /api/orders/1/payments respeta el permiso del rol (3 ms)
+      √ post /api/payments/1/sync respeta el permiso del rol (4 ms)
+      √ post /api/payments/1/cancel respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/ticket respeta el permiso del rol (3 ms)
+      √ get /api/orders/1/ticket respeta el permiso del rol (4 ms)
+      √ post /api/orders/1/ticket/print-link respeta el permiso del rol (3 ms)
+      √ get /api/dashboard respeta el permiso del rol (3 ms)
+    rol MECHANIC
+      √ get /api/auth/me respeta el permiso del rol (3 ms)
+      √ post /api/auth/change-password respeta el permiso del rol (3 ms)
+      √ get /api/users respeta el permiso del rol (3 ms)
+      √ get /api/users/1 respeta el permiso del rol (3 ms)
+      √ post /api/users respeta el permiso del rol (3 ms)
+      √ patch /api/users/1 respeta el permiso del rol (3 ms)
+      √ get /api/clients respeta el permiso del rol (4 ms)
+      √ get /api/clients/1 respeta el permiso del rol (3 ms)
+      √ post /api/clients respeta el permiso del rol (3 ms)
+      √ patch /api/clients/1 respeta el permiso del rol (2 ms)
+      √ get /api/vehicles respeta el permiso del rol (4 ms)
+      √ get /api/vehicles/1 respeta el permiso del rol (3 ms)
+      √ post /api/vehicles respeta el permiso del rol (3 ms)
+      √ patch /api/vehicles/1 respeta el permiso del rol (3 ms)
+      √ get /api/appointments respeta el permiso del rol (3 ms)
+      √ get /api/appointments/1 respeta el permiso del rol (3 ms)
+      √ post /api/appointments respeta el permiso del rol (3 ms)
+      √ patch /api/appointments/1 respeta el permiso del rol (3 ms)
+      √ post /api/appointments/1/confirm respeta el permiso del rol (3 ms)
+      √ post /api/appointments/1/cancel respeta el permiso del rol (3 ms)
+      √ get /api/mechanics respeta el permiso del rol (3 ms)
+      √ get /api/orders respeta el permiso del rol (3 ms)
+      √ get /api/orders/1 respeta el permiso del rol (4 ms)
+      √ post /api/orders respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1 respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/status respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/services respeta el permiso del rol (4 ms)
+      √ patch /api/orders/1/services/1 respeta el permiso del rol (3 ms)
+      √ delete /api/orders/1/services/1 respeta el permiso del rol (4 ms)
+      √ post /api/orders/1/labor respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1/labor/1 respeta el permiso del rol (3 ms)
+      √ delete /api/orders/1/labor/1 respeta el permiso del rol (4 ms)
+      √ get /api/vehicles/1/history respeta el permiso del rol (3 ms)
+      √ get /api/maintenance respeta el permiso del rol (4 ms)
+      √ get /api/maintenance/1 respeta el permiso del rol (3 ms)
+      √ post /api/maintenance respeta el permiso del rol (3 ms)
+      √ patch /api/maintenance/1 respeta el permiso del rol (3 ms)
+      √ get /api/parts respeta el permiso del rol (4 ms)
+      √ get /api/parts/summary respeta el permiso del rol (3 ms)
+      √ get /api/parts/categories respeta el permiso del rol (3 ms)
+      √ get /api/parts/1 respeta el permiso del rol (4 ms)
+      √ get /api/parts/1/movements respeta el permiso del rol (3 ms)
+      √ post /api/parts respeta el permiso del rol (3 ms)
+      √ patch /api/parts/1 respeta el permiso del rol (3 ms)
+      √ post /api/parts/1/movements respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/parts respeta el permiso del rol (3 ms)
+      √ patch /api/orders/1/parts/1 respeta el permiso del rol (3 ms)
+      √ delete /api/orders/1/parts/1 respeta el permiso del rol (4 ms)
+      √ get /api/orders/1/payments respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/payments respeta el permiso del rol (3 ms)
+      √ post /api/payments/1/sync respeta el permiso del rol (3 ms)
+      √ post /api/payments/1/cancel respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/ticket respeta el permiso del rol (3 ms)
+      √ get /api/orders/1/ticket respeta el permiso del rol (3 ms)
+      √ post /api/orders/1/ticket/print-link respeta el permiso del rol (3 ms)
+      √ get /api/dashboard respeta el permiso del rol (3 ms)
+  Rutas públicas del Sprint 4 (no exigen sesión pero validan su contenido)
+    √ el_webhook_de_mercado_pago_no_pide_sesion_y_rechaza_lo_mal_formado (5 ms)
+    √ la_pagina_de_impresion_no_pide_sesion_pero_exige_un_token_valido (4 ms)
+PASS tests/contract/orderParts.contract.test.js
+  POST /api/orders/:id/parts
+    √ responde_201_con_la_orden_completa_con_parts_y_total (64 ms)
+    √ responde_400_404_y_403_con_error_estandar (40 ms)
+    √ responde_409_con_los_codigos_documentados (67 ms)
+    √ ignora_un_precio_enviado_y_usa_el_de_venta_vigente (32 ms)
+  PATCH y DELETE /api/orders/:id/parts/:lineId
+    √ PATCH_responde_200_con_la_orden_y_404_si_la_linea_no_es_de_la_orden (61 ms)
+    √ DELETE_responde_200_con_la_orden_sin_la_refaccion (42 ms)
+PASS tests/integration/orderParts.test.js
+  Refacciones en órdenes (integración)
+    √ agregar_baja_el_stock_crea_la_salida_ligada_a_la_orden_y_suma_el_total (75 ms)
+    √ el_total_suma_servicios_mano_de_obra_y_refacciones (69 ms)
+    √ una_cantidad_mayor_a_la_disponible_se_rechaza_sin_cambiar_nada (29 ms)
+    √ diez_peticiones_simultaneas_por_la_ultima_pieza_dejan_exactamente_una_aplicada (95 ms)
+    √ dos_mecanicos_usando_la_ultima_pieza_a_la_vez_solo_uno_lo_logra (54 ms)
+    √ el_precio_de_la_orden_no_cambia_si_cambia_el_catalogo (68 ms)
+    √ editar_la_cantidad_registra_la_diferencia_y_quitar_regresa_las_piezas (74 ms)
+    √ aumentar_mas_de_lo_disponible_se_rechaza_y_conserva_la_cantidad_anterior (36 ms)
+    √ las_ordenes_cerradas_rechazan_cambios_y_otro_mecanico_o_recepcion_no_pueden_agregar (74 ms)
+    √ una_refaccion_desactivada_no_se_ofrece_para_nuevas_ordenes_pero_conserva_las_existentes (57 ms)
+    √ la_base_impide_dos_lineas_de_la_misma_refaccion_en_una_orden (33 ms)
+PASS tests/integration/orders.lines.test.js
+  Documentar el trabajo (integración)
+    √ el_mecanico_asignado_registra_diagnostico_observaciones_y_recomendaciones (56 ms)
+    √ el_total_siempre_coincide_con_la_suma_de_servicios_y_mano_de_obra (98 ms)
+    √ administrador_puede_documentar_cualquier_orden (26 ms)
+    √ otro_mecanico_y_recepcion_no_pueden_documentar (29 ms)
+    √ recepcion_corrige_el_problema_reportado_y_reasigna_al_mecanico (32 ms)
+    √ las_ordenes_en_estado_TERMINADO_son_de_solo_lectura (52 ms)
+    √ las_ordenes_en_estado_ENTREGADO_son_de_solo_lectura (78 ms)
+    √ las_ordenes_en_estado_CANCELADA_son_de_solo_lectura (123 ms)
+    √ valida_importes_horas_y_descripciones_con_mensajes_en_espanol (22 ms)
+    √ una_linea_ajena_a_la_orden_o_inexistente_responde_404 (55 ms)
+    √ rechaza_peticiones_sin_token_y_ediciones_vacias (15 ms)
+PASS tests/integration/dashboard.test.js
+  Panel de control: cada cifra coincide con su módulo
+    √ ordenes_por_estado_coinciden_con_el_listado_de_ordenes (57 ms)
+    √ las_ordenes_con_saldo_y_lo_pendiente_de_cobrar_coinciden_con_el_resumen_de_cada_orden (31 ms)
+    √ lo_cobrado_hoy_y_en_el_mes_solo_cuenta_pagos_PAGADO_de_ese_periodo (6 ms)
+    √ las_citas_de_hoy_y_de_los_proximos_7_dias_coinciden_con_la_agenda (15 ms)
+    √ los_mantenimientos_vencidos_y_proximos_coinciden_con_la_lista (14 ms)
+    √ las_alertas_de_inventario_coinciden_con_el_resumen_y_las_mas_urgentes_van_primero (9 ms)
+    √ el_panel_se_calcula_en_cada_consulta_y_refleja_los_cambios_al_instante (61 ms)
+    √ responde_en_menos_de_3_segundos (5 ms)
+PASS tests/integration/maintenance.test.js
+  Mantenimientos (integración)
+    √ admin_y_mecanico_registran_y_editan_y_recepcion_solo_consulta (84 ms)
+    √ registrar_otro_del_mismo_tipo_deja_atendido_al_anterior_sin_distinguir_mayusculas (53 ms)
+    √ el_reemplazo_no_toca_los_mantenimientos_de_otro_vehiculo (32 ms)
+    √ enlaza_la_orden_de_origen_cuando_existe (35 ms)
+    √ la_base_rechaza_un_mantenimiento_sin_proxima_fecha_ni_kilometraje_aunque_falle_la_validacion (11 ms)
+  console.warn
+    Mercado Pago: el importe del pago 7 no coincide con el informado; se ignora.
+      40 |     // El importe debe coincidir: una notificación que no corresponde se ignora.
+      41 |     if (aCentavos(externo.amount) !== aCentavos(local.amount)) {
+    > 42 |       logger.warn?.(`Mercado Pago: el importe del pago ${local.id} no coincide con el informado; se ignora.`);
+         |                    ^
+      43 |       return false;
+      44 |     }
+      45 |     const nuevo = ESTADO_LOCAL[externo.status];
+      at aplicar (services/mercadoPagoService.js:42:20)
+      at Object.handleNotification (services/mercadoPagoService.js:64:29)
+      at webhook (controllers/paymentController.js:39:3)
+  console.warn
+    Mercado Pago: el pago 12 ya estaba cancelado y se informó como aprobado; requiere conciliación manual.
+      51 |     if (filas === 0 && local.status === PAYMENT_STATUS.CANCELLED && nuevo === PAYMENT_STATUS.PAID) {
+      52 |       // Límite aceptado del MVP: un pago cancelado en Motorix que luego se pagó se concilia fuera del sistema.
+    > 53 |       logger.warn?.(`Mercado Pago: el pago ${local.id} ya estaba cancelado y se informó como aprobado; requiere conciliación manual.`);
+         |                    ^
+      54 |     }
+      55 |     return filas === 1;
+      56 |   }
+      at aplicar (services/mercadoPagoService.js:53:20)
+      at Object.handleNotification (services/mercadoPagoService.js:64:23)
+      at webhook (controllers/paymentController.js:39:3)
+PASS tests/integration/payments.mercadopago.test.js
+  Pagos con Mercado Pago (integración, pasarela simulada en la red)
+    √ el_flujo_Pendiente_a_Pagado_por_notificacion_actualiza_el_saldo (84 ms)
+    √ el_flujo_Pendiente_a_Pagado_por_sincronizacion_manual (40 ms)
+    √ rechazado_y_cancelado_liberan_el_saldo_y_permiten_iniciar_otro_pago (78 ms)
+    √ diez_notificaciones_identicas_simultaneas_dejan_un_solo_cambio (78 ms)
+    √ prevalece_el_estado_real_de_mercado_pago_y_no_lo_que_afirme_la_notificacion (46 ms)
+    √ una_notificacion_falsa_de_un_pago_inexistente_o_ajeno_no_altera_ningun_pago (56 ms)
+    √ el_pago_pendiente_reserva_saldo_y_bloquea_sobrecobros (70 ms)
+    √ cancelar_un_pago_pendiente_libera_el_saldo_y_cancelar_uno_pagado_responde_409 (65 ms)
+    √ una_aprobacion_tardia_de_un_pago_cancelado_se_ignora (48 ms)
+    √ el_webhook_funciona_sin_sesion_y_las_demas_rutas_de_pagos_la_exigen (10 ms)
+    √ el_token_de_acceso_nunca_aparece_en_las_respuestas_de_error (26 ms)
+PASS tests/integration/parts.test.js
+  Inventario (integración)
+    √ solo_el_administrador_escribe_y_los_demas_roles_reciben_403 (63 ms)
+    √ entrada_salida_y_ajuste_actualizan_el_stock_y_quedan_con_usuario_y_fecha (46 ms)
+    √ un_movimiento_que_dejaria_el_stock_negativo_se_rechaza_sin_cambios (18 ms)
+    √ los_movimientos_son_inmutables_no_hay_rutas_para_editarlos_o_borrarlos (25 ms)
+    √ la_base_rechaza_stock_negativo_y_movimientos_incoherentes_aunque_falle_la_logica (13 ms)
+    √ el_precio_de_compra_no_aparece_en_ninguna_respuesta_para_mecanico_y_recepcion (34 ms)
+    √ desactivar_oculta_la_refaccion_a_los_demas_roles_sin_perder_su_historial_y_reactivar_la_devuelve (45 ms)
+    √ busca_por_codigo_nombre_categoria_o_marca_y_filtra_por_categoria (21 ms)
+    √ treinta_movimientos_simultaneos_mantienen_stock_igual_a_la_suma_de_movimientos (243 ms)
+PASS tests/integration/payments.test.js
+  Pagos (integración)
+    √ un_pago_parcial_y_luego_el_saldo_exacto_dejan_la_orden_PAGADA_y_rechazan_mas_pagos (76 ms)
+    √ recepcion_y_administracion_pueden_cobrar_y_el_mecanico_recibe_403 (48 ms)
+    √ las_ordenes_en_curso_y_canceladas_no_admiten_pagos_y_las_entregadas_si (119 ms)
+    √ una_orden_con_total_cero_no_admite_pagos (17 ms)
+    √ diez_cobros_simultaneos_que_juntos_exceden_el_saldo_nunca_pasan_del_total (78 ms)
+    √ cobros_simultaneos_por_el_saldo_exacto_dejan_solo_uno (30 ms)
+    √ los_pagos_rechazados_y_cancelados_no_cuentan_para_el_saldo_y_se_conservan (43 ms)
+    √ los_pagos_no_se_editan_ni_se_eliminan_no_hay_rutas_para_ello (49 ms)
+    √ la_base_rechaza_pagos_incoherentes_aunque_falle_la_validacion (25 ms)
+    √ el_pago_se_conserva_cuando_la_orden_pasa_a_entregada (52 ms)
+PASS tests/integration/auth.test.js
+  Inicio de sesión (integración)
+    √ permite_entrar_con_el_usuario_admin_y_devuelve_el_rol_ADMIN (25 ms)
+    √ permite_entrar_con_el_usuario_recepcion_y_devuelve_el_rol_RECEPTIONIST (4 ms)
+    √ permite_entrar_con_el_usuario_mecanico_y_devuelve_el_rol_MECHANIC (5 ms)
+    √ permite_entrar_con_el_correo_admin@motorix.test_en_el_mismo_campo (5 ms)
+    √ permite_entrar_con_el_correo_recepcion@motorix.test_en_el_mismo_campo (4 ms)
+    √ permite_entrar_con_el_correo_mecanico@motorix.test_en_el_mismo_campo (4 ms)
+    √ el_token_emitido_sirve_para_consultar_el_perfil (9 ms)
+    √ rechaza_credenciales_incorrectas_con_mensaje_generico (9 ms)
+    √ rechaza_campos_vacios_con_error_de_validacion (4 ms)
+    √ rechaza_peticiones_sin_token_o_con_token_invalido (4 ms)
+    √ una_cuenta_desactivada_deja_de_entrar_de_inmediato_aunque_tenga_token (35 ms)
+    √ bloquea_la_cuenta_tras_5_intentos_fallidos_y_responde_423 (63 ms)
+  Cambio de contraseña (integración)
+    √ cambia_la_contrasena_cumpliendo_la_politica_y_la_anterior_deja_de_funcionar (237 ms)
+    √ rechaza_una_contrasena_nueva_que_no_cumple_la_politica (8 ms)
+    √ rechaza_el_cambio_si_la_contrasena_actual_es_incorrecta (7 ms)
+PASS tests/contract/payments.mercadopago.contract.test.js
+  POST /api/orders/:id/payments con MERCADO_PAGO
+    √ responde_201_con_el_pago_PENDIENTE_el_enlace_y_el_importe_reservado (56 ms)
+    √ responde_503_MP_NOT_CONFIGURED_sin_credenciales_y_no_crea_ningun_pago (33 ms)
+    √ responde_502_MP_UNAVAILABLE_si_mercado_pago_no_responde_y_no_crea_ningun_pago (31 ms)
+  POST /api/payments/:id/sync y /cancel
+    √ sync_responde_200_con_payment_y_summary_y_aplica_la_aprobacion (41 ms)
+    √ sync_y_cancel_responden_409_PAYMENT_NOT_PENDING_si_ya_no_esta_pendiente (42 ms)
+    √ cancel_responde_200_libera_el_saldo_y_404_si_no_existe (40 ms)
+    √ sync_responde_502_si_mercado_pago_no_responde (37 ms)
+  POST /api/payments/mercadopago/webhook (pública)
+    √ responde_200_received_true_sin_sesion_aunque_no_corresponda_a_ningun_pago (3 ms)
+    √ otros_tipos_de_notificacion_responden_200_sin_consultar_a_mercado_pago (3 ms)
+    √ responde_400_si_esta_mal_formada (6 ms)
+    √ con_secreto_configurado_responde_401_si_la_firma_no_coincide_y_200_si_es_valida (5 ms)
+PASS tests/integration/vehicleHistory.test.js
+  Historial del vehículo (integración)
+    √ solo_aparecen_las_terminadas_y_entregadas_de_la_mas_reciente_a_la_mas_antigua (102 ms)
+    √ el_kilometraje_es_el_del_servicio_o_el_de_entrada_si_falta (50 ms)
+    √ una_correccion_a_la_orden_se_refleja_en_el_historial (81 ms)
+    √ el_kilometraje_del_servicio_sube_el_del_vehiculo_y_uno_menor_a_la_entrada_se_rechaza (50 ms)
+    √ un_vehiculo_sin_servicios_terminados_devuelve_lista_vacia (14 ms)
+PASS tests/integration/orders.status.test.js
+  Flujo completo por rol (integración)
+    √ recorre_RECIBIDO_a_ENTREGADO_con_historial_validaciones_y_efectos_sobre_la_cita (151 ms)
+    √ rechaza_los_saltos_indicando_las_transiciones_permitidas (26 ms)
+    √ ESPERANDO_REFACCION_es_un_desvio_permitido_desde_EN_REPARACION_y_regresa (33 ms)
+    √ otro_mecanico_recibe_403_y_el_administrador_puede_avanzar_cualquier_orden (24 ms)
+    √ allowedTransitions_depende_del_rol_en_el_detalle (27 ms)
+  Cancelación (integración)
+    √ recepcion_cancela_con_motivo_conserva_todo_y_la_cita_vuelve_a_confirmada (53 ms)
+    √ una_cita_con_orden_cancelada_admite_una_orden_nueva (56 ms)
+    √ no_se_cancela_una_orden_TERMINADO (26 ms)
+    √ no_se_cancela_una_orden_ENTREGADO (14 ms)
+    √ no_se_cancela_una_orden_CANCELADA (15 ms)
+  Cambios simultáneos (integración)
+    √ con_expectedStatus_solo_uno_gana_y_el_otro_recibe_STATE_CONFLICT (28 ms)
+    √ sin_expectedStatus_el_segundo_cambio_simultaneo_se_rechaza_como_transicion_invalida (23 ms)
+  Validaciones del cambio de estado
+    √ rechaza_estados_invalidos_ordenes_inexistentes_y_peticiones_sin_token (20 ms)
+PASS tests/integration/tickets.test.js
+  Tickets (integración)
+    √ los_importes_del_ticket_coinciden_con_la_orden_y_sus_pagos_en_cada_etapa (129 ms)
+    √ regenerar_conserva_el_folio_y_actualiza_el_pago_principal (53 ms)
+    √ diez_generaciones_simultaneas_crean_un_solo_ticket (87 ms)
+    √ los_pagos_rechazados_y_pendientes_no_cuentan_en_el_ticket (40 ms)
+    √ una_orden_con_total_cero_muestra_Sin_cobro (27 ms)
+    √ el_ticket_incluye_refacciones_y_el_kilometraje_del_servicio (49 ms)
+    √ el_ticket_no_cambia_de_folio_cuando_la_orden_pasa_a_entregada (57 ms)
+    √ recepcion_y_administracion_pueden_y_el_mecanico_no (68 ms)
+PASS tests/integration/stockInvariant.test.js
+  Invariante del inventario
+    √ tras_un_escenario_mixto_el_stock_de_toda_refaccion_coincide_con_la_suma_de_sus_movimientos (419 ms)
+PASS tests/integration/orders.read.test.js
+  Consulta de órdenes con dos mecánicos (integración)
+    √ cada_mecanico_ve_solo_las_suyas (23 ms)
+    √ un_mecanico_no_puede_forzar_el_filtro_de_otro_mecanico (6 ms)
+    √ un_mecanico_no_puede_abrir_una_orden_ajena_pero_si_la_suya (14 ms)
+    √ el_rol_RECEPTIONIST_ve_todas_las_ordenes_y_cualquier_detalle (10 ms)
+    √ el_rol_ADMIN_ve_todas_las_ordenes_y_cualquier_detalle (8 ms)
+    √ recepcion_filtra_por_estado_por_mecanico_y_por_fecha (18 ms)
+    √ busca_por_folio_cliente_y_placas (11 ms)
+    √ un_mecanico_que_busca_solo_encuentra_dentro_de_sus_ordenes (4 ms)
+    √ ordena_las_mas_recientes_primero (4 ms)
+    √ un_mecanico_sin_ordenes_recibe_una_lista_vacia (9 ms)
+    √ rechaza_peticiones_sin_token_y_parametros_invalidos (12 ms)
+PASS tests/contract/orders.lines.contract.test.js
+  PATCH /api/orders/:id
+    √ responde_200_con_la_orden_completa_actualizada (34 ms)
+    √ responde_403_con_error_estandar_si_el_campo_no_corresponde_al_rol (5 ms)
+    √ responde_400_si_no_se_envia_ningun_campo (5 ms)
+  Servicios
+    √ POST responde_201_con_la_orden_completa_y_el_total_recalculado (12 ms)
+    √ PATCH y DELETE responden_200_con_la_orden_completa (26 ms)
+    √ responde_400_con_detalles_por_campo_y_404_si_la_linea_no_existe (9 ms)
+  Mano de obra
+    √ POST responde_201_con_el_importe_calculado_y_PATCH_y_DELETE_responden_200 (32 ms)
+    √ responde_409_ORDER_NOT_EDITABLE_cuando_la_orden_ya_no_esta_en_curso (28 ms)
+PASS tests/integration/orders.create.test.js
+  Alta de órdenes (integración)
+    √ el_mecanico_recibe_403_y_no_se_crea_nada (34 ms)
+    √ rechaza_peticiones_sin_token (3 ms)
+    √ el_rol_ADMIN_crea_una_orden_directa_en_estado_recibido_con_folio (34 ms)
+    √ el_rol_RECEPTIONIST_crea_una_orden_directa_en_estado_recibido_con_folio (22 ms)
+    √ el_folio_es_unico_y_legible_entre_ordenes (29 ms)
+    √ actualiza_el_kilometraje_del_vehiculo_con_el_de_entrada (23 ms)
+    √ rechaza_un_kilometraje_menor_sin_correccion_y_lo_acepta_con_ella (23 ms)
+    √ rechaza_kilometrajes_fuera_de_rango_y_acepta_cualquiera_con_0_km_previos (25 ms)
+    √ exige_mecanico_activo_con_rol_de_mecanico (44 ms)
+    √ rechaza_un_vehiculo_de_otro_cliente_o_inexistente_y_un_cliente_desactivado (26 ms)
+    √ crea_la_orden_desde_una_cita_confirmada_y_la_cita_pasa_a_en_proceso (40 ms)
+    √ una_cita_que_no_esta_confirmada_no_genera_orden (36 ms)
+    √ la_creacion_es_atomica_si_falla_no_queda_nada_a_medias (24 ms)
+    √ la_lista_de_mecanicos_activos_es_solo_para_recepcion_y_administracion (9 ms)
+PASS tests/integration/appointments.test.js
+  Citas (integración)
+    √ el_mecanico_recibe_403_en_todas_las_rutas_de_citas (39 ms)
+    √ rechaza_peticiones_sin_token (2 ms)
+    √ el_rol_ADMIN_agenda_una_cita_que_queda_pendiente (16 ms)
+    √ el_rol_RECEPTIONIST_agenda_una_cita_que_queda_pendiente (10 ms)
+    √ rechaza_un_vehiculo_de_otro_cliente (15 ms)
+    √ rechaza_fechas_pasadas_y_clientes_desactivados (22 ms)
+    √ avisa_de_una_cita_duplicada_y_la_acepta_al_confirmar (20 ms)
+    √ filtra_por_fecha_estado_y_busca_por_cliente_o_placas_ordenando_por_fecha (36 ms)
+    √ confirma_modifica_y_cancela_conservando_la_cita_como_historial (47 ms)
+    √ no_se_puede_cancelar_una_cita_que_tiene_una_orden_activa (27 ms)
+    √ devuelve_404_para_una_cita_inexistente_y_400_para_un_id_invalido (10 ms)
+PASS tests/contract/tickets.contract.test.js
+  POST y GET /api/orders/:id/ticket
+    √ POST_responde_201_con_la_forma_documentada_y_200_al_repetir (69 ms)
+    √ GET_responde_200_con_el_ticket_y_404_si_aun_no_se_genero (50 ms)
+    √ POST_responde_409_TICKET_NOT_AVAILABLE_si_la_orden_esta_en_curso_o_cancelada (28 ms)
+    √ responde_403_al_mecanico_y_401_sin_token (39 ms)
+  Impresión del ticket
+    √ print_link_responde_200_con_la_direccion_y_la_vigencia_y_404_sin_ticket (34 ms)
+    √ la_pagina_publica_responde_text_html_con_el_ticket_sin_sesion (79 ms)
+    √ responde_401_en_html_sencillo_con_token_alterado_vencido_o_de_sesion (50 ms)
+PASS tests/integration/parts.alerts.test.js
+  Alertas de stock bajo (integración)
+    √ el_resumen_cuenta_bien_cada_nivel_e_ignora_las_refacciones_inactivas (66 ms)
+    √ una_entrada_que_supera_el_minimo_hace_desaparecer_la_alerta (50 ms)
+    √ usar_en_una_orden_la_pieza_que_deja_el_stock_en_el_minimo_dispara_la_alerta_de_inmediato (89 ms)
+    √ desactivar_una_refaccion_agotada_la_saca_del_resumen (15 ms)
+PASS tests/integration/maintenance.list.test.js
+  Listado de mantenimientos (integración)
+    √ clasifica_cada_caso_y_oculta_los_atendidos_por_defecto (19 ms)
+    √ los_limites_de_15_dias_y_500_km_son_proximos_y_16_dias_es_normal (6 ms)
+    √ filtra_por_clasificacion_y_por_estado (18 ms)
+    √ busca_por_cliente_placas_o_tipo_y_filtra_por_vehiculo_y_cliente (20 ms)
+    √ recepcion_lee_con_el_telefono_del_cliente (4 ms)
+    √ una_orden_que_sube_el_kilometraje_reclasifica_el_mantenimiento (70 ms)
+    √ pagina_el_resultado (4 ms)
+PASS tests/integration/payments.methods.test.js
+  Métodos de pago (integración)
+    √ efectivo_tarjeta_y_transferencia_quedan_PAGADO_con_su_metodo_y_referencia (88 ms)
+    √ un_metodo_invalido_o_ausente_responde_400 (37 ms)
+    √ una_referencia_con_forma_de_numero_de_tarjeta_se_rechaza_y_no_se_guarda (24 ms)
+    √ ningun_dato_enviado_como_extra_se_guarda_numero_vencimiento_o_cvv_se_ignoran (35 ms)
+    √ el_esquema_no_tiene_columnas_de_datos_de_tarjeta_ni_de_credenciales (2 ms)
+PASS tests/contract/maintenance.contract.test.js
+  POST /api/maintenance
+    √ responde_201_con_la_forma_documentada (45 ms)
+    √ responde_400_con_el_campo_en_details (6 ms)
+    √ responde_404_con_vehiculo_u_orden_inexistentes_y_403_a_recepcion (13 ms)
+  GET y PATCH /api/maintenance/:id
+    √ GET_responde_200_con_el_mantenimiento_y_404_si_no_existe (7 ms)
+    √ PATCH_responde_200_actualizado_y_permite_quitar_un_valor_si_queda_otro (9 ms)
+    √ PATCH_responde_400_si_quedaria_sin_proxima_fecha_ni_kilometraje (5 ms)
+    √ PATCH_responde_409_MAINTENANCE_NOT_EDITABLE_si_ya_esta_atendido (28 ms)
+PASS tests/contract/parts.contract.test.js
+  POST /api/parts
+    √ responde_201_con_la_refaccion_y_su_movimiento_de_existencia_inicial (32 ms)
+    √ responde_409_DUPLICATE_VALUE_con_el_campo_code_y_400_con_datos_invalidos (6 ms)
+  GET /api/parts y GET /api/parts/:id
+    √ el_listado_responde_200_con_data_y_meta_y_el_detalle_404_si_no_existe (18 ms)
+    √ GET_categories_devuelve_las_categorias_disponibles (4 ms)
+    √ el_detalle_incluye_movements_con_el_usuario_que_los_registro (12 ms)
+  PATCH /api/parts/:id
+    √ responde_200_ignora_el_stock_y_el_codigo_enviados (22 ms)
+    √ responde_400_sin_campos_y_404_si_no_existe (13 ms)
+  Movimientos: POST y GET /api/parts/:id/movements
+    √ POST_responde_201_con_movement_y_part_actualizada (16 ms)
+    √ POST_responde_409_INSUFFICIENT_STOCK_con_available_y_400_con_datos_invalidos (15 ms)
+    √ GET_lista_los_movimientos_paginados_del_mas_reciente_al_mas_antiguo (22 ms)
+PASS tests/integration/clients.test.js
+  Clientes (integración)
+    √ el_rol_ADMIN_puede_crear_y_editar_clientes (41 ms)
+    √ el_rol_RECEPTIONIST_puede_crear_y_editar_clientes (20 ms)
+    √ el_mecanico_solo_consulta_y_recibe_403_al_escribir (16 ms)
+    √ rechaza_peticiones_sin_token (6 ms)
+    √ busca_por_nombre_telefono_y_correo (28 ms)
+    √ el_telefono_repetido_avisa_y_se_guarda_solo_al_confirmar (17 ms)
+    √ el_detalle_incluye_los_vehiculos_asociados (17 ms)
+    √ desactivar_un_cliente_conserva_su_informacion_y_sus_vehiculos (29 ms)
+    √ devuelve_404_para_un_cliente_inexistente_y_400_para_un_id_invalido (15 ms)
+PASS tests/contract/payments.contract.test.js
+  POST /api/orders/:id/payments
+    √ responde_201_con_el_pago_PAGADO_y_el_resumen_actualizado (52 ms)
+    √ responde_400_con_el_campo_en_details (30 ms)
+    √ responde_404_si_la_orden_no_existe (4 ms)
+    √ responde_409_ORDER_NOT_PAYABLE_si_la_orden_esta_en_curso (16 ms)
+    √ responde_409_PAYMENT_EXCEEDS_BALANCE_con_el_saldo_disponible (22 ms)
+    √ responde_403_al_mecanico_y_401_sin_token (30 ms)
+  GET /api/orders/:id/payments
+    √ responde_200_con_los_pagos_del_mas_reciente_al_mas_antiguo_y_el_resumen (44 ms)
+    √ una_orden_sin_pagos_devuelve_lista_vacia_y_estado_SIN_PAGOS (27 ms)
+    √ responde_404_403_y_401 (26 ms)
+PASS tests/integration/vehicles.test.js
+  Vehículos (integración)
+    √ registra_un_vehiculo_asociado_a_su_propietario_y_lo_ve_el_detalle_del_cliente (20 ms)
+    √ rechaza_un_vehiculo_sin_propietario (7 ms)
+    √ responde_404_si_el_propietario_no_existe (4 ms)
+    √ rechaza_placas_duplicadas_con_409 (4 ms)
+    √ rechaza_un_vin_duplicado_y_permite_varios_vehiculos_sin_vin (22 ms)
+    √ el_mecanico_solo_consulta_y_recibe_403_al_escribir (12 ms)
+    √ busca_por_placas_marca_modelo_y_propietario (33 ms)
+    √ el_detalle_incluye_al_propietario (7 ms)
+    √ no_deja_bajar_el_kilometraje_sin_correccion_explicita (33 ms)
+    √ la_base_impide_vehiculos_sin_propietario_valido_por_llave_foranea (13 ms)
+    √ rechaza_peticiones_sin_token (3 ms)
+PASS tests/integration/orderParts.cancel.test.js
+  Cancelar una orden con refacciones (integración)
+    √ cancelar_regresa_todas_las_piezas_con_movimientos_que_indican_la_cancelacion (120 ms)
+    √ cancelar_una_orden_sin_refacciones_no_crea_movimientos (27 ms)
+    √ la_invariante_stock_igual_a_suma_de_movimientos_se_cumple_en_todas_las_refacciones (1 ms)
+PASS tests/contract/orders.create.contract.test.js
+  POST /api/orders
+    √ responde_201_con_la_orden_completa_y_su_folio (40 ms)
+    √ responde_400_con_detalles_por_campo (5 ms)
+    √ responde_400_si_solo_falta_el_problema_reportado_y_no_hay_cita (3 ms)
+    √ responde_404_con_error_estandar_si_el_vehiculo_no_existe (4 ms)
+    √ responde_409_MILEAGE_DECREASE_con_error_estandar (5 ms)
+  GET /api/mechanics
+    √ responde_200_con_id_y_nombre_de_los_mecanicos_activos (5 ms)
+PASS tests/contract/orders.status.contract.test.js
+  POST /api/orders/:id/status
+    √ responde_200_con_la_orden_completa_el_nuevo_estado_y_las_transiciones_del_usuario (54 ms)
+    √ responde_400_cuando_falta_el_motivo_al_cancelar_con_el_campo_en_details (15 ms)
+    √ responde_403_FORBIDDEN_cuando_el_rol_no_puede_aplicar_ese_cambio (24 ms)
+    √ responde_409_INVALID_TRANSITION_con_las_permitidas_en_details (17 ms)
+    √ responde_409_ORDER_INCOMPLETE_al_terminar_sin_diagnostico_ni_lineas (15 ms)
+    √ responde_409_STATE_CONFLICT_cuando_el_estado_esperado_ya_no_coincide (16 ms)
+    √ responde_404_si_la_orden_no_existe_y_400_si_el_estado_no_es_valido (23 ms)
+PASS tests/contract/vehicles.contract.test.js
+  POST /api/vehicles
+    √ responde_201_con_el_vehiculo_y_el_resumen_del_propietario (11 ms)
+    √ responde_400_con_detalles_cuando_falta_el_propietario (5 ms)
+    √ responde_404_con_error_estandar_si_el_cliente_no_existe (4 ms)
+    √ responde_409_DUPLICATE_VALUE_indicando_el_campo_repetido (5 ms)
+  GET /api/vehicles
+    √ responde_200_con_data_y_meta_de_paginacion (8 ms)
+  GET /api/vehicles/:id
+    √ responde_200_con_el_vehiculo_y_client_con_id_name_y_phone (8 ms)
+    √ responde_404_si_no_existe (4 ms)
+  PATCH /api/vehicles/:id
+    √ responde_200_con_el_vehiculo_actualizado (11 ms)
+    √ responde_409_MILEAGE_DECREASE_al_bajar_el_kilometraje (7 ms)
+    √ responde_400_si_no_se_envia_ningun_campo (7 ms)
+PASS tests/contract/parts.alerts.contract.test.js
+  GET /api/parts/summary
+    √ responde_200_con_total_ok_low_y_out_para_los_tres_roles (20 ms)
+    √ responde_401_sin_token (2 ms)
+  GET /api/parts?stockLevel=
+    √ acepta_LOW_OUT_o_LOW_OUT_y_devuelve_el_nivel_de_cada_refaccion (16 ms)
+    √ rechaza_niveles_invalidos_con_400 (8 ms)
+PASS tests/contract/appointments.contract.test.js
+  POST /api/appointments
+    √ responde_201_con_la_cita_pendiente_y_los_datos_de_cliente_y_vehiculo (36 ms)
+    √ responde_400_con_detalles_por_campo (4 ms)
+    √ responde_404_con_error_estandar_si_el_cliente_no_existe (4 ms)
+    √ responde_409_DUPLICATE_APPOINTMENT_con_la_cita_existente_en_details (6 ms)
+  GET /api/appointments
+    √ responde_200_con_data_y_meta_de_paginacion (8 ms)
+    √ responde_400_si_el_estado_no_es_valido (4 ms)
+  GET /api/appointments/:id
+    √ responde_200_con_la_cita_y_404_si_no_existe (12 ms)
+  PATCH /api/appointments/:id
+    √ responde_200_con_la_cita_actualizada_y_400_si_no_hay_campos (17 ms)
+  POST /api/appointments/:id/confirm y /cancel
+    √ confirmar_responde_200_y_repetirlo_responde_409_APPOINTMENT_NOT_EDITABLE (17 ms)
+    √ cancelar_responde_200_con_la_cita_cancelada (13 ms)
+PASS tests/contract/auth.contract.test.js
+  POST /api/auth/login
+    √ responde_200_con_token_expiresIn_y_usuario_publico (25 ms)
+    √ responde_401_con_forma_de_error_estandar_y_sin_trazas (12 ms)
+    √ responde_400_con_detalles_por_campo_cuando_faltan_datos (4 ms)
+    √ responde_400_si_el_cuerpo_no_es_un_json_valido (4 ms)
+  GET /api/auth/me
+    √ responde_200_con_el_usuario_de_la_sesion (5 ms)
+    √ responde_401_sin_token (3 ms)
+  POST /api/auth/change-password
+    √ responde_204_sin_contenido_cuando_el_cambio_es_valido (84 ms)
+    √ responde_400_cuando_la_politica_no_se_cumple_indicando_el_campo (4 ms)
+    √ responde_401_sin_token (3 ms)
+PASS tests/contract/orders.read.contract.test.js
+  GET /api/orders
+    √ responde_200_con_data_resumida_y_meta_de_paginacion (21 ms)
+    √ el_listado_no_incluye_lineas_ni_historial (6 ms)
+    √ responde_400_si_el_estado_no_es_valido_y_401_sin_token (7 ms)
+  GET /api/orders/:id
+    √ responde_200_con_el_detalle_completo (9 ms)
+    √ responde_403_a_un_mecanico_ajeno_con_error_estandar_y_404_si_no_existe (13 ms)
+PASS tests/contract/users.contract.test.js
+  POST /api/users
+    √ responde_201_con_el_usuario_sin_datos_sensibles (98 ms)
+    √ responde_400_con_detalles_por_campo (5 ms)
+    √ responde_409_DUPLICATE_VALUE_con_el_campo_repetido (4 ms)
+    √ responde_401_con_un_token_invalido (3 ms)
+  GET /api/users
+    √ responde_200_con_data_y_meta (8 ms)
+    √ acepta_los_filtros_role_y_active (8 ms)
+  GET /api/users/:id
+    √ responde_200_con_el_usuario (4 ms)
+    √ responde_404_con_error_estandar (4 ms)
+  PATCH /api/users/:id
+    √ responde_200_con_el_usuario_actualizado (14 ms)
+    √ responde_409_LAST_ADMIN_al_desactivar_al_unico_administrador (5 ms)
+    √ responde_400_si_no_se_envia_ningun_campo (3 ms)
+PASS tests/contract/vehicleHistory.contract.test.js
+  GET /api/vehicles/:id/history
+    √ responde_200_con_la_forma_documentada_de_cada_entrada (25 ms)
+    √ responde_404_con_error_estandar_si_el_vehiculo_no_existe (5 ms)
+    √ responde_400_con_paginacion_invalida_y_401_sin_token (7 ms)
+  PATCH /api/orders/:id con serviceMileage
+    √ responde_200_con_serviceMileage_y_400_con_el_campo_si_es_menor_al_de_entrada (67 ms)
+PASS tests/contract/clients.contract.test.js
+  POST /api/clients
+    √ responde_201_con_el_cliente_creado (30 ms)
+    √ responde_400_con_detalles_por_campo (5 ms)
+    √ responde_409_DUPLICATE_PHONE_con_las_coincidencias_en_details (4 ms)
+  GET /api/clients
+    √ responde_200_con_data_y_meta_de_paginacion (8 ms)
+    √ responde_400_si_la_paginacion_no_es_valida (3 ms)
+  GET /api/clients/:id
+    √ responde_200_con_el_cliente_y_el_arreglo_vehicles (9 ms)
+    √ responde_404_con_forma_de_error_estandar (4 ms)
+  PATCH /api/clients/:id
+    √ responde_200_con_el_cliente_actualizado (13 ms)
+    √ responde_400_si_no_se_envia_ningun_campo (7 ms)
+PASS tests/contract/dashboard.contract.test.js
+  GET /api/dashboard
+    √ responde_200_al_administrador_con_la_forma_documentada (29 ms)
+    √ responde_403_a_recepcion_y_mecanico_con_error_estandar_y_401_sin_token (16 ms)
+PASS tests/contract/maintenance.list.contract.test.js
+  GET /api/maintenance
+    √ responde_200_con_data_y_meta_y_la_forma_de_cada_mantenimiento (19 ms)
+    √ acepta_clasificaciones_validas_separadas_por_coma_y_rechaza_las_invalidas (13 ms)
+    √ responde_401_sin_token (3 ms)
+PASS tests/integration/dashboard.empty.test.js
+  Panel de control sin datos
+    √ con_la_base_vacia_todo_vale_cero_o_lista_vacia_y_no_hay_errores (29 ms)
+PASS tests/unit/serviceMileage.test.js
+  Kilometraje del servicio
+    √ el_esquema_acepta_enteros_de_0_a_1500000_y_rechaza_decimales_y_texto (5 ms)
+    √ el_mecanico_asignado_lo_registra_y_sube_el_kilometraje_del_vehiculo (4 ms)
+    √ rechaza_un_kilometraje_menor_al_de_entrada_sin_modificar_nada (1 ms)
+    √ acepta_un_kilometraje_igual_al_de_entrada (1 ms)
+    √ otro_mecanico_y_recepcion_no_pueden_registrarlo (1 ms)
+    √ solo_se_registra_con_la_orden_en_curso
+PASS tests/unit/authService.test.js
+  authService.login
+    √ busca_por_correo_cuando_el_identificador_contiene_arroba (6 ms)
+    √ busca_por_usuario_cuando_el_identificador_no_contiene_arroba (2 ms)
+    √ ignora_mayusculas_y_espacios_al_inicio_y_al_final_del_identificador (2 ms)
+    √ devuelve_token_de_8_horas_y_datos_publicos_sin_hash (2 ms)
+    √ reinicia_el_contador_de_intentos_al_acertar (2 ms)
+    √ responde_con_mensaje_generico_si_el_usuario_no_existe (2 ms)
+    √ responde_con_el_mismo_mensaje_si_la_contrasena_es_incorrecta (3 ms)
+    √ registra_el_intento_fallido_sin_bloquear_antes_del_quinto (2 ms)
+    √ bloquea_la_cuenta_15_minutos_al_llegar_al_quinto_intento_fallido (1 ms)
+    √ rechaza_con_423_y_tiempo_restante_si_la_cuenta_esta_bloqueada
+    √ permite_entrar_cuando_el_bloqueo_ya_vencio (1 ms)
+    √ rechaza_cuentas_desactivadas_con_403_solo_si_la_contrasena_es_correcta (3 ms)
+  authService.changePassword
+    √ actualiza_el_hash_cuando_la_contrasena_actual_es_correcta (4 ms)
+    √ rechaza_el_cambio_si_la_contrasena_actual_es_incorrecta (2 ms)
+PASS tests/unit/userService.test.js
+  Validación de usuarios
+    √ acepta_un_usuario_valido_y_normaliza_el_correo_a_minusculas (2 ms)
+    √ el_nombre_de_usuario_tiene_de_3_a_50_caracteres_y_no_lleva_espacios (1 ms)
+    √ exige_un_correo_con_formato_valido
+    √ solo_admite_los_tres_roles_del_sistema (1 ms)
+    √ aplica_la_politica_de_contrasena (1 ms)
+    √ la_edicion_exige_al_menos_un_campo_y_no_cambia_el_nombre_de_usuario (1 ms)
+  userService.create
+    √ guarda_la_contrasena_solo_como_hash_bcrypt (8 ms)
+    √ rechaza_un_nombre_de_usuario_repetido_indicando_el_campo (1 ms)
+    √ rechaza_un_correo_repetido_indicando_el_campo (1 ms)
+  userService.update
+    √ devuelve_404_si_el_usuario_no_existe (1 ms)
+    √ rechaza_desactivar_al_ultimo_administrador_activo
+    √ rechaza_quitar_el_rol_de_administrador_al_ultimo_administrador_activo
+    √ permite_desactivar_a_un_administrador_si_hay_otro_activo (1 ms)
+    √ no_aplica_la_regla_del_ultimo_administrador_a_otros_roles
+    √ rechaza_un_correo_que_ya_usa_otro_usuario
+    √ restablece_la_contrasena_con_hash_y_desbloquea_la_cuenta (9 ms)
+PASS tests/unit/orderLines.test.js
+  Validación de servicios y mano de obra
+    √ el_servicio_exige_descripcion_de_1_a_255_caracteres_e_importe (4 ms)
+    √ el_importe_no_es_negativo_no_pasa_de_99999999_99_y_tiene_hasta_dos_decimales (2 ms)
+    √ la_mano_de_obra_exige_horas_mayores_a_0_hasta_999_99_y_tarifa_no_negativa (1 ms)
+    √ la_edicion_de_lineas_exige_al_menos_un_campo
+    √ la_edicion_de_la_orden_acepta_textos_de_hasta_4000_caracteres_y_vacios_como_nulos
+  Servicios y mano de obra: permisos y estados
+    √ el_mecanico_asignado_agrega_un_servicio_y_el_total_se_recalcula_en_la_misma_transaccion (2 ms)
+    √ el_administrador_tambien_puede_editar_las_lineas
+    √ recepcion_no_puede_editar_las_lineas (1 ms)
+    √ otro_mecanico_no_puede_editar_las_lineas
+    √ permite_editar_lineas_en_estado_RECIBIDO
+    √ permite_editar_lineas_en_estado_DIAGNOSTICO
+    √ permite_editar_lineas_en_estado_EN_REPARACION
+    √ permite_editar_lineas_en_estado_ESPERANDO_REFACCION
+    √ rechaza_editar_lineas_en_estado_TERMINADO
+    √ rechaza_editar_lineas_en_estado_ENTREGADO (1 ms)
+    √ rechaza_editar_lineas_en_estado_CANCELADA
+    √ devuelve_404_si_la_orden_no_existe_o_si_la_linea_no_pertenece_a_la_orden (1 ms)
+    √ editar_y_quitar_lineas_tambien_recalcula_el_total (1 ms)
+  Edición de la orden: permisos por campo
+    √ el_mecanico_asignado_y_admin_editan_diagnosis (1 ms)
+    √ el_mecanico_asignado_y_admin_editan_notes (1 ms)
+    √ el_mecanico_asignado_y_admin_editan_recommendations
+    √ recepcion_no_puede_editar_el_diagnostico_ni_otro_mecanico (1 ms)
+    √ el_mecanico_no_puede_cambiar_el_problema_reportado_ni_reasignar
+    √ recepcion_edita_el_problema_reportado_y_reasigna_el_mecanico (1 ms)
+    √ un_mecanico_nuevo_debe_ser_activo_y_con_rol_de_mecanico (1 ms)
+    √ el_diagnostico_solo_se_edita_con_la_orden_en_curso_pero_la_reasignacion_tambien_en_terminado (1 ms)
+    √ devuelve_404_si_la_orden_no_existe (1 ms)
+PASS tests/unit/ticketService.test.js
+  Ticket: generación
+    √ crea_el_ticket_de_una_orden_terminada_con_su_pago_principal (5 ms)
+    √ generar_de_nuevo_devuelve_el_mismo_ticket_y_actualiza_el_pago_principal (1 ms)
+    √ dos_generaciones_simultaneas_devuelven_el_ticket_del_ganador
+    √ solo_las_ordenes_terminadas_o_entregadas_tienen_ticket (1 ms)
+    √ una_orden_inexistente_o_sin_ticket_responde_404
+  Ticket: token de impresión
+    √ emite_un_token_de_5_minutos_que_da_acceso_al_ticket_de_esa_orden (2 ms)
+    √ no_se_puede_emitir_sin_ticket
+    √ un_token_de_impresion_no_autentica_como_sesion (3 ms)
+    √ un_token_de_sesion_no_abre_la_impresion (1 ms)
+    √ rechaza_tokens_vencidos_alterados_o_de_otro_tipo (3 ms)
+    √ el_token_solo_sirve_para_la_orden_para_la_que_se_emitio (1 ms)
+PASS tests/unit/orderStatus.test.js
+  Validación del cambio de estado
+    √ exige_un_estado_valido (4 ms)
+    √ al_cancelar_el_motivo_es_obligatorio_y_tiene_hasta_255_caracteres (2 ms)
+  orderService.changeStatus
+    √ aplica_una_transicion_valida_registrando_historial_con_usuario_y_motivo_en_una_transaccion (1 ms)
+    √ devuelve_404_si_la_orden_no_existe (1 ms)
+    √ un_mecanico_ajeno_recibe_FORBIDDEN
+    √ rechaza_un_salto_con_INVALID_TRANSITION_e_indica_las_permitidas_para_el_usuario (1 ms)
+    √ el_mecanico_no_puede_entregar_ni_cancelar_aunque_la_transicion_exista
+    √ recepcion_no_puede_avanzar_el_trabajo_del_mecanico (1 ms)
+    al terminar
+      √ exige_diagnostico
+      √ exige_al_menos_un_servicio_o_una_mano_de_obra (1 ms)
+      √ indica_todo_lo_que_falta_a_la_vez
+      √ basta_con_solo_servicios
+      √ basta_con_solo_mano_de_obra (1 ms)
+    cancelar
+      √ guarda_el_motivo_y_devuelve_la_cita_asociada_a_confirmada
+      √ sin_cita_no_toca_citas
+      √ desde_terminado_ya_no_se_puede_cancelar (1 ms)
+    entregar
+      √ marca_la_cita_asociada_como_completada
+      √ una_orden_ENTREGADO_no_admite_ningun_cambio
+      √ una_orden_CANCELADA_no_admite_ningun_cambio
+    cambios simultáneos
+      √ si_el_estado_visto_por_el_usuario_ya_cambio_responde_STATE_CONFLICT (1 ms)
+      √ si_la_base_no_actualiza_ninguna_fila_responde_STATE_CONFLICT
+PASS tests/unit/appointmentService.test.js
+  Validación de citas
+    √ acepta_una_cita_valida_y_convierte_la_fecha_a_hora_local (4 ms)
+    √ el_motivo_es_obligatorio_y_tiene_de_1_a_255_caracteres (2 ms)
+    √ las_observaciones_admiten_hasta_2000_caracteres_y_vacias_se_guardan_como_nulas (1 ms)
+    √ exige_cliente_vehiculo_y_fecha_con_mensajes_en_espanol (1 ms)
+    √ rechaza_fechas_con_formato_invalido (1 ms)
+    √ la_edicion_exige_al_menos_un_campo (1 ms)
+  appointmentService.create
+    √ crea_la_cita_en_estado_pendiente_registrando_quien_la_creo (2 ms)
+    √ rechaza_un_cliente_inexistente_con_404 (1 ms)
+    √ rechaza_un_cliente_desactivado (1 ms)
+    √ rechaza_un_vehiculo_inexistente_con_404
+    √ rechaza_un_vehiculo_que_no_pertenece_al_cliente (1 ms)
+    √ rechaza_fechas_pasadas_pero_acepta_el_minuto_en_curso (1 ms)
+    √ avisa_con_409_si_hay_otra_cita_activa_del_mismo_vehiculo_a_esa_hora (1 ms)
+    √ guarda_la_cita_duplicada_cuando_se_confirma (1 ms)
+  appointmentService.confirm
+    √ confirma_solo_desde_pendiente
+    √ rechaza_confirmar_una_cita_CONFIRMADA (1 ms)
+    √ rechaza_confirmar_una_cita_EN_PROCESO
+    √ rechaza_confirmar_una_cita_COMPLETADA (1 ms)
+    √ rechaza_confirmar_una_cita_CANCELADA
+  appointmentService.cancel
+    √ cancela_una_cita_PENDIENTE_sin_orden_activa (1 ms)
+    √ cancela_una_cita_CONFIRMADA_sin_orden_activa
+    √ rechaza_cancelar_una_cita_con_orden_activa
+    √ rechaza_cancelar_una_cita_COMPLETADA (1 ms)
+    √ rechaza_cancelar_una_cita_CANCELADA
+    √ devuelve_404_si_la_cita_no_existe
+  appointmentService.update
+    √ permite_editar_una_cita_PENDIENTE (1 ms)
+    √ permite_editar_una_cita_CONFIRMADA
+    √ rechaza_editar_una_cita_EN_PROCESO (1 ms)
+    √ rechaza_editar_una_cita_COMPLETADA
+    √ rechaza_editar_una_cita_CANCELADA
+    √ rechaza_cambiar_la_fecha_a_una_pasada (1 ms)
+    √ avisa_de_duplicado_al_mover_la_cita_y_la_acepta_confirmada
+PASS tests/unit/vehicleHistoryService.test.js
+  Historial del vehículo (servicio)
+    √ rechaza_con_404_un_vehiculo_inexistente (2 ms)
+    √ agrupa_servicios_mano_de_obra_y_refacciones_por_orden (2 ms)
+    √ carga_las_lineas_por_lotes_con_una_consulta_por_tipo (1 ms)
+    √ sin_ordenes_devuelve_lista_vacia
+PASS tests/unit/partService.test.js
+  Validación del alta y la edición de refacciones
+    √ acepta_una_refaccion_completa_con_o_sin_existencia_inicial (3 ms)
+    √ el_codigo_es_obligatorio_de_1_a_40_caracteres (1 ms)
+    √ nombre_hasta_120_categoria_y_marca_hasta_60 (1 ms)
+    √ stock_minimo_y_existencia_inicial_son_enteros_de_0_a_1000000 (2 ms)
+    √ los_precios_van_de_0_a_99999999_99_con_hasta_dos_decimales (1 ms)
+    √ la_edicion_no_acepta_codigo_ni_stock_y_exige_al_menos_un_campo (2 ms)
+    √ el_filtro_de_nivel_acepta_LOW_OUT_o_ambos_y_rechaza_otros (1 ms)
+  Servicio de refacciones
+    √ rechaza_un_codigo_repetido_con_409_y_el_campo_code (2 ms)
+    √ la_existencia_inicial_genera_un_movimiento_de_entrada_con_motivo_Existencia_inicial (1 ms)
+    √ sin_existencia_inicial_no_se_registra_ningun_movimiento
+    √ desactivar_y_reactivar_solo_cambia_el_campo_active (1 ms)
+    √ editar_o_mover_una_refaccion_inexistente_responde_404 (1 ms)
+    √ las_respuestas_omiten_el_precio_de_compra_a_los_roles_que_no_son_administrador (1 ms)
+    √ quien_no_es_administrador_solo_consulta_refacciones_activas (1 ms)
+    √ una_refaccion_inactiva_no_se_ve_para_quien_no_es_administrador (1 ms)
+    √ registrar_movimiento_traduce_la_cantidad_a_delta_con_signo
+PASS tests/unit/orderPartService.test.js
+  Validación de refacciones en la orden
+    √ la_cantidad_es_entera_de_1_a_1000000 (3 ms)
+    √ descarta_cualquier_precio_enviado
+    √ exige_la_refaccion (1 ms)
+  Servicio de refacciones en la orden
+    √ agregar_registra_la_salida_ligada_a_la_orden_congela_el_precio_y_recalcula_el_total (1 ms)
+    √ el_administrador_tambien_puede_agregar (1 ms)
+    √ otro_mecanico_y_recepcion_reciben_403_sin_mover_inventario (1 ms)
+    √ las_ordenes_cerradas_rechazan_cambios_con_ORDER_NOT_EDITABLE (2 ms)
+    √ una_refaccion_inactiva_o_inexistente_se_rechaza (1 ms)
+    √ una_refaccion_ya_agregada_responde_DUPLICATE_ORDER_PART
+    √ aumentar_la_cantidad_registra_solo_la_diferencia_como_salida (1 ms)
+    √ reducir_la_cantidad_regresa_la_diferencia_como_entrada_de_reversa (1 ms)
+    √ la_misma_cantidad_no_genera_movimientos
+    √ quitar_regresa_todas_las_piezas_borra_la_linea_y_recalcula (1 ms)
+    √ una_linea_que_no_es_de_la_orden_responde_404
+    √ la_orden_inexistente_responde_404 (1 ms)
+PASS tests/unit/vehicleService.test.js
+  Validación de vehículos
+    √ guarda_las_placas_en_mayusculas_y_sin_espacios (4 ms)
+    √ exige_propietario_marca_modelo_placas_anio_y_kilometraje (2 ms)
+    √ el_mensaje_de_propietario_obligatorio_esta_en_espanol
+    √ el_vin_es_opcional_y_si_se_captura_tiene_17_caracteres_alfanumericos (1 ms)
+    √ el_anio_va_de_1950_al_anio_actual_mas_uno (1 ms)
+    √ el_kilometraje_es_un_entero_mayor_o_igual_a_cero (1 ms)
+    √ la_edicion_no_permite_cambiar_de_propietario_en_este_sprint (1 ms)
+  vehicleService.create
+    √ rechaza_con_404_si_el_propietario_no_existe (2 ms)
+    √ rechaza_con_409_si_las_placas_ya_existen (1 ms)
+    √ rechaza_con_409_si_el_vin_ya_existe_pero_permite_varios_sin_vin (1 ms)
+    √ crea_el_vehiculo_asociado_al_propietario (1 ms)
+  vehicleService.update
+    √ devuelve_404_si_el_vehiculo_no_existe (1 ms)
+    √ rechaza_bajar_el_kilometraje_sin_correccion_explicita
+    √ permite_bajar_el_kilometraje_con_mileageCorrection (1 ms)
+    √ permite_subir_o_mantener_el_kilometraje
+    √ rechaza_placas_que_pertenecen_a_otro_vehiculo
+    √ no_considera_duplicadas_las_propias_placas
+PASS tests/unit/orderCreation.test.js
+  Validación del alta de órdenes
+    √ acepta_una_orden_valida (3 ms)
+    √ el_kilometraje_de_entrada_es_obligatorio_entero_y_va_de_0_a_1500000 (2 ms)
+    √ el_mecanico_es_obligatorio_con_mensaje_en_espanol
+    √ el_problema_reportado_es_obligatorio_salvo_que_venga_de_una_cita (1 ms)
+    √ el_problema_reportado_tiene_de_1_a_2000_caracteres (1 ms)
+  orderService.create
+    √ crea_la_orden_actualiza_el_kilometraje_del_vehiculo_y_registra_el_historial_en_una_transaccion (2 ms)
+    √ rechaza_un_cliente_inexistente_y_uno_desactivado (2 ms)
+    √ rechaza_un_vehiculo_inexistente_o_de_otro_cliente (1 ms)
+    √ rechaza_un_mecanico_inexistente_con_404
+    √ rechaza_un_responsable_con_rol_de_recepcion
+    √ rechaza_un_responsable_con_rol_de_administrador (1 ms)
+    √ rechaza_un_responsable_desactivado
+    √ rechaza_un_kilometraje_menor_al_del_vehiculo_sin_correccion_explicita (1 ms)
+    √ acepta_un_kilometraje_menor_con_mileageCorrection_y_lo_guarda_en_el_vehiculo
+    √ con_0_km_previos_acepta_cualquier_valor_del_rango_y_acepta_un_kilometraje_igual (1 ms)
+    desde una cita
+      √ toma_el_motivo_de_la_cita_como_problema_reportado_y_la_pasa_a_en_proceso (1 ms)
+      √ rechaza_una_cita_inexistente_con_404
+      √ rechaza_una_cita_PENDIENTE
+      √ rechaza_una_cita_EN_PROCESO
+      √ rechaza_una_cita_COMPLETADA
+      √ rechaza_una_cita_CANCELADA (1 ms)
+      √ rechaza_si_el_cliente_o_el_vehiculo_no_coinciden_con_los_de_la_cita
+      √ rechaza_una_cita_que_ya_tiene_una_orden_activa (1 ms)
+PASS tests/unit/stockLevel.test.js
+  Nivel de stock
+    √ con_cero_piezas_esta_agotada (1 ms)
+    √ el_limite_exacto_cuenta_como_stock_bajo
+    √ por_encima_del_minimo_esta_en_orden
+    √ las_refacciones_inactivas_no_tienen_nivel (1 ms)
+PASS tests/unit/clientService.test.js
+  Validación de clientes
+    √ normaliza_el_telefono_a_10_digitos_sin_espacios_ni_guiones (3 ms)
+    √ rechaza_telefonos_que_no_tienen_10_digitos (1 ms)
+    √ exige_nombre_y_limita_su_longitud_a_120_caracteres (1 ms)
+    √ acepta_correo_opcional_pero_exige_formato_valido_si_se_captura (1 ms)
+    √ la_edicion_exige_al_menos_un_campo (1 ms)
+  clientService.create
+    √ crea_el_cliente_cuando_el_telefono_no_existe (1 ms)
+    √ avisa_con_409_y_las_coincidencias_si_el_telefono_ya_existe (1 ms)
+    √ permite_el_telefono_repetido_cuando_se_confirma (1 ms)
+  clientService.update
+    √ devuelve_404_si_el_cliente_no_existe (1 ms)
+    √ no_avisa_si_el_telefono_no_cambia
+    √ avisa_si_el_telefono_nuevo_ya_pertenece_a_otro_cliente (1 ms)
+    √ desactiva_al_cliente_sin_borrar_su_informacion
+PASS tests/unit/mercadoPagoService.test.js
+  Mercado Pago: notificaciones
+    √ una_aprobacion_pasa_el_pago_a_PAGADO_con_actualizacion_condicionada (3 ms)
+    √ rechazado_y_cancelado_se_aplican_como_RECHAZADO_y_CANCELADO
+    √ los_estados_intermedios_no_cambian_nada (1 ms)
+    √ repetir_la_notificacion_no_cambia_nada_la_segunda_vez (1 ms)
+    √ ignora_pagos_inexistentes_ajenos_o_con_importe_distinto (1 ms)
+    √ una_aprobacion_tardia_de_un_pago_ya_cancelado_se_ignora_y_se_advierte
+    √ un_error_de_mercado_pago_se_propaga_para_que_reintente (1 ms)
+  Mercado Pago: sincronizar y cancelar
+    √ sincronizar_busca_por_referencia_si_aun_no_se_conoce_el_identificador_y_aplica_el_estado (1 ms)
+    √ sincronizar_sin_novedades_deja_el_pago_pendiente (1 ms)
+    √ solo_se_sincroniza_o_cancela_un_pago_de_mercado_pago_pendiente (1 ms)
+    √ cancelar_pasa_el_pago_a_CANCELADO_y_si_otro_proceso_lo_resolvio_responde_409 (1 ms)
+PASS tests/unit/maintenanceService.test.js
+  Validación del alta de mantenimientos
+    √ acepta_un_mantenimiento_completo (3 ms)
+    √ el_tipo_de_servicio_es_obligatorio_y_hasta_100_caracteres (1 ms)
+    √ exige_al_menos_proxima_fecha_o_proximo_kilometraje (2 ms)
+    √ la_proxima_fecha_no_puede_ser_anterior_al_ultimo_servicio
+    √ el_proximo_kilometraje_debe_ser_mayor_al_del_ultimo_servicio
+    √ los_kilometrajes_son_enteros_hasta_1500000 (1 ms)
+    √ las_notas_admiten_hasta_2000_caracteres_y_vacias_pasan_a_nulo (1 ms)
+    √ las_fechas_deben_tener_formato_valido (1 ms)
+    √ la_edicion_exige_al_menos_un_campo
+  Servicio de mantenimientos
+    √ el_alta_reemplaza_pendientes_en_una_transaccion_y_devuelve_la_clasificacion (3 ms)
+    √ rechaza_con_404_un_vehiculo_o_una_orden_de_origen_inexistentes (1 ms)
+    √ un_mantenimiento_atendido_no_se_edita (1 ms)
+    √ la_edicion_valida_las_reglas_con_el_resultado_final (1 ms)
+    √ puede_quitar_un_valor_mientras_quede_el_otro
+    √ el_servicio_de_edicion_responde_404_si_no_existe (1 ms)
+PASS tests/unit/dashboardService.test.js
+  Periodos del panel (hora local)
+    √ calcula_hoy_manana_el_fin_de_los_proximos_7_dias_y_los_limites_del_mes (1 ms)
+    √ en_el_ultimo_minuto_del_dia_sigue_siendo_hoy
+    √ a_las_00_00_ya_es_el_dia_siguiente_y_cambia_de_mes
+    √ cruza_el_cambio_de_anio (1 ms)
+  Orden por urgencia de las refacciones
+    √ las_agotadas_van_primero_y_luego_la_menor_proporcion_de_stock (1 ms)
+    √ en_empate_ordena_por_nombre_y_tolera_minimo_cero
+  Panel de control: armado de la respuesta
+    √ reune_las_cifras_de_todos_los_modulos (2 ms)
+    √ las_refacciones_mas_urgentes_son_cinco_sin_precio_de_compra (2 ms)
+    √ reutiliza_los_modulos_de_origen_con_los_periodos_en_hora_local (1 ms)
+    √ sin_datos_todo_vale_cero_o_lista_vacia
+PASS tests/unit/orderAccess.test.js
+  Validación de los filtros de órdenes
+    √ acepta_estado_mecanico_y_rango_de_fechas_y_aplica_paginacion_por_defecto (2 ms)
+    √ rechaza_estados_y_fechas_invalidos (1 ms)
+  orderService.list
+    √ el_mecanico_siempre_se_filtra_por_su_propio_id_aunque_envie_otro (1 ms)
+    √ el_mecanico_sin_filtro_tambien_queda_limitado_a_sus_ordenes
+    √ el_rol_RECEPTIONIST_ve_todas_y_puede_filtrar_por_mecanico (1 ms)
+    √ el_rol_ADMIN_ve_todas_y_puede_filtrar_por_mecanico
+    √ devuelve_la_paginacion_en_meta (1 ms)
+  orderService.get
+    √ el_mecanico_asignado_ve_su_orden
+    √ otro_mecanico_recibe_FORBIDDEN (1 ms)
+    √ el_rol_RECEPTIONIST_ve_cualquier_orden
+    √ el_rol_ADMIN_ve_cualquier_orden
+    √ devuelve_404_si_la_orden_no_existe
+PASS tests/unit/inventoryService.test.js
+  Validación de movimientos de inventario
+    √ la_entrada_y_la_salida_manual_exigen_cantidad_entera_mayor_a_0 (6 ms)
+    √ el_ajuste_es_una_diferencia_entera_con_signo_distinta_de_cero (1 ms)
+    √ el_motivo_es_obligatorio_y_de_hasta_255_caracteres (1 ms)
+    √ el_tipo_debe_ser_IN_OUT_o_ADJUSTMENT (1 ms)
+  Servicio de inventario: applyMovement
+    √ una_entrada_suma_actualiza_el_stock_y_registra_el_stock_resultante (2 ms)
+    √ una_salida_guarda_la_cantidad_negativa_y_puede_dejar_el_stock_en_cero
+    √ rechaza_con_INSUFFICIENT_STOCK_si_el_resultado_seria_negativo_y_no_escribe_nada
+    √ bloquea_la_refaccion_antes_de_calcular_y_responde_404_si_no_existe (1 ms)
+    √ vincula_el_movimiento_con_la_orden_cuando_se_indica
+    √ deltaDe_aplica_el_signo_solo_a_las_salidas (1 ms)
+PASS tests/unit/orderStateMachine.test.js
+  orderStateMachine: las 49 combinaciones de estado × los 4 tipos de usuario
+    √ hay_196_combinaciones_cubiertas (2 ms)
+    √ RECIBIDO → RECIBIDO con admin (1 ms)
+    √ RECIBIDO → RECIBIDO con recepcion
+    √ RECIBIDO → RECIBIDO con mecanicoAsignado (1 ms)
+    √ RECIBIDO → RECIBIDO con mecanicoAjeno
+    √ RECIBIDO → DIAGNOSTICO con admin
+    √ RECIBIDO → DIAGNOSTICO con recepcion
+    √ RECIBIDO → DIAGNOSTICO con mecanicoAsignado
+    √ RECIBIDO → DIAGNOSTICO con mecanicoAjeno
+    √ RECIBIDO → EN_REPARACION con admin (1 ms)
+    √ RECIBIDO → EN_REPARACION con recepcion
+    √ RECIBIDO → EN_REPARACION con mecanicoAsignado
+    √ RECIBIDO → EN_REPARACION con mecanicoAjeno (1 ms)
+    √ RECIBIDO → ESPERANDO_REFACCION con admin
+    √ RECIBIDO → ESPERANDO_REFACCION con recepcion
+    √ RECIBIDO → ESPERANDO_REFACCION con mecanicoAsignado
+    √ RECIBIDO → ESPERANDO_REFACCION con mecanicoAjeno (1 ms)
+    √ RECIBIDO → TERMINADO con admin
+    √ RECIBIDO → TERMINADO con recepcion
+    √ RECIBIDO → TERMINADO con mecanicoAsignado
+    √ RECIBIDO → TERMINADO con mecanicoAjeno
+    √ RECIBIDO → ENTREGADO con admin
+    √ RECIBIDO → ENTREGADO con recepcion
+    √ RECIBIDO → ENTREGADO con mecanicoAsignado
+    √ RECIBIDO → ENTREGADO con mecanicoAjeno
+    √ RECIBIDO → CANCELADA con admin (1 ms)
+    √ RECIBIDO → CANCELADA con recepcion
+    √ RECIBIDO → CANCELADA con mecanicoAsignado
+    √ RECIBIDO → CANCELADA con mecanicoAjeno
+    √ DIAGNOSTICO → RECIBIDO con admin (1 ms)
+    √ DIAGNOSTICO → RECIBIDO con recepcion
+    √ DIAGNOSTICO → RECIBIDO con mecanicoAsignado
+    √ DIAGNOSTICO → RECIBIDO con mecanicoAjeno
+    √ DIAGNOSTICO → DIAGNOSTICO con admin
+    √ DIAGNOSTICO → DIAGNOSTICO con recepcion
+    √ DIAGNOSTICO → DIAGNOSTICO con mecanicoAsignado
+    √ DIAGNOSTICO → DIAGNOSTICO con mecanicoAjeno
+    √ DIAGNOSTICO → EN_REPARACION con admin (1 ms)
+    √ DIAGNOSTICO → EN_REPARACION con recepcion
+    √ DIAGNOSTICO → EN_REPARACION con mecanicoAsignado
+    √ DIAGNOSTICO → EN_REPARACION con mecanicoAjeno
+    √ DIAGNOSTICO → ESPERANDO_REFACCION con admin
+    √ DIAGNOSTICO → ESPERANDO_REFACCION con recepcion
+    √ DIAGNOSTICO → ESPERANDO_REFACCION con mecanicoAsignado
+    √ DIAGNOSTICO → ESPERANDO_REFACCION con mecanicoAjeno (1 ms)
+    √ DIAGNOSTICO → TERMINADO con admin
+    √ DIAGNOSTICO → TERMINADO con recepcion
+    √ DIAGNOSTICO → TERMINADO con mecanicoAsignado
+    √ DIAGNOSTICO → TERMINADO con mecanicoAjeno
+    √ DIAGNOSTICO → ENTREGADO con admin
+    √ DIAGNOSTICO → ENTREGADO con recepcion
+    √ DIAGNOSTICO → ENTREGADO con mecanicoAsignado
+    √ DIAGNOSTICO → ENTREGADO con mecanicoAjeno
+    √ DIAGNOSTICO → CANCELADA con admin (1 ms)
+    √ DIAGNOSTICO → CANCELADA con recepcion
+    √ DIAGNOSTICO → CANCELADA con mecanicoAsignado
+    √ DIAGNOSTICO → CANCELADA con mecanicoAjeno
+    √ EN_REPARACION → RECIBIDO con admin
+    √ EN_REPARACION → RECIBIDO con recepcion
+    √ EN_REPARACION → RECIBIDO con mecanicoAsignado
+    √ EN_REPARACION → RECIBIDO con mecanicoAjeno
+    √ EN_REPARACION → DIAGNOSTICO con admin
+    √ EN_REPARACION → DIAGNOSTICO con recepcion (1 ms)
+    √ EN_REPARACION → DIAGNOSTICO con mecanicoAsignado
+    √ EN_REPARACION → DIAGNOSTICO con mecanicoAjeno
+    √ EN_REPARACION → EN_REPARACION con admin
+    √ EN_REPARACION → EN_REPARACION con recepcion
+    √ EN_REPARACION → EN_REPARACION con mecanicoAsignado (1 ms)
+    √ EN_REPARACION → EN_REPARACION con mecanicoAjeno
+    √ EN_REPARACION → ESPERANDO_REFACCION con admin
+    √ EN_REPARACION → ESPERANDO_REFACCION con recepcion
+    √ EN_REPARACION → ESPERANDO_REFACCION con mecanicoAsignado (1 ms)
+    √ EN_REPARACION → ESPERANDO_REFACCION con mecanicoAjeno
+    √ EN_REPARACION → TERMINADO con admin
+    √ EN_REPARACION → TERMINADO con recepcion
+    √ EN_REPARACION → TERMINADO con mecanicoAsignado
+    √ EN_REPARACION → TERMINADO con mecanicoAjeno
+    √ EN_REPARACION → ENTREGADO con admin
+    √ EN_REPARACION → ENTREGADO con recepcion
+    √ EN_REPARACION → ENTREGADO con mecanicoAsignado
+    √ EN_REPARACION → ENTREGADO con mecanicoAjeno (1 ms)
+    √ EN_REPARACION → CANCELADA con admin
+    √ EN_REPARACION → CANCELADA con recepcion
+    √ EN_REPARACION → CANCELADA con mecanicoAsignado
+    √ EN_REPARACION → CANCELADA con mecanicoAjeno (1 ms)
+    √ ESPERANDO_REFACCION → RECIBIDO con admin
+    √ ESPERANDO_REFACCION → RECIBIDO con recepcion
+    √ ESPERANDO_REFACCION → RECIBIDO con mecanicoAsignado
+    √ ESPERANDO_REFACCION → RECIBIDO con mecanicoAjeno
+    √ ESPERANDO_REFACCION → DIAGNOSTICO con admin
+    √ ESPERANDO_REFACCION → DIAGNOSTICO con recepcion
+    √ ESPERANDO_REFACCION → DIAGNOSTICO con mecanicoAsignado
+    √ ESPERANDO_REFACCION → DIAGNOSTICO con mecanicoAjeno
+    √ ESPERANDO_REFACCION → EN_REPARACION con admin (1 ms)
+    √ ESPERANDO_REFACCION → EN_REPARACION con recepcion
+    √ ESPERANDO_REFACCION → EN_REPARACION con mecanicoAsignado
+    √ ESPERANDO_REFACCION → EN_REPARACION con mecanicoAjeno
+    √ ESPERANDO_REFACCION → ESPERANDO_REFACCION con admin
+    √ ESPERANDO_REFACCION → ESPERANDO_REFACCION con recepcion (1 ms)
+    √ ESPERANDO_REFACCION → ESPERANDO_REFACCION con mecanicoAsignado
+    √ ESPERANDO_REFACCION → ESPERANDO_REFACCION con mecanicoAjeno
+    √ ESPERANDO_REFACCION → TERMINADO con admin
+    √ ESPERANDO_REFACCION → TERMINADO con recepcion
+    √ ESPERANDO_REFACCION → TERMINADO con mecanicoAsignado (1 ms)
+    √ ESPERANDO_REFACCION → TERMINADO con mecanicoAjeno
+    √ ESPERANDO_REFACCION → ENTREGADO con admin
+    √ ESPERANDO_REFACCION → ENTREGADO con recepcion
+    √ ESPERANDO_REFACCION → ENTREGADO con mecanicoAsignado
+    √ ESPERANDO_REFACCION → ENTREGADO con mecanicoAjeno (1 ms)
+    √ ESPERANDO_REFACCION → CANCELADA con admin
+    √ ESPERANDO_REFACCION → CANCELADA con recepcion
+    √ ESPERANDO_REFACCION → CANCELADA con mecanicoAsignado
+    √ ESPERANDO_REFACCION → CANCELADA con mecanicoAjeno
+    √ TERMINADO → RECIBIDO con admin (1 ms)
+    √ TERMINADO → RECIBIDO con recepcion
+    √ TERMINADO → RECIBIDO con mecanicoAsignado
+    √ TERMINADO → RECIBIDO con mecanicoAjeno
+    √ TERMINADO → DIAGNOSTICO con admin
+    √ TERMINADO → DIAGNOSTICO con recepcion (1 ms)
+    √ TERMINADO → DIAGNOSTICO con mecanicoAsignado
+    √ TERMINADO → DIAGNOSTICO con mecanicoAjeno
+    √ TERMINADO → EN_REPARACION con admin
+    √ TERMINADO → EN_REPARACION con recepcion
+    √ TERMINADO → EN_REPARACION con mecanicoAsignado
+    √ TERMINADO → EN_REPARACION con mecanicoAjeno
+    √ TERMINADO → ESPERANDO_REFACCION con admin
+    √ TERMINADO → ESPERANDO_REFACCION con recepcion
+    √ TERMINADO → ESPERANDO_REFACCION con mecanicoAsignado
+    √ TERMINADO → ESPERANDO_REFACCION con mecanicoAjeno
+    √ TERMINADO → TERMINADO con admin
+    √ TERMINADO → TERMINADO con recepcion
+    √ TERMINADO → TERMINADO con mecanicoAsignado
+    √ TERMINADO → TERMINADO con mecanicoAjeno (6 ms)
+    √ TERMINADO → ENTREGADO con admin
+    √ TERMINADO → ENTREGADO con recepcion
+    √ TERMINADO → ENTREGADO con mecanicoAsignado
+    √ TERMINADO → ENTREGADO con mecanicoAjeno
+    √ TERMINADO → CANCELADA con admin
+    √ TERMINADO → CANCELADA con recepcion
+    √ TERMINADO → CANCELADA con mecanicoAsignado (1 ms)
+    √ TERMINADO → CANCELADA con mecanicoAjeno
+    √ ENTREGADO → RECIBIDO con admin
+    √ ENTREGADO → RECIBIDO con recepcion
+    √ ENTREGADO → RECIBIDO con mecanicoAsignado
+    √ ENTREGADO → RECIBIDO con mecanicoAjeno
+    √ ENTREGADO → DIAGNOSTICO con admin
+    √ ENTREGADO → DIAGNOSTICO con recepcion
+    √ ENTREGADO → DIAGNOSTICO con mecanicoAsignado
+    √ ENTREGADO → DIAGNOSTICO con mecanicoAjeno
+    √ ENTREGADO → EN_REPARACION con admin
+    √ ENTREGADO → EN_REPARACION con recepcion
+    √ ENTREGADO → EN_REPARACION con mecanicoAsignado
+    √ ENTREGADO → EN_REPARACION con mecanicoAjeno
+    √ ENTREGADO → ESPERANDO_REFACCION con admin
+    √ ENTREGADO → ESPERANDO_REFACCION con recepcion
+    √ ENTREGADO → ESPERANDO_REFACCION con mecanicoAsignado
+    √ ENTREGADO → ESPERANDO_REFACCION con mecanicoAjeno
+    √ ENTREGADO → TERMINADO con admin
+    √ ENTREGADO → TERMINADO con recepcion
+    √ ENTREGADO → TERMINADO con mecanicoAsignado
+    √ ENTREGADO → TERMINADO con mecanicoAjeno
+    √ ENTREGADO → ENTREGADO con admin
+    √ ENTREGADO → ENTREGADO con recepcion
+    √ ENTREGADO → ENTREGADO con mecanicoAsignado
+    √ ENTREGADO → ENTREGADO con mecanicoAjeno
+    √ ENTREGADO → CANCELADA con admin
+    √ ENTREGADO → CANCELADA con recepcion
+    √ ENTREGADO → CANCELADA con mecanicoAsignado
+    √ ENTREGADO → CANCELADA con mecanicoAjeno
+    √ CANCELADA → RECIBIDO con admin (1 ms)
+    √ CANCELADA → RECIBIDO con recepcion
+    √ CANCELADA → RECIBIDO con mecanicoAsignado
+    √ CANCELADA → RECIBIDO con mecanicoAjeno
+    √ CANCELADA → DIAGNOSTICO con admin
+    √ CANCELADA → DIAGNOSTICO con recepcion
+    √ CANCELADA → DIAGNOSTICO con mecanicoAsignado
+    √ CANCELADA → DIAGNOSTICO con mecanicoAjeno
+    √ CANCELADA → EN_REPARACION con admin
+    √ CANCELADA → EN_REPARACION con recepcion
+    √ CANCELADA → EN_REPARACION con mecanicoAsignado
+    √ CANCELADA → EN_REPARACION con mecanicoAjeno
+    √ CANCELADA → ESPERANDO_REFACCION con admin
+    √ CANCELADA → ESPERANDO_REFACCION con recepcion
+    √ CANCELADA → ESPERANDO_REFACCION con mecanicoAsignado
+    √ CANCELADA → ESPERANDO_REFACCION con mecanicoAjeno
+    √ CANCELADA → TERMINADO con admin
+    √ CANCELADA → TERMINADO con recepcion
+    √ CANCELADA → TERMINADO con mecanicoAsignado
+    √ CANCELADA → TERMINADO con mecanicoAjeno
+    √ CANCELADA → ENTREGADO con admin
+    √ CANCELADA → ENTREGADO con recepcion
+    √ CANCELADA → ENTREGADO con mecanicoAsignado
+    √ CANCELADA → ENTREGADO con mecanicoAjeno
+    √ CANCELADA → CANCELADA con admin
+    √ CANCELADA → CANCELADA con recepcion
+    √ CANCELADA → CANCELADA con mecanicoAsignado
+    √ CANCELADA → CANCELADA con mecanicoAjeno
+  orderStateMachine.transitionExists
+    √ RECIBIDO → RECIBIDO
+    √ RECIBIDO → DIAGNOSTICO
+    √ RECIBIDO → EN_REPARACION
+    √ RECIBIDO → ESPERANDO_REFACCION
+    √ RECIBIDO → TERMINADO
+    √ RECIBIDO → ENTREGADO (1 ms)
+    √ RECIBIDO → CANCELADA
+    √ DIAGNOSTICO → RECIBIDO
+    √ DIAGNOSTICO → DIAGNOSTICO
+    √ DIAGNOSTICO → EN_REPARACION
+    √ DIAGNOSTICO → ESPERANDO_REFACCION (1 ms)
+    √ DIAGNOSTICO → TERMINADO
+    √ DIAGNOSTICO → ENTREGADO
+    √ DIAGNOSTICO → CANCELADA
+    √ EN_REPARACION → RECIBIDO
+    √ EN_REPARACION → DIAGNOSTICO (1 ms)
+    √ EN_REPARACION → EN_REPARACION
+    √ EN_REPARACION → ESPERANDO_REFACCION
+    √ EN_REPARACION → TERMINADO
+    √ EN_REPARACION → ENTREGADO
+    √ EN_REPARACION → CANCELADA
+    √ ESPERANDO_REFACCION → RECIBIDO
+    √ ESPERANDO_REFACCION → DIAGNOSTICO
+    √ ESPERANDO_REFACCION → EN_REPARACION
+    √ ESPERANDO_REFACCION → ESPERANDO_REFACCION
+    √ ESPERANDO_REFACCION → TERMINADO
+    √ ESPERANDO_REFACCION → ENTREGADO
+    √ ESPERANDO_REFACCION → CANCELADA
+    √ TERMINADO → RECIBIDO
+    √ TERMINADO → DIAGNOSTICO (1 ms)
+    √ TERMINADO → EN_REPARACION
+    √ TERMINADO → ESPERANDO_REFACCION
+    √ TERMINADO → TERMINADO
+    √ TERMINADO → ENTREGADO
+    √ TERMINADO → CANCELADA (1 ms)
+    √ ENTREGADO → RECIBIDO
+    √ ENTREGADO → DIAGNOSTICO
+    √ ENTREGADO → EN_REPARACION
+    √ ENTREGADO → ESPERANDO_REFACCION
+    √ ENTREGADO → TERMINADO
+    √ ENTREGADO → ENTREGADO
+    √ ENTREGADO → CANCELADA
+    √ CANCELADA → RECIBIDO
+    √ CANCELADA → DIAGNOSTICO
+    √ CANCELADA → EN_REPARACION
+    √ CANCELADA → ESPERANDO_REFACCION
+    √ CANCELADA → TERMINADO
+    √ CANCELADA → ENTREGADO
+    √ CANCELADA → CANCELADA (1 ms)
+    √ un_estado_no_puede_pasar_a_si_mismo
+    √ entregado_y_cancelada_no_tienen_salidas (1 ms)
+    √ ignora_estados_desconocidos
+  orderStateMachine.allowedTransitions
+    √ el_mecanico_asignado_solo_ve_los_avances_del_trabajo (1 ms)
+    √ recepcion_solo_ve_cancelar_y_entregar
+    √ el_administrador_ve_la_union_de_ambos_conjuntos
+    √ un_mecanico_ajeno_no_ve_ninguna_transicion (1 ms)
+    √ las_ordenes_entregadas_o_canceladas_no_tienen_transiciones_para_nadie
+PASS tests/unit/maintenanceList.test.js
+  Listado de mantenimientos (servicio)
+    √ ordena_vencido_proximo_normal_y_deja_los_atendidos_al_final (4 ms)
+    √ filtra_por_una_o_varias_clasificaciones (1 ms)
+    √ pagina_en_memoria_con_el_total_correcto
+    √ entrega_los_filtros_de_base_de_datos_al_modelo
+    √ se_reclasifica_cuando_cambia_el_kilometraje_actual_del_vehiculo (1 ms)
+    √ los_atendidos_no_llevan_clasificacion_ni_valores_restantes (1 ms)
+PASS tests/unit/paymentService.test.js
+  Servicio de pagos: reglas de saldo
+    √ registra_un_pago_en_efectivo_como_PAGADO_dentro_de_la_transaccion_con_la_orden_bloqueada (3 ms)
+    √ rechaza_ordenes_inexistentes_con_404 (1 ms)
+    √ solo_admite_ordenes_terminadas_o_entregadas (1 ms)
+    √ una_orden_con_total_cero_no_admite_pagos
+    √ rechaza_un_importe_mayor_al_disponible_e_indica_el_saldo
+    √ acepta_exactamente_el_saldo_disponible
+    √ los_pagos_pendientes_de_mercado_pago_reservan_saldo (1 ms)
+    √ un_pago_de_mercado_pago_nace_PENDIENTE_con_enlace_y_referencia_externa (1 ms)
+    √ sin_credenciales_responde_503_sin_bloquear_la_orden_ni_crear_nada (1 ms)
+    √ si_mercado_pago_falla_no_se_crea_ningun_pago
+    √ efectivo_tarjeta_y_transferencia_nunca_llaman_a_mercado_pago (1 ms)
+PASS tests/unit/paymentValidator.test.js
+  Validación del alta de pagos
+    √ acepta_los_cuatro_metodos_de_pago (3 ms)
+    √ un_metodo_invalido_o_ausente_se_rechaza_con_mensaje_en_espanol (1 ms)
+    √ el_importe_va_de_0_01_a_99999999_99_con_hasta_dos_decimales (2 ms)
+    √ la_referencia_es_opcional_de_hasta_100_caracteres_y_vacia_pasa_a_indefinida (1 ms)
+    √ rechaza_referencias_con_forma_de_numero_de_tarjeta (1 ms)
+    √ acepta_numeros_de_autorizacion_y_de_transferencia_cortos
+PASS tests/unit/ticketBuilder.test.js
+  Armado del ticket
+    √ incluye_todos_los_datos_esperados (3 ms)
+    √ el_kilometraje_es_el_del_servicio_o_el_de_entrada_si_falta
+    √ el_subtotal_es_la_suma_de_las_lineas_y_coincide_con_el_total_de_la_orden
+    √ sin_pagos_el_estado_es_SIN_PAGOS_sin_metodos_y_con_todo_el_saldo (1 ms)
+    √ con_un_pago_parcial_el_estado_es_PARCIAL
+    √ con_varios_metodos_los_lista_una_vez_en_el_orden_en_que_se_cobraron
+    √ los_pagos_rechazados_cancelados_y_pendientes_no_cuentan (1 ms)
+    √ una_orden_con_total_cero_se_marca_SIN_COBRO
+PASS tests/unit/passwordPolicy.test.js
+  Política de contraseñas
+    √ acepta_contrasena_con_8_caracteres_mayuscula_minuscula_y_numero (3 ms)
+    √ rechaza_contrasena_de_menos_de_8_caracteres
+    √ rechaza_contrasena_sin_mayuscula (1 ms)
+    √ rechaza_contrasena_sin_minuscula
+    √ rechaza_contrasena_sin_numero
+    √ indica_en_espanol_que_requisitos_faltan
+PASS tests/unit/ticketPrint.test.js
+  Página imprimible del ticket
+    √ contiene_todos_los_datos_del_ticket (3 ms)
+    √ incluye_estilos_de_impresion_y_la_llamada_a_imprimir_y_no_tiene_menus_ni_botones
+    √ escapa_el_html_de_todo_texto_variable (1 ms)
+    √ omite_las_secciones_sin_lineas
+    √ etiquetas_de_metodos_y_estados
+    √ la_pagina_de_error_escapa_el_mensaje
+PASS tests/unit/mercadoPagoGateway.test.js
+  Pasarela de Mercado Pago
+    √ sin_token_no_esta_configurada_y_no_sale_a_la_red (4 ms)
+    √ arma_la_preferencia_con_importe_descripcion_y_referencia_y_devuelve_el_enlace_de_pruebas (2 ms)
+    √ incluye_la_direccion_de_notificaciones_solo_si_esta_configurada
+    √ traduce_errores_de_red_y_respuestas_fallidas_a_MP_UNAVAILABLE_sin_exponer_el_token (2 ms)
+    √ usa_un_tiempo_de_espera_para_no_quedar_colgado (1 ms)
+    √ consulta_un_pago_y_lo_traduce_a_la_forma_interna (1 ms)
+    √ un_pago_inexistente_devuelve_null_y_un_identificador_invalido_ni_siquiera_consulta
+    √ busca_por_referencia_codificandola_y_devuelve_el_mas_reciente (1 ms)
+PASS tests/unit/webhookVerifier.test.js
+  Lectura de notificaciones de Mercado Pago
+    √ lee_el_tipo_y_el_identificador_del_cuerpo (2 ms)
+    √ lee_el_formato_con_parametros_en_la_direccion
+    √ otros_tipos_de_notificacion_se_reconocen_sin_identificador (1 ms)
+    √ las_notificaciones_mal_formadas_devuelven_null (1 ms)
+  Firma de las notificaciones
+    √ acepta_una_firma_valida (1 ms)
+    √ rechaza_firmas_alteradas_de_otro_secreto_o_de_otro_pago
+    √ rechaza_encabezados_ausentes_o_incompletos
+PASS tests/unit/maintenanceClassifier.test.js
+  Clasificación de mantenimientos: fechas
+    √ una_fecha_de_ayer_esta_vencida (1 ms)
+    √ una_fecha_de_hoy_es_proxima_y_no_vencida
+    √ a_15_dias_es_proximo
+    √ a_16_dias_es_normal
+    √ cuenta_bien_el_cambio_de_mes_y_de_anio
+    √ acepta_objetos_Date_de_la_base_de_datos
+  Clasificación de mantenimientos: kilometraje
+    √ con_501_km_por_recorrer_es_normal
+    √ con_500_km_por_recorrer_es_proximo
+    √ con_1_km_por_recorrer_es_proximo
+    √ al_alcanzar_el_kilometraje_esta_vencido
+    √ al_superar_el_kilometraje_esta_vencido_con_valor_negativo (1 ms)
+  Clasificación de mantenimientos: fecha y kilometraje juntos
+    √ gana_la_condicion_mas_urgente_vencido_por_km_aunque_la_fecha_sea_lejana
+    √ gana_la_fecha_vencida_aunque_falte_mucho_kilometraje
+    √ es_proximo_si_solo_una_de_las_dos_condiciones_esta_cerca (1 ms)
+    √ es_normal_si_ambas_estan_lejos
+  Orden por urgencia
+    √ ordena_vencido_proximo_normal
+    √ dentro_de_un_grupo_el_mas_urgente_va_primero
+    √ el_vencido_hace_mas_tiempo_va_primero_y_los_empates_se_desempatan_por_id
+    √ la_urgencia_sin_valores_es_infinita (1 ms)
+  hoyLocal
+    √ da_la_fecha_local_con_ceros_a_la_izquierda
+PASS tests/unit/serializers.test.js
+  Serializador de refacciones por rol
+    √ el_administrador_ve_el_precio_de_compra (2 ms)
+    √ mecanico_y_recepcion_no_reciben_el_campo_purchasePrice (1 ms)
+    √ sin_usuario_tampoco_se_envia_el_precio_de_compra_y_no_modifica_el_original
+PASS tests/unit/paymentSummary.test.js
+  Resumen de cobro de una orden
+    √ sin_pagos_el_estado_es_SIN_PAGOS_y_todo_el_total_esta_disponible (1 ms)
+    √ un_pago_parcial_deja_el_estado_PARCIAL_y_el_saldo_pendiente (1 ms)
+    √ pagos_por_el_total_dejan_la_orden_PAGADA_sin_saldo
+    √ un_pago_pendiente_reserva_saldo_pero_no_cuenta_como_pagado (1 ms)
+    √ un_pago_pendiente_por_todo_el_saldo_no_deja_disponible_pero_la_orden_sigue_sin_pagos
+    √ con_total_cero_el_estado_es_SIN_COBRO_y_no_hay_nada_disponible
+    √ los_centavos_no_acumulan_error_de_redondeo
+PASS tests/unit/money.test.js
+  Aritmética de importes en centavos
+    √ convierte_importes_a_centavos_enteros_sin_error_de_punto_flotante (1 ms)
+    √ 0_1_mas_0_2_es_exactamente_0_30 (1 ms)
+    √ formatea_centavos_con_dos_decimales_y_ceros
+    √ suma_listas_de_importes_grandes_y_vacias (1 ms)
+Test Suites: 75 passed, 75 total
+Tests:       1240 passed, 1240 total
+Snapshots:   0 total
+Time:        72.585 s, estimated 76 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

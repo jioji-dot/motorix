@@ -1,0 +1,411 @@
+# Salida de las pruebas del frontend (flutter test)
+# Fecha: 2026-10-19 04:34  ·  Comando: flutter test (en client/)
+
+00:00 +0: loading C:/GPS/motorix/client/test/layout_responsive_test.dart
+00:00 +0: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:01 +0: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Acceso a la sección Citas el_mecanico_no_ve_la_seccion_citas
+00:01 +1: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:01 +1: C:/GPS/motorix/client/test/screens/clients_screen_test.dart: Lista de clientes muestra_los_clientes_devueltos_por_la_api
+00:01 +2: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:01 +3: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +3: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Acceso a la sección Citas recepcion_y_administrador_si_ven_la_seccion_citas
+00:02 +4: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +5: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +6: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +6: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Tarjetas del panel muestra_las_ordenes_por_estado_y_las_que_tienen_saldo_por_cobrar
+00:02 +7: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +8: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +9: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +10: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +10: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Agenda de citas muestra_las_citas_con_cliente_placas_y_estado
+00:02 +11: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +12: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +12: C:/GPS/motorix/client/test/screens/clients_screen_test.dart: Lista de clientes el_mecanico_no_ve_el_boton_de_registrar_cliente
+00:02 +13: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +14: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:02 +14: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Tarjetas del panel muestra_lo_cobrado_hoy_en_el_mes_y_lo_pendiente_de_cobrar
+00:02 +15: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +16: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +17: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +17: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Agenda de citas muestra_el_estado_vacio_con_la_accion_de_registrar
+00:03 +18: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +18: C:/GPS/motorix/client/test/screens/clients_screen_test.dart: Lista de clientes envia_el_texto_de_busqueda_a_la_api
+00:03 +19: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +19: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Programar desde una orden terminada el_boton_precarga_el_vehiculo_la_fecha_y_el_kilometraje_del_servicio
+00:03 +20: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +20: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Tarjetas del panel muestra_las_citas_de_hoy_las_proximas_y_las_siguientes_con_su_detalle
+00:03 +21: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +21: C:/GPS/motorix/client/test/screens/maintenance_screen_test.dart: Lista de mantenimientos muestra_la_clasificacion_el_cliente_y_su_telefono_de_contacto
+00:03 +22: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +23: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +23: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Agenda de citas muestra_el_error_de_la_api_con_reintentar
+00:03 +24: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +25: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +26: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +26: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Tarjetas del panel muestra_los_mantenimientos_vencidos_y_proximos
+00:03 +27: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +27: C:/GPS/motorix/client/test/screens/maintenance_screen_test.dart: Lista de mantenimientos recepcion_solo_consulta_y_no_ve_programar_ni_editar
+00:03 +28: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:03 +29: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +29: C:/GPS/motorix/client/test/screens/maintenance_screen_test.dart: Lista de mantenimientos el_rol_MECHANIC_puede_programar_y_editar
+00:04 +30: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +30: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Tarjetas del panel muestra_las_alertas_de_inventario_con_las_refacciones_mas_urgentes
+00:04 +31: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +31: C:/GPS/motorix/client/test/screens/clients_screen_test.dart: Formulario de cliente registra_el_cliente_y_regresa_a_la_lista_con_aviso_de_exito
+00:04 +32: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +33: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +33: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Programar desde una orden terminada guarda_con_la_orden_de_origen_y_los_valores_capturados
+00:04 +34: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +34: C:/GPS/motorix/client/test/screens/maintenance_screen_test.dart: Lista de mantenimientos el_rol_MECHANIC_puede_programar_y_editar
+00:04 +35: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +35: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Agenda de citas el_filtro_de_estado_y_la_busqueda_se_envian_a_la_api
+00:04 +36: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +37: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +37: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Navegación desde las tarjetas tocar_tarjeta-ordenes_lleva_a_su_modulo
+00:04 +38: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +38: C:/GPS/motorix/client/test/screens/clients_screen_test.dart: Formulario de cliente pide_confirmacion_si_el_telefono_ya_existe_y_reenvia_confirmado
+00:04 +39: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +39: C:/GPS/motorix/client/test/screens/maintenance_screen_test.dart: Lista de mantenimientos el_rol_ADMIN_puede_programar_y_editar
+00:04 +40: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1400_y_barra_expandida_o_colapsada
+00:04 +41: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Programar desde una orden terminada recepcion_no_ve_el_boton_de_programar
+00:04 +42: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Formulario de cita exige_cliente_vehiculo_y_motivo_en_espanol
+00:05 +43: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Navegación desde las tarjetas tocar_tarjeta-cobros_lleva_a_su_modulo
+00:05 +44: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Navegación desde las tarjetas tocar_tarjeta-cobros_lleva_a_su_modulo
+00:05 +45: C:/GPS/motorix/client/test/screens/maintenance_screen_test.dart: Lista de mantenimientos el_filtro_pide_al_servidor_las_clasificaciones_elegidas
+00:05 +45: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Programar desde una orden terminada una_orden_en_curso_no_ofrece_programar_mantenimiento
+00:05 +46: C:/GPS/motorix/client/test/screens/maintenance_screen_test.dart: Lista de mantenimientos el_filtro_pide_al_servidor_las_clasificaciones_elegidas
+00:05 +47: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:05 +47: C:/GPS/motorix/client/test/screens/clients_screen_test.dart: Detalle de cliente muestra_los_datos_y_los_vehiculos_asociados
+00:05 +48: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:05 +48: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Navegación desde las tarjetas tocar_tarjeta-citas_lleva_a_su_modulo
+00:05 +49: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:05 +49: C:/GPS/motorix/client/test/screens/clients_screen_test.dart: Detalle de cliente el_mecanico_ve_el_detalle_sin_acciones_de_edicion
+00:05 +50: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:05 +50: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Programar desde una orden terminada tambien_se_ofrece_en_una_orden_entregada
+00:05 +51: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:05 +51: C:/GPS/motorix/client/test/screens/maintenance_screen_test.dart: Lista de mantenimientos buscar_envia_el_texto_al_servidor
+00:05 +52: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:06 +52: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Formulario de cita registra_la_cita_eligiendo_cliente_y_vehiculo_del_cliente
+00:06 +53: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:06 +53: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Navegación desde las tarjetas tocar_tarjeta-mantenimientos_lleva_a_su_modulo
+00:06 +54: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:06 +54: C:/GPS/motorix/client/test/screens/maintenance_screen_test.dart: Lista de mantenimientos sin_mantenimientos_muestra_el_estado_vacio
+00:06 +55: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:06 +55: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Validaciones del formulario exige_el_cliente_el_vehiculo_el_tipo_de_servicio_y_los_datos_del_ultimo_servicio
+00:06 +56: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:06 +56: C:/GPS/motorix/client/test/screens/dashboard_cards_test.dart: Navegación desde las tarjetas tocar_tarjeta-inventario_lleva_a_su_modulo
+00:06 +57: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:06 +58: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:06 +58: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Formulario de cita pide_confirmacion_si_hay_una_cita_duplicada_y_reenvia_confirmado
+00:06 +59: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:06 +59: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Validaciones del formulario sin_proxima_fecha_ni_proximo_kilometraje_se_rechaza_con_un_mensaje_claro
+00:06 +60: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_1000_y_barra_expandida_o_colapsada
+00:07 +61: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago inicia_el_pago_y_muestra_el_enlace_el_codigo_QR_y_el_estado_Pendiente
+00:07 +61: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Formulario de cita muestra_el_mensaje_de_la_api_cuando_la_fecha_es_pasada
+00:07 +62: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago inicia_el_pago_y_muestra_el_enlace_el_codigo_QR_y_el_estado_Pendiente
+00:07 +62: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Lista de órdenes muestra_folio_cliente_placas_mecanico_estado_y_total
+00:07 +63: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago inicia_el_pago_y_muestra_el_enlace_el_codigo_QR_y_el_estado_Pendiente
+00:07 +63: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Validaciones del formulario la_proxima_fecha_no_puede_ser_anterior_y_el_proximo_kilometraje_debe_ser_mayor
+00:07 +64: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago inicia_el_pago_y_muestra_el_enlace_el_codigo_QR_y_el_estado_Pendiente
+00:07 +65: C:/GPS/motorix/client/test/screens/order_form_screen_test.dart: Formulario de orden exige_cliente_vehiculo_mecanico_kilometraje_y_problema_en_espanol
+00:07 +65: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Formulario de cita pide_confirmacion_al_salir_con_cambios_sin_guardar
+00:07 +66: C:/GPS/motorix/client/test/screens/order_form_screen_test.dart: Formulario de orden exige_cliente_vehiculo_mecanico_kilometraje_y_problema_en_espanol
+00:07 +66: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Lista de órdenes el_mecanico_sin_ordenes_ve_un_estado_vacio_que_lo_explica
+00:07 +67: C:/GPS/motorix/client/test/screens/order_form_screen_test.dart: Formulario de orden exige_cliente_vehiculo_mecanico_kilometraje_y_problema_en_espanol
+00:07 +67: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Validaciones del formulario rechaza_fechas_con_formato_invalido_o_inexistentes
+00:07 +68: C:/GPS/motorix/client/test/screens/order_form_screen_test.dart: Formulario de orden exige_cliente_vehiculo_mecanico_kilometraje_y_problema_en_espanol
+00:08 +69: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:08 +69: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Detalle de la cita confirma_una_cita_pendiente
+00:08 +70: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:08 +70: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Lista de órdenes recepcion_sin_ordenes_ve_el_estado_vacio_con_la_accion_de_crear
+00:08 +71: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:08 +72: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:08 +72: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Validaciones del formulario muestra_el_mensaje_de_la_api_si_el_servidor_rechaza_los_datos
+00:08 +73: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:08 +73: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago el_boton_copiar_pone_el_enlace_en_el_portapapeles_y_abrir_lo_abre_en_el_navegador
+00:08 +74: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:08 +74: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Detalle de la cita cancelar_pide_confirmacion_y_conserva_la_cita_si_se_arrepiente
+00:08 +75: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:08 +75: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Lista de órdenes el_mecanico_ve_las_ordenes_pero_no_el_boton_de_nueva_orden
+00:08 +76: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:08 +76: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Detalle de la cita una_cita_con_orden_no_ofrece_cancelar_y_explica_por_que
+00:08 +77: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:08 +77: C:/GPS/motorix/client/test/screens/maintenance_form_test.dart: Validaciones del formulario salir_con_cambios_pide_confirmacion
+00:08 +78: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_secciones_no_desbordan_con_ancho_760_y_barra_expandida_o_colapsada
+00:09 +79: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden muestra_las_refacciones_usadas_con_precio_importe_y_total
+00:09 +79: C:/GPS/motorix/client/test/screens/appointments_screen_test.dart: Detalle de la cita las_citas_canceladas_o_completadas_son_de_solo_lectura
+00:09 +80: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden muestra_las_refacciones_usadas_con_precio_importe_y_total
+00:09 +81: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden muestra_las_refacciones_usadas_con_precio_importe_y_total
+00:09 +81: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Lista de órdenes el_filtro_de_estado_y_la_busqueda_se_envian_a_la_api
+00:09 +82: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden muestra_las_refacciones_usadas_con_precio_importe_y_total
+00:09 +82: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago el_pago_pendiente_reserva_saldo_y_se_lista_con_sus_acciones
+00:09 +83: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden muestra_las_refacciones_usadas_con_precio_importe_y_total
+00:09 +84: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden muestra_el_resumen_de_cobro_y_los_pagos_registrados
+00:09 +85: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden muestra_el_resumen_de_cobro_y_los_pagos_registrados
+00:09 +85: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Lista de órdenes muestra_el_error_de_la_api_con_reintentar
+00:09 +86: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden muestra_el_resumen_de_cobro_y_los_pagos_registrados
+00:09 +87: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:09 +87: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago actualizar_estado_pasa_el_pago_a_Pagado_cuando_mercado_pago_lo_confirma
+00:09 +88: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:09 +88: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden sin_refacciones_dice_que_no_hay_registradas
+00:09 +89: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +90: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +90: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Lista de órdenes nueva_orden_abre_el_formulario
+00:10 +91: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +91: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago si_mercado_pago_aun_no_confirma_el_pago_sigue_Pendiente_y_lo_avisa
+00:10 +92: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +93: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +93: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden sin_pagos_dice_que_no_hay_registrados_y_el_estado_es_Sin_pagos
+00:10 +94: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +94: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden el_mecanico_asignado_y_el_administrador_pueden_agregar
+00:10 +95: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +96: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +96: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago cancelar_pide_confirmacion_libera_el_saldo_y_conserva_el_pago_como_Cancelado
+00:10 +97: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +97: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Detalle de la orden muestra_los_datos_el_trabajo_el_total_y_el_historial
+00:10 +98: C:/GPS/motorix/client/test/layout_responsive_test.dart: los_formularios_y_el_detalle_no_desbordan_en_una_ventana_angosta
+00:10 +99: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:10 +99: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden el_rol_RECEPTIONIST_ve_el_bloque_y_el_boton_de_registrar
+00:10 +100: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:10 +100: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago sin_configurar_muestra_el_mensaje_en_espanol_y_permite_cobrar_con_otro_metodo
+00:10 +100: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden recepcion_y_otro_mecanico_no_ven_las_acciones
+00:10 +101: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:11 +101: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Detalle de la orden sin_diagnostico_ni_lineas_muestra_textos_que_lo_indican
+00:11 +102: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:11 +102: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden la_orden_TERMINADO_muestra_las_refacciones_solo_en_lectura
+00:11 +103: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:11 +103: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden el_rol_ADMIN_ve_el_bloque_y_el_boton_de_registrar
+00:11 +104: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:11 +104: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago sin_configurar_muestra_el_mensaje_en_espanol_y_permite_cobrar_con_otro_metodo
+00:11 +105: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:11 +105: C:/GPS/motorix/client/test/screens/orders_screen_test.dart: Detalle de la orden muestra_el_motivo_cuando_la_orden_esta_cancelada
+00:11 +106: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:11 +106: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden la_orden_ENTREGADO_muestra_las_refacciones_solo_en_lectura
+00:11 +107: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:11 +107: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden el_mecanico_no_ve_el_bloque_de_pagos
+00:11 +108: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_ve_solo_los_avances_del_trabajo
+00:11 +109: C:/GPS/motorix/client/test/screens/order_work_test.dart: Quién puede documentar el_mecanico_asignado_ve_las_acciones_de_documentacion_en_una_orden_en_curso
+00:11 +109: C:/GPS/motorix/client/test/screens/mercadopago_payment_test.dart: Cobro con Mercado Pago si_mercado_pago_no_responde_avisa_y_no_crea_ningun_pago
+00:11 +110: C:/GPS/motorix/client/test/screens/order_work_test.dart: Quién puede documentar el_mecanico_asignado_ve_las_acciones_de_documentacion_en_una_orden_en_curso
+00:12 +110: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Bloque de refacciones de la orden la_orden_CANCELADA_muestra_las_refacciones_solo_en_lectura
+00:12 +111: C:/GPS/motorix/client/test/screens/order_work_test.dart: Quién puede documentar el_mecanico_asignado_ve_las_acciones_de_documentacion_en_una_orden_en_curso
+00:12 +112: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_1400
+00:12 +112: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden una_orden_en_curso_no_muestra_pagos
+00:12 +113: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_1400
+00:12 +113: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado recepcion_ve_cancelar_pero_no_los_avances_del_trabajo
+00:12 +114: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_1400
+00:12 +115: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo el_resumen_cuenta_las_refacciones_con_stock_bajo_y_agotadas
+00:12 +115: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden una_orden_entregada_sigue_admitiendo_cobros
+00:12 +116: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo el_resumen_cuenta_las_refacciones_con_stock_bajo_y_agotadas
+00:12 +116: C:/GPS/motorix/client/test/screens/order_work_test.dart: Quién puede documentar recepcion_no_ve_la_documentacion_pero_si_editar_los_datos_de_la_orden
+00:12 +117: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo el_resumen_cuenta_las_refacciones_con_stock_bajo_y_agotadas
+00:12 +117: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Selector de refacción busca_y_agrega_la_refaccion_con_la_cantidad_y_actualiza_el_total
+00:12 +118: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo el_resumen_cuenta_las_refacciones_con_stock_bajo_y_agotadas
+00:12 +118: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado recepcion_ve_entregar_cuando_la_orden_esta_terminada
+00:12 +119: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo el_resumen_cuenta_las_refacciones_con_stock_bajo_y_agotadas
+00:12 +119: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Bloque de pagos del detalle de la orden una_orden_pagada_completa_ya_no_ofrece_registrar_pagos
+00:12 +120: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo el_resumen_cuenta_las_refacciones_con_stock_bajo_y_agotadas
+00:13 +120: C:/GPS/motorix/client/test/screens/order_work_test.dart: Quién puede documentar otro_mecanico_no_ve_las_acciones_de_documentacion
+00:13 +121: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo el_resumen_cuenta_las_refacciones_con_stock_bajo_y_agotadas
+00:13 +122: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:13 +122: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado el_mecanico_no_ve_acciones_en_una_orden_terminada
+00:13 +123: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:13 +123: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Selector de refacción advierte_si_el_stock_es_bajo_y_limita_la_cantidad_al_disponible
+00:13 +124: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:13 +124: C:/GPS/motorix/client/test/screens/order_work_test.dart: Quién puede documentar el_administrador_puede_documentar_cualquier_orden_en_curso
+00:13 +125: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:13 +125: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo las_filas_muestran_la_marca_de_cada_nivel_incluido_el_limite_exacto
+00:13 +126: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:13 +126: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Registrar un pago el_importe_viene_con_el_saldo_disponible_y_el_pago_se_envia_y_actualiza_el_resumen
+00:13 +127: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:13 +127: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado la_orden_ENTREGADO_no_ofrece_ninguna_accion_de_estado
+00:13 +128: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:13 +128: C:/GPS/motorix/client/test/screens/order_work_test.dart: Quién puede documentar la_orden_en_estado_TERMINADO_es_de_solo_lectura_para_el_mecanico_asignado
+00:13 +129: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:14 +129: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Selector de refacción una_refaccion_agotada_aparece_marcada_y_no_se_puede_elegir
+00:14 +130: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:14 +130: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo sin_alertas_el_resumen_dice_que_todo_el_stock_esta_en_orden
+00:14 +131: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:14 +131: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_1000
+00:14 +132: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:14 +132: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado la_orden_CANCELADA_no_ofrece_ninguna_accion_de_estado
+00:14 +133: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:14 +133: C:/GPS/motorix/client/test/screens/order_work_test.dart: Quién puede documentar la_orden_en_estado_ENTREGADO_es_de_solo_lectura_para_el_mecanico_asignado
+00:14 +134: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:14 +134: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Registrar un pago el_pago_por_el_saldo_deja_la_orden_Pagada
+00:14 +135: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_administrador_ve_las_refacciones_con_precio_de_compra_y_el_boton_de_registrar
+00:14 +136: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago ofrece_efectivo_tarjeta_transferencia_y_mercado_pago
+00:14 +136: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Selector de refacción la_cantidad_debe_ser_un_entero_mayor_a_cero
+00:14 +137: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago ofrece_efectivo_tarjeta_transferencia_y_mercado_pago
+00:14 +137: C:/GPS/motorix/client/test/screens/order_status_test.dart: Acciones según el rol y el estado desde_esperando_refaccion_el_boton_se_llama_reanudar_reparacion
+00:14 +138: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago ofrece_efectivo_tarjeta_transferencia_y_mercado_pago
+00:14 +138: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo el_filtro_stock_bajo_pide_al_servidor_solo_las_alertas
+00:14 +139: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago ofrece_efectivo_tarjeta_transferencia_y_mercado_pago
+00:14 +139: C:/GPS/motorix/client/test/screens/order_work_test.dart: Quién puede documentar la_orden_en_estado_CANCELADA_es_de_solo_lectura_para_el_mecanico_asignado
+00:14 +140: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago ofrece_efectivo_tarjeta_transferencia_y_mercado_pago
+00:14 +140: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_rol_MECHANIC_consulta_sin_precio_de_compra_ni_boton_de_registrar
+00:14 +141: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago ofrece_efectivo_tarjeta_transferencia_y_mercado_pago
+00:14 +141: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo el_filtro_sin_resultados_muestra_el_estado_vacio_filtrado
+00:14 +142: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago ofrece_efectivo_tarjeta_transferencia_y_mercado_pago
+00:15 +142: C:/GPS/motorix/client/test/screens/order_status_test.dart: Avanzar el trabajo el_mecanico_inicia_el_diagnostico_y_se_actualizan_el_estado_y_el_historial
+00:15 +143: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago ofrece_efectivo_tarjeta_transferencia_y_mercado_pago
+00:15 +143: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Selector de refacción si_el_servidor_rechaza_por_stock_insuficiente_muestra_su_mensaje
+00:15 +144: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago ofrece_efectivo_tarjeta_transferencia_y_mercado_pago
+00:15 +145: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_760
+00:15 +145: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Registrar un pago valida_el_metodo_obligatorio_y_los_importes_invalidos_en_espanol
+00:15 +146: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_760
+00:15 +146: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones el_rol_RECEPTIONIST_consulta_sin_precio_de_compra_ni_boton_de_registrar
+00:15 +147: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_760
+00:15 +147: C:/GPS/motorix/client/test/screens/order_work_test.dart: Diagnóstico, observaciones y recomendaciones guarda_el_diagnostico_las_observaciones_y_las_recomendaciones
+00:15 +148: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_760
+00:15 +149: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo al_registrar_una_entrada_que_supera_el_minimo_la_alerta_desaparece
+00:15 +149: C:/GPS/motorix/client/test/screens/order_status_test.dart: Avanzar el trabajo si_falta_diagnostico_o_servicios_muestra_el_mensaje_de_la_api
+00:15 +150: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo al_registrar_una_entrada_que_supera_el_minimo_la_alerta_desaparece
+00:15 +150: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Selector de refacción buscar_envia_el_texto_y_solo_pide_refacciones_activas
+00:15 +151: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo al_registrar_una_entrada_que_supera_el_minimo_la_alerta_desaparece
+00:15 +152: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo al_registrar_una_entrada_que_supera_el_minimo_la_alerta_desaparece
+00:15 +152: C:/GPS/motorix/client/test/screens/order_payments_test.dart: Registrar un pago si_el_saldo_cambio_el_mensaje_de_la_api_se_muestra_y_se_recarga_el_resumen
+00:15 +153: C:/GPS/motorix/client/test/screens/parts_alerts_test.dart: Alertas de stock bajo al_registrar_una_entrada_que_supera_el_minimo_la_alerta_desaparece
+00:15 +154: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago registra_un_pago_con_EFECTIVO_y_conserva_el_metodo_en_la_lista
+00:15 +154: C:/GPS/motorix/client/test/screens/order_work_test.dart: Diagnóstico, observaciones y recomendaciones cancelar_la_edicion_con_cambios_pide_confirmacion
+00:15 +155: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago registra_un_pago_con_EFECTIVO_y_conserva_el_metodo_en_la_lista
+00:15 +155: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Cambiar y quitar refacciones cambiar_la_cantidad_envia_la_nueva_y_actualiza_el_total
+00:15 +156: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago registra_un_pago_con_EFECTIVO_y_conserva_el_metodo_en_la_lista
+00:16 +156: C:/GPS/motorix/client/test/screens/order_status_test.dart: Entregar pide_confirmacion_y_solo_entonces_entrega
+00:16 +157: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago registra_un_pago_con_EFECTIVO_y_conserva_el_metodo_en_la_lista
+00:16 +157: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones buscar_envia_el_texto_al_servidor_y_muestra_el_estado_sin_resultados
+00:16 +158: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago registra_un_pago_con_EFECTIVO_y_conserva_el_metodo_en_la_lista
+00:16 +159: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_600
+00:16 +159: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Cambiar y quitar refacciones quitar_pide_confirmacion_y_regresa_las_piezas
+00:16 +160: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_600
+00:16 +160: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Lista de refacciones muestra_un_error_en_espanol_con_reintentar_si_falla_la_carga
+00:16 +161: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_3_no_desbordan_con_ancho_600
+00:16 +162: C:/GPS/motorix/client/test/screens/order_work_test.dart: Servicios valida_la_descripcion_y_el_importe_en_espanol
+00:16 +163: C:/GPS/motorix/client/test/screens/order_status_test.dart: Cancelar la orden exige_un_motivo_y_lo_envia_a_la_api
+00:16 +164: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago registra_un_pago_con_TARJETA_y_conserva_el_metodo_en_la_lista
+00:16 +164: C:/GPS/motorix/client/test/screens/order_parts_test.dart: Cambiar y quitar refacciones cancelar_la_confirmacion_no_quita_nada
+00:16 +165: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago registra_un_pago_con_TARJETA_y_conserva_el_metodo_en_la_lista
+00:16 +166: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Formulario de refacción valida_los_campos_obligatorios_con_mensajes_en_espanol
+00:17 +166: C:/GPS/motorix/client/test/screens/order_status_test.dart: Cancelar la orden cancelar_el_dialogo_no_modifica_la_orden
+00:17 +167: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Formulario de refacción valida_los_campos_obligatorios_con_mensajes_en_espanol
+00:17 +167: C:/GPS/motorix/client/test/screens/order_work_test.dart: Servicios agrega_un_servicio_y_el_total_se_actualiza_en_pantalla
+00:17 +168: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Formulario de refacción valida_los_campos_obligatorios_con_mensajes_en_espanol
+00:17 +169: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_4_no_desbordan_con_ancho_1400
+00:17 +170: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:17 +170: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Selector de método de pago registra_un_pago_con_TRANSFERENCIA_y_conserva_el_metodo_en_la_lista
+00:17 +171: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:17 +171: C:/GPS/motorix/client/test/screens/order_status_test.dart: Cambios simultáneos ante_STATE_CONFLICT_avisa_y_recarga_la_orden
+00:17 +172: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:17 +172: C:/GPS/motorix/client/test/screens/order_work_test.dart: Servicios edita_un_servicio_y_actualiza_el_total
+00:17 +173: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:17 +173: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Formulario de refacción valida_el_stock_minimo_y_los_precios
+00:17 +174: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:17 +174: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Referencia del pago la_etiqueta_cambia_segun_el_metodo_y_no_pide_datos_de_tarjeta
+00:17 +175: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:17 +175: C:/GPS/motorix/client/test/screens/order_work_test.dart: Servicios quitar_un_servicio_pide_confirmacion
+00:17 +176: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:17 +176: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_4_no_desbordan_con_ancho_1000
+00:17 +177: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:18 +178: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:18 +178: C:/GPS/motorix/client/test/screens/order_work_test.dart: Mano de obra valida_horas_y_tarifa
+00:18 +179: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:18 +179: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Referencia del pago rechaza_una_referencia_con_forma_de_numero_de_tarjeta_y_una_demasiado_larga
+00:18 +180: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:18 +181: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:18 +181: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Formulario de refacción guarda_la_refaccion_con_existencia_inicial_y_regresa_a_la_lista
+00:18 +182: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:18 +182: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_4_no_desbordan_con_ancho_760
+00:18 +183: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:18 +184: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket genera_el_ticket_y_muestra_todos_los_datos
+00:18 +185: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos muestra_los_vehiculos_con_placas_y_propietario
+00:18 +185: C:/GPS/motorix/client/test/screens/order_work_test.dart: Mano de obra agrega_mano_de_obra_y_muestra_el_importe_calculado_y_el_total
+00:18 +186: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos muestra_los_vehiculos_con_placas_y_propietario
+00:19 +186: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Referencia del pago acepta_un_numero_de_autorizacion_corto_y_lo_envia
+00:19 +187: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos muestra_los_vehiculos_con_placas_y_propietario
+00:19 +187: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Lista de usuarios muestra_nombre_usuario_rol_y_estado
+00:19 +188: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos muestra_los_vehiculos_con_placas_y_propietario
+00:19 +188: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_pantallas_del_sprint_4_no_desbordan_con_ancho_600
+00:19 +189: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos muestra_los_vehiculos_con_placas_y_propietario
+00:19 +189: C:/GPS/motorix/client/test/screens/order_work_test.dart: Mano de obra quitar_mano_de_obra_pide_confirmacion_y_recalcula
+00:19 +190: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos muestra_los_vehiculos_con_placas_y_propietario
+00:19 +190: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Formulario de refacción un_codigo_repetido_muestra_el_error_en_el_campo_codigo
+00:19 +191: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos muestra_los_vehiculos_con_placas_y_propietario
+00:19 +191: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket sin_pagos_el_estado_es_Pendiente_y_no_hay_metodo
+00:19 +192: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos muestra_los_vehiculos_con_placas_y_propietario
+00:19 +193: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:19 +193: C:/GPS/motorix/client/test/screens/payment_methods_test.dart: Referencia del pago con_mercado_pago_no_se_pide_referencia_y_se_explica_el_enlace
+00:19 +194: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:19 +195: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:19 +195: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos muestra_el_estado_vacio_con_la_accion_de_registrar
+00:19 +196: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:19 +196: C:/GPS/motorix/client/test/layout_responsive_test.dart: las_acciones_y_los_dialogos_de_la_orden_no_desbordan_en_una_ventana_angosta
+00:19 +197: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:19 +197: C:/GPS/motorix/client/test/screens/order_work_test.dart: Datos de la orden (recepción) recepcion_reasigna_el_mecanico_y_corrige_el_problema_reportado
+00:19 +198: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:19 +198: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Formulario de refacción salir_con_cambios_pide_confirmacion
+00:19 +199: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:19 +200: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:19 +200: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket con_un_pago_parcial_el_estado_es_Pago_parcial_y_muestra_el_saldo
+00:19 +201: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:20 +201: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos el_mecanico_consulta_pero_no_ve_el_boton_de_registrar
+00:20 +202: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:20 +202: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Detalle de refacción y movimientos muestra_los_datos_y_el_historial_de_movimientos
+00:20 +203: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:20 +203: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Formulario de usuario valida_usuario_correo_y_politica_de_contrasena_en_espanol
+00:20 +204: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo muestra_los_servicios_del_mas_reciente_al_mas_antiguo_con_su_detalle
+00:20 +205: C:/GPS/motorix/client/test/screens/order_work_test.dart: Errores de la API si_la_orden_ya_no_esta_en_curso_se_muestra_el_mensaje_de_la_api
+00:20 +206: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket generar_de_nuevo_conserva_el_mismo_folio
+00:20 +207: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos envia_el_texto_de_busqueda_a_la_api
+00:20 +207: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Detalle de refacción y movimientos el_rol_MECHANIC_solo_consulta_y_no_ve_el_precio_de_compra
+00:20 +208: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Lista de vehículos envia_el_texto_de_busqueda_a_la_api
+00:20 +209: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Formulario de usuario crea_el_usuario_con_el_rol_elegido
+00:20 +209: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo el_rol_ADMIN_puede_abrir_el_historial
+00:20 +210: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Formulario de usuario crea_el_usuario_con_el_rol_elegido
+00:20 +210: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Detalle de refacción y movimientos el_rol_RECEPTIONIST_solo_consulta_y_no_ve_el_precio_de_compra
+00:20 +211: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Formulario de usuario crea_el_usuario_con_el_rol_elegido
+00:21 +211: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket imprimir_pide_el_enlace_y_lo_abre_en_el_navegador
+00:21 +212: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Formulario de usuario crea_el_usuario_con_el_rol_elegido
+00:21 +213: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo exige_el_propietario_y_no_envia_nada_si_falta
+00:21 +213: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo el_rol_MECHANIC_puede_abrir_el_historial
+00:21 +214: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo exige_el_propietario_y_no_envia_nada_si_falta
+00:21 +215: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Detalle de refacción y movimientos el_ajuste_muestra_el_stock_resultante_y_rechaza_dejarlo_negativo
+00:21 +215: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket si_no_se_puede_abrir_el_navegador_avisa_en_espanol
+00:21 +216: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Detalle de refacción y movimientos el_ajuste_muestra_el_stock_resultante_y_rechaza_dejarlo_negativo
+00:21 +217: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Formulario de usuario muestra_el_mensaje_cuando_el_usuario_ya_existe
+00:21 +217: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo el_rol_RECEPTIONIST_puede_abrir_el_historial
+00:21 +218: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Formulario de usuario muestra_el_mensaje_cuando_el_usuario_ya_existe
+00:21 +218: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo valida_marca_anio_y_kilometraje_en_espanol
+00:21 +219: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Formulario de usuario muestra_el_mensaje_cuando_el_usuario_ya_existe
+00:21 +220: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket si_la_api_rechaza_el_ticket_muestra_el_error_con_reintentar
+00:21 +221: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Detalle de refacción y movimientos el_motivo_y_la_cantidad_son_obligatorios
+00:21 +222: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo sin_servicios_muestra_el_estado_vacio
+00:22 +223: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo registra_el_vehiculo_eligiendo_el_propietario_en_el_selector
+00:22 +223: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Formulario de usuario en_la_edicion_el_nombre_de_usuario_no_se_puede_cambiar
+00:22 +224: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo registra_el_vehiculo_eligiendo_el_propietario_en_el_selector
+00:22 +224: C:/GPS/motorix/client/test/screens/ticket_screen_test.dart: Pantalla del ticket el_mecanico_no_ve_el_boton_de_ticket
+00:22 +225: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo registra_el_vehiculo_eligiendo_el_propietario_en_el_selector
+00:22 +225: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Historial del vehículo si_falla_la_carga_muestra_el_error_en_espanol_con_reintentar
+00:22 +226: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo registra_el_vehiculo_eligiendo_el_propietario_en_el_selector
+00:22 +226: C:/GPS/motorix/client/test/screens/parts_screen_test.dart: Detalle de refacción y movimientos desactivar_pide_confirmacion_y_reactivar_no
+00:22 +227: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo registra_el_vehiculo_eligiendo_el_propietario_en_el_selector
+00:22 +227: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Activar y desactivar usuarios desactivar_pide_confirmacion_y_solo_entonces_envia_el_cambio
+00:22 +228: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo registra_el_vehiculo_eligiendo_el_propietario_en_el_selector
+00:22 +229: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Kilometraje del servicio en la orden el_detalle_dice_que_no_esta_registrado_cuando_falta
+00:22 +230: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Activar y desactivar usuarios cancelar_la_confirmacion_no_modifica_al_usuario
+00:22 +230: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo muestra_el_mensaje_del_servidor_cuando_las_placas_ya_existen
+00:22 +230: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Activar y desactivar usuarios cancelar_la_confirmacion_no_modifica_al_usuario
+00:22 +231: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo muestra_el_mensaje_del_servidor_cuando_las_placas_ya_existen
+00:23 +231: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Activar y desactivar usuarios si_es_el_ultimo_administrador_muestra_el_mensaje_claro_de_la_api
+00:23 +231: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Kilometraje del servicio en la orden el_mecanico_asignado_lo_registra_y_se_muestra_en_el_detalle
+00:23 +232: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo muestra_el_mensaje_del_servidor_cuando_las_placas_ya_existen
+00:23 +233: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo muestra_el_mensaje_del_servidor_cuando_las_placas_ya_existen
+00:23 +234: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Kilometraje del servicio en la orden un_kilometraje_menor_al_de_entrada_muestra_el_error_y_bloquea_guardar
+00:23 +234: C:/GPS/motorix/client/test/screens/users_screen_test.dart: Activar y desactivar usuarios reactivar_a_un_usuario_inactivo_no_pide_confirmacion
+00:23 +235: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Kilometraje del servicio en la orden un_kilometraje_menor_al_de_entrada_muestra_el_error_y_bloquea_guardar
+00:23 +236: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo pide_confirmar_la_correccion_cuando_el_kilometraje_baja_y_reenvia
+00:23 +237: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Kilometraje del servicio en la orden recepcion_y_otro_mecanico_no_pueden_editarlo
+00:23 +238: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Formulario de vehículo en_la_edicion_el_propietario_no_se_puede_cambiar
+00:23 +239: C:/GPS/motorix/client/test/screens/vehicle_history_test.dart: Kilometraje del servicio en la orden una_orden_terminada_es_de_solo_lectura
+00:24 +240: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Desde el detalle del cliente registrar_vehiculo_abre_el_formulario_con_el_propietario_ya_elegido
+00:24 +241: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Detalle de vehículo muestra_los_datos_y_el_propietario
+00:24 +242: All tests passed!
