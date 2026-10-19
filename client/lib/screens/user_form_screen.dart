@@ -5,6 +5,7 @@ import '../models/user.dart';
 import '../providers/users_provider.dart';
 import '../services/api_client.dart';
 import '../utils/app_theme.dart';
+import '../widgets/button_spinner.dart';
 import '../widgets/confirm_dialog.dart';
 import '../widgets/state_views.dart';
 import 'change_password_screen.dart';
@@ -204,11 +205,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
                         FilledButton(
                           onPressed: _saving ? null : _save,
                           child: _saving
-                              ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                )
+                              ? const ButtonSpinner()
                               : const Text('Guardar'),
                         ),
                       ],

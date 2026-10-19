@@ -184,13 +184,13 @@ description: "Lista de tareas para implementar el Sprint 1: base del sistema, cl
 
 **Propósito**: Mejoras que afectan a varias historias
 
-- [ ] T071 [P] Escribir la prueba de seguridad de que ninguna ruta protegida acepta peticiones sin token ni con rol no autorizado (matriz completa de `contracts/api.md`) en `server/tests/integration/permissions.test.js`
-- [ ] T072 [P] Revisar que ninguna contraseña ni secreto aparezca en texto plano en el repositorio ni en seeds, y que `.env` no esté versionado
-- [ ] T073 [P] Verificar contra la lista de revisión de `docs/design-system.md` (sección 11) cada pantalla: tokens, transiciones suaves, estados vacío/cargando/error/éxito y confirmaciones obligatorias
-- [ ] T074 [P] Actualizar `README.md` en español con la instalación, la creación de la base local, las migraciones, los seeds, el arranque y las pruebas
-- [ ] T075 [P] Actualizar `docs/project-context.md` con las decisiones del sprint que hayan cambiado, según el principio I de la constitución
-- [ ] T076 Ejecutar la suite completa del backend (`npm test`) y del frontend (`flutter test`) y corregir fallos
-- [ ] T077 Ejecutar la validación de `quickstart.md` de principio a fin (escenarios 1 a 13) y registrar el resultado
+- [X] T071 [P] Escribir la prueba de seguridad de que ninguna ruta protegida acepta peticiones sin token ni con rol no autorizado (matriz completa de `contracts/api.md`) en `server/tests/integration/permissions.test.js`
+- [X] T072 [P] Revisar que ninguna contraseña ni secreto aparezca en texto plano en el repositorio ni en seeds, y que `.env` no esté versionado
+- [X] T073 [P] Verificar contra la lista de revisión de `docs/design-system.md` (sección 11) cada pantalla: tokens, transiciones suaves, estados vacío/cargando/error/éxito y confirmaciones obligatorias
+- [X] T074 [P] Actualizar `README.md` en español con la instalación, la creación de la base local, las migraciones, los seeds, el arranque y las pruebas
+- [X] T075 [P] Actualizar `docs/project-context.md` con las decisiones del sprint que hayan cambiado, según el principio I de la constitución
+- [X] T076 Ejecutar la suite completa del backend (`npm test`) y del frontend (`flutter test`) y corregir fallos
+- [X] T077 Ejecutar la validación de `quickstart.md` de principio a fin (escenarios 1 a 13) y registrar el resultado
 
 ---
 

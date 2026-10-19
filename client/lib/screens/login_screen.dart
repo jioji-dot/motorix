@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/api_client.dart';
 import '../utils/app_theme.dart';
+import '../widgets/button_spinner.dart';
 
 /// Inicio de sesión con un único campo de usuario o correo (aplica a todos los roles).
 class LoginScreen extends StatefulWidget {
@@ -121,11 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       FilledButton(
                         onPressed: auth.loading ? null : _submit,
                         child: auth.loading
-                            ? const SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                              )
+                            ? const ButtonSpinner()
                             : const Text('Iniciar sesión'),
                       ),
                     ],

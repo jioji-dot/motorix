@@ -10,6 +10,7 @@ import '../providers/users_provider.dart';
 import '../services/api_client.dart';
 import '../utils/app_theme.dart';
 import '../widgets/confirm_dialog.dart';
+import '../widgets/list_toolbar.dart';
 import '../widgets/state_views.dart';
 import '../widgets/status_chip.dart';
 import 'user_form_screen.dart';
@@ -83,19 +84,16 @@ class _UsersScreenState extends State<UsersScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  key: const Key('campo-busqueda'),
-                  onChanged: _onSearchChanged,
-                  decoration: const InputDecoration(
-                    hintText: 'Buscar por nombre, usuario o correo',
-                    prefixIcon: Icon(LucideIcons.search, size: 18),
-                  ),
-                ),
+          ListToolbar(
+            search: TextField(
+              key: const Key('campo-busqueda'),
+              onChanged: _onSearchChanged,
+              decoration: const InputDecoration(
+                hintText: 'Buscar por nombre, usuario o correo',
+                prefixIcon: Icon(LucideIcons.search, size: 18),
               ),
-              const SizedBox(width: AppSpacing.md),
+            ),
+            actions: [
               SizedBox(
                 width: 190,
                 child: DropdownButtonFormField<bool?>(
@@ -111,7 +109,6 @@ class _UsersScreenState extends State<UsersScreen> {
                   onChanged: (valor) => context.read<UsersProvider>().setActiveFilter(valor),
                 ),
               ),
-              const SizedBox(width: AppSpacing.md),
               FilledButton(
                 onPressed: () => _openForm(),
                 child: const Row(
@@ -119,7 +116,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   children: [
                     Icon(LucideIcons.plus, size: 18),
                     SizedBox(width: AppSpacing.sm),
-                    Text('Registrar usuario'),
+                    Flexible(child: Text('Registrar usuario', overflow: TextOverflow.ellipsis)),
                   ],
                 ),
               ),
@@ -199,9 +196,13 @@ class _UsersScreenState extends State<UsersScreen> {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
           child: Row(
             children: [
-              Text('${provider.total} usuario${provider.total == 1 ? '' : 's'}',
-                  style: Theme.of(context).textTheme.bodySmall),
-              const Spacer(),
+              Expanded(
+                child: Text(
+                  '${provider.total} usuario${provider.total == 1 ? '' : 's'}',
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
               IconButton(
                 tooltip: 'Página anterior',
                 onPressed: provider.page > 1 ? () => provider.load(page: provider.page - 1) : null,

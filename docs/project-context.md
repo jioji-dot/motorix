@@ -1272,7 +1272,7 @@ Antes de asumirlas como definitivas, el equipo debe decidir:
 -   **Librería complementaria de componentes de UI**: ninguna. Se usa
     Material 3 con tema propio, más `google_fonts`, `data_table_2` (versión
     2.6.0; la 3.x no es compatible con Flutter 3.47) y el set de íconos
-    `lucide_icons_flutter` (pendiente de confirmación del equipo).
+    `lucide_icons_flutter` (confirmado el 2026-10-19 en `/speckit-clarify`).
 -   **Reglas funcionales del Sprint 1**: MECHANIC solo consulta clientes y
     vehículos; un teléfono de cliente repetido avisa y pide confirmación; la
     placa es única y el número de serie es opcional pero único si se captura;
@@ -1291,6 +1291,29 @@ Antes de asumirlas como definitivas, el equipo debe decidir:
 
 - **Login**: se acepta usuario o correo electrónico en el mismo campo para todos los roles.
 - **Estándar de usuarios del MVP**: se fijan cuentas iniciales `admin`, `recepcion` y `mecanico` con contraseñas `Admin2026!`, `Recepcion2026!` y `Mecanico2026!` respectivamente, solo para pruebas locales. Se agrega `username` único a la entidad `User`.
+
+### Decisiones resueltas con Spec Kit para el Sprint 1 (2026-10-19)
+
+- **Interfaz** (`/speckit-clarify`): sin librería complementaria de componentes; íconos
+  `lucide_icons_flutter`; la barra lateral muestra Clientes y Vehículos a los tres roles (el mecánico solo
+  consulta) y Usuarios solo a ADMIN; la pantalla inicial es Clientes; el cambio de contraseña y el cierre de
+  sesión salen del usuario al pie de la barra. No hay Dashboard en este sprint.
+- **Entorno de base de datos**: el nombre de la base (`DB_NAME`) y el de la base de pruebas (`DB_NAME_TEST`, que
+  debe terminar en `_test`) son configurables. Si el servidor ya tiene bases con esos nombres, se usan otras
+  (en el equipo de Jorge: `motorix_sdd` y `motorix_sdd_test`). El usuario dedicado lo crea
+  `database/scripts/crear-entorno.ps1` y no modifica un usuario existente.
+- **Semillas**: las contraseñas del estándar se leen de las variables locales `SEED_PASSWORD_ADMIN`,
+  `SEED_PASSWORD_RECEPCION` y `SEED_PASSWORD_MECANICO` del `.env` (no versionado) al ejecutar `npm run seed`.
+- **Clientes**: el teléfono se guarda con 10 dígitos; un teléfono repetido responde 409 `DUPLICATE_PHONE` y se
+  acepta reenviando con `confirmDuplicatePhone: true`; desactivar es lógico (se conserva la información).
+- **Vehículos**: las placas se guardan en mayúsculas y sin espacios; el VIN, si se captura, tiene 17
+  caracteres alfanuméricos; el año va de 1950 al año actual más uno; el propietario no se cambia en este sprint;
+  bajar el kilometraje exige `mileageCorrection: true` (409 `MILEAGE_DECREASE` en caso contrario).
+- **Usuarios**: el nombre de usuario no se cambia al editar; el administrador puede restablecer la contraseña de
+  otro usuario (lo desbloquea); no se puede desactivar ni quitar el rol al último administrador activo
+  (409 `LAST_ADMIN`).
+- **Sesión**: los datos de las pantallas (providers) viven sobre el `Navigator` y se vacían al terminar la
+  sesión.
 
 CLAUDE puede proponer opciones para estas decisiones, pero no debe
 introducir dependencias grandes sin justificar su necesidad.

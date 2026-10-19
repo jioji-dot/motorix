@@ -352,8 +352,8 @@ Una pantalla se considera terminada cuando:
 
 ## 12. Decisiones pendientes
 
-- [ ] Librería complementaria de componentes (`shadcn_ui` u otra, o ninguna).
-- [ ] Set de íconos definitivo.
+- [x] Librería complementaria de componentes: ninguna (decidido el 2026-10-19 en `/speckit-clarify`).
+- [x] Set de íconos definitivo: `lucide_icons_flutter` (decidido el 2026-10-19).
 - [ ] Si habrá modo oscuro después del MVP (por ahora, solo tema claro).
 - [ ] Logotipo e identidad de Motorix.
 - [ ] Tipos exactos de gráficas del dashboard (dona, barras, línea) y qué indicadores se muestran en cada sprint.

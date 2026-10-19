@@ -1,0 +1,78 @@
+// Matriz de permisos de contracts/api.md: cada endpoint protegido se prueba con cada rol y sin token.
+import request from 'supertest';
+import { app } from '../../app.js';
+import { cerrarConexiones, crearUsuariosDePrueba, limpiarBase } from '../helpers.js';
+
+let usuarios;
+
+beforeAll(async () => {
+  await limpiarBase();
+  usuarios = await crearUsuariosDePrueba();
+});
+
+afterAll(cerrarConexiones);
+
+const TODOS = ['ADMIN', 'RECEPTIONIST', 'MECHANIC'];
+const ESCRITURA = ['ADMIN', 'RECEPTIONIST'];
+const SOLO_ADMIN = ['ADMIN'];
+
+// [método, ruta, roles permitidos]. Las escrituras se envían vacías: si el rol está permitido, la
+// petición pasa la autorización y la validación la rechaza con 400 (nunca con 401 ni 403).
+const MATRIZ = [
+  ['get', '/api/auth/me', TODOS],
+  ['post', '/api/auth/change-password', TODOS],
+  ['get', '/api/users', SOLO_ADMIN],
+  ['get', '/api/users/1', SOLO_ADMIN],
+  ['post', '/api/users', SOLO_ADMIN],
+  ['patch', '/api/users/1', SOLO_ADMIN],
+  ['get', '/api/clients', TODOS],
+  ['get', '/api/clients/1', TODOS],
+  ['post', '/api/clients', ESCRITURA],
+  ['patch', '/api/clients/1', ESCRITURA],
+  ['get', '/api/vehicles', TODOS],
+  ['get', '/api/vehicles/1', TODOS],
+  ['post', '/api/vehicles', ESCRITURA],
+  ['patch', '/api/vehicles/1', ESCRITURA],
+];
+
+const enviar = (metodo, ruta, token) => {
+  const peticion = request(app)[metodo](ruta);
+  if (token) peticion.set('Authorization', `Bearer ${token}`);
+  return ['post', 'patch'].includes(metodo) ? peticion.send({}) : peticion;
+};
+
+describe('Matriz de permisos por rol (SC-003)', () => {
+  test.each(MATRIZ)('%s %s sin token responde 401', async (metodo, ruta) => {
+    const respuesta = await enviar(metodo, ruta, null);
+    expect(respuesta.status).toBe(401);
+    expect(respuesta.body.error.code).toBe('UNAUTHENTICATED');
+  });
+
+  test.each(MATRIZ)('%s %s con un token inválido responde 401', async (metodo, ruta) => {
+    expect((await enviar(metodo, ruta, 'token.invalido.falso')).status).toBe(401);
+  });
+
+  describe.each(TODOS)('rol %s', (rol) => {
+    test.each(MATRIZ)('%s %s respeta el permiso del rol', async (metodo, ruta, permitidos) => {
+      const respuesta = await enviar(metodo, ruta, usuarios[rol].token);
+      if (permitidos.includes(rol)) {
+        expect([401, 403]).not.toContain(respuesta.status);
+      } else {
+        expect(respuesta.status).toBe(403);
+        expect(respuesta.body.error.code).toBe('FORBIDDEN');
+      }
+    });
+  });
+
+  test('el_inicio_de_sesion_es_la_unica_ruta_publica', async () => {
+    const respuesta = await request(app).post('/api/auth/login').send({});
+    expect(respuesta.status).toBe(400); // llega a la validación sin exigir token
+    expect((await request(app).get('/api/health')).status).toBe(200);
+  });
+
+  test('una_ruta_inexistente_responde_404_con_formato_estandar_y_sin_trazas', async () => {
+    const respuesta = await request(app).get('/api/no-existe').set('Authorization', `Bearer ${usuarios.ADMIN.token}`);
+    expect(respuesta.status).toBe(404);
+    expect(respuesta.body).toEqual({ error: { code: 'NOT_FOUND', message: expect.any(String) } });
+  });
+});

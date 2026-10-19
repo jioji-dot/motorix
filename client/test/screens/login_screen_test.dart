@@ -68,7 +68,7 @@ void main() {
       });
 
       await tester.enterText(find.byKey(const Key('campo-identificador')), 'recepcion@motorix.mx');
-      await tester.enterText(find.byKey(const Key('campo-contrasena')), 'Recepcion2026!');
+      await tester.enterText(find.byKey(const Key('campo-contrasena')), 'ClaveDePrueba1');
       await tester.tap(find.widgetWithText(FilledButton, 'Iniciar sesión'));
       await tester.pumpAndSettle();
 
@@ -82,7 +82,7 @@ void main() {
   group('Cierre de sesión', () {
     Future<void> iniciarSesion(WidgetTester tester) async {
       await tester.enterText(find.byKey(const Key('campo-identificador')), 'recepcion');
-      await tester.enterText(find.byKey(const Key('campo-contrasena')), 'Recepcion2026!');
+      await tester.enterText(find.byKey(const Key('campo-contrasena')), 'ClaveDePrueba1');
       await tester.tap(find.widgetWithText(FilledButton, 'Iniciar sesión'));
       await tester.pumpAndSettle();
     }

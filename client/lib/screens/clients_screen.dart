@@ -10,6 +10,7 @@ import '../providers/auth_provider.dart';
 import '../providers/clients_provider.dart';
 import '../utils/app_theme.dart';
 import '../utils/format.dart';
+import '../widgets/list_toolbar.dart';
 import '../widgets/state_views.dart';
 import '../widgets/status_chip.dart';
 import 'client_detail_screen.dart';
@@ -76,20 +77,17 @@ class _ClientsScreenState extends State<ClientsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  key: const Key('campo-busqueda'),
-                  controller: _searchController,
-                  onChanged: _onSearchChanged,
-                  decoration: const InputDecoration(
-                    hintText: 'Buscar por nombre, teléfono o correo',
-                    prefixIcon: Icon(LucideIcons.search, size: 18),
-                  ),
-                ),
+          ListToolbar(
+            search: TextField(
+              key: const Key('campo-busqueda'),
+              controller: _searchController,
+              onChanged: _onSearchChanged,
+              decoration: const InputDecoration(
+                hintText: 'Buscar por nombre, teléfono o correo',
+                prefixIcon: Icon(LucideIcons.search, size: 18),
               ),
-              const SizedBox(width: AppSpacing.md),
+            ),
+            actions: [
               SizedBox(
                 width: 190,
                 child: DropdownButtonFormField<bool?>(
@@ -105,8 +103,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                   onChanged: (valor) => context.read<ClientsProvider>().setActiveFilter(valor),
                 ),
               ),
-              if (puedeEscribir) ...[
-                const SizedBox(width: AppSpacing.md),
+              if (puedeEscribir)
                 FilledButton(
                   onPressed: () => _openForm(),
                   child: const Row(
@@ -114,11 +111,10 @@ class _ClientsScreenState extends State<ClientsScreen> {
                     children: [
                       Icon(LucideIcons.plus, size: 18),
                       SizedBox(width: AppSpacing.sm),
-                      Text('Registrar cliente'),
+                      Flexible(child: Text('Registrar cliente', overflow: TextOverflow.ellipsis)),
                     ],
                   ),
                 ),
-              ],
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -199,9 +195,13 @@ class _ClientsScreenState extends State<ClientsScreen> {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
           child: Row(
             children: [
-              Text('${provider.total} cliente${provider.total == 1 ? '' : 's'}',
-                  style: Theme.of(context).textTheme.bodySmall),
-              const Spacer(),
+              Expanded(
+                child: Text(
+                  '${provider.total} cliente${provider.total == 1 ? '' : 's'}',
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
               IconButton(
                 tooltip: 'Página anterior',
                 onPressed: provider.page > 1 ? () => provider.load(page: provider.page - 1) : null,

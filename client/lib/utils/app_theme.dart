@@ -17,6 +17,7 @@ class AppColors {
   static const warning = Color(0xFFC9892B);
   static const success = Color(0xFF4F7A5A);
   static const danger = Color(0xFFC0392B);
+  static const onPrimary = Color(0xFFFFFFFF);
   static const onSidebar = Color(0xFFF1EBEA);
   static const onSidebarMuted = Color(0xFFB9AEB0);
 }
@@ -71,7 +72,7 @@ ThemeData buildAppTheme({bool useGoogleFonts = true}) {
     brightness: Brightness.light,
   ).copyWith(
     primary: AppColors.primary,
-    onPrimary: Colors.white,
+    onPrimary: AppColors.onPrimary,
     surface: AppColors.surface,
     onSurface: AppColors.textPrimary,
     outline: AppColors.outline,
@@ -157,11 +158,11 @@ ThemeData buildAppTheme({bool useGoogleFonts = true}) {
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.onPrimary,
         shape: controlShape,
         minimumSize: const Size(0, 40),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-        textStyle: estilo(AppText.body, FontWeight.w500, color: Colors.white),
+        textStyle: estilo(AppText.body, FontWeight.w500, color: AppColors.onPrimary),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(

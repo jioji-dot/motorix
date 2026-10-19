@@ -5,6 +5,7 @@ import '../models/client.dart';
 import '../providers/clients_provider.dart';
 import '../services/api_client.dart';
 import '../utils/app_theme.dart';
+import '../widgets/button_spinner.dart';
 import '../widgets/confirm_dialog.dart';
 import '../widgets/state_views.dart';
 
@@ -171,11 +172,7 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                         FilledButton(
                           onPressed: _saving ? null : () => _save(),
                           child: _saving
-                              ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                )
+                              ? const ButtonSpinner()
                               : const Text('Guardar'),
                         ),
                       ],

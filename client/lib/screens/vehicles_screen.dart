@@ -10,6 +10,7 @@ import '../providers/auth_provider.dart';
 import '../providers/vehicles_provider.dart';
 import '../utils/app_theme.dart';
 import '../utils/format.dart';
+import '../widgets/list_toolbar.dart';
 import '../widgets/state_views.dart';
 import 'vehicle_detail_screen.dart';
 import 'vehicle_form_screen.dart';
@@ -70,20 +71,17 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  key: const Key('campo-busqueda'),
-                  onChanged: _onSearchChanged,
-                  decoration: const InputDecoration(
-                    hintText: 'Buscar por placas, marca, modelo o propietario',
-                    prefixIcon: Icon(LucideIcons.search, size: 18),
-                  ),
-                ),
+          ListToolbar(
+            search: TextField(
+              key: const Key('campo-busqueda'),
+              onChanged: _onSearchChanged,
+              decoration: const InputDecoration(
+                hintText: 'Buscar por placas, marca, modelo o propietario',
+                prefixIcon: Icon(LucideIcons.search, size: 18),
               ),
-              if (puedeEscribir) ...[
-                const SizedBox(width: AppSpacing.md),
+            ),
+            actions: [
+              if (puedeEscribir)
                 FilledButton(
                   onPressed: () => _openForm(),
                   child: const Row(
@@ -91,11 +89,10 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                     children: [
                       Icon(LucideIcons.plus, size: 18),
                       SizedBox(width: AppSpacing.sm),
-                      Text('Registrar vehículo'),
+                      Flexible(child: Text('Registrar vehículo', overflow: TextOverflow.ellipsis)),
                     ],
                   ),
                 ),
-              ],
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -176,9 +173,13 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
           child: Row(
             children: [
-              Text('${provider.total} vehículo${provider.total == 1 ? '' : 's'}',
-                  style: Theme.of(context).textTheme.bodySmall),
-              const Spacer(),
+              Expanded(
+                child: Text(
+                  '${provider.total} vehículo${provider.total == 1 ? '' : 's'}',
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
               IconButton(
                 tooltip: 'Página anterior',
                 onPressed: provider.page > 1 ? () => provider.load(page: provider.page - 1) : null,

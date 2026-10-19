@@ -5,7 +5,7 @@ describe('Política de contraseñas', () => {
 
   test('acepta_contrasena_con_8_caracteres_mayuscula_minuscula_y_numero', () => {
     expect(valida('Abcdef12')).toBe(true);
-    expect(valida('Admin2026!')).toBe(true);
+    expect(valida('Clave2026!')).toBe(true);
   });
 
   test('rechaza_contrasena_de_menos_de_8_caracteres', () => {
