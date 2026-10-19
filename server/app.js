@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
 import maintenanceRoutes from './routes/maintenanceRoutes.js';
 import mechanicRoutes from './routes/mechanicRoutes.js';
+import partRoutes from './routes/partRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import vehicleRoutes from './routes/vehicleRoutes.js';
@@ -26,6 +27,7 @@ export function createApp() {
   app.use('/api/mechanics', mechanicRoutes);
   app.use('/api/orders', orderRoutes);
   app.use('/api/maintenance', maintenanceRoutes);
+  app.use('/api/parts', partRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

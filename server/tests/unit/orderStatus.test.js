@@ -11,6 +11,7 @@ function crearEntorno({
   orden = { id: 9, status: 'EN_REPARACION', mechanicId: 3, appointmentId: null, diagnosis: 'Falla' },
   lineas = { services: 1, labor: 0 },
   filasAfectadas = 1,
+  lineasDeRefaccion = [],
 } = {}) {
   const conexion = { id: 'conexion' };
   const orderModel = {
@@ -20,8 +21,10 @@ function crearEntorno({
     findDetail: jest.fn(async (id) => ({ id, status: 'X', mechanicId: 3, services: [], labor: [], history: [] })),
   };
   const appointmentModel = { setStatus: jest.fn(async () => {}) };
-  const servicio = createOrderService({ orderModel, appointmentModel, transaction: async (trabajo) => trabajo(conexion) });
-  return { servicio, orderModel, appointmentModel, conexion };
+  const orderPartModel = { listByOrder: jest.fn(async () => lineasDeRefaccion) };
+  const inventoryService = { applyMovement: jest.fn(async () => ({})) };
+  const servicio = createOrderService({ orderModel, appointmentModel, orderPartModel, inventoryService, transaction: async (trabajo) => trabajo(conexion) });
+  return { servicio, orderModel, appointmentModel, orderPartModel, inventoryService, conexion };
 }
 
 describe('Validación del cambio de estado', () => {

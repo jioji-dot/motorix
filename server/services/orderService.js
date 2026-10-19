@@ -2,11 +2,13 @@
 import { withTransaction } from '../config/db.js';
 import * as modeloCitas from '../models/appointmentModel.js';
 import * as modeloClientes from '../models/clientModel.js';
+import * as modeloLineasDeRefaccion from '../models/orderPartModel.js';
 import * as modeloOrdenes from '../models/orderModel.js';
 import * as modeloUsuarios from '../models/userModel.js';
 import * as modeloVehiculos from '../models/vehicleModel.js';
-import { APPOINTMENT_STATUS, ORDER_FINAL_STATUSES, ORDER_OPEN_STATUSES } from '../utils/constants.js';
+import { APPOINTMENT_STATUS, MOVEMENT_TYPE, ORDER_FINAL_STATUSES, ORDER_OPEN_STATUSES } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
+import { inventoryService as servicioInventario } from './inventoryService.js';
 import { allowedTransitions, canTransition, transitionExists } from './orderStateMachine.js';
 
 function errorDeCampo(campo, mensaje) {
@@ -19,6 +21,8 @@ export function createOrderService({
   clientModel = modeloClientes,
   vehicleModel = modeloVehiculos,
   userModel = modeloUsuarios,
+  orderPartModel = modeloLineasDeRefaccion,
+  inventoryService = servicioInventario,
   transaction = withTransaction,
 } = {}) {
   // Cada orden se devuelve con las transiciones que el usuario actual puede aplicar ahora.
@@ -263,6 +267,20 @@ export function createOrderService({
       });
       if (filas === 0) {
         throw new HttpError(409, 'STATE_CONFLICT', 'La orden cambió de estado mientras se procesaba tu petición. Recarga la pantalla.');
+      }
+
+      // Al cancelar, las refacciones de la orden regresan al stock (las líneas se conservan para la trazabilidad).
+      if (status === 'CANCELADA') {
+        for (const linea of await orderPartModel.listByOrder(conexion, id)) {
+          await inventoryService.applyMovement(conexion, {
+            partId: linea.partId,
+            type: MOVEMENT_TYPE.IN,
+            delta: linea.quantity,
+            reason: `Cancelación de la orden ${orden.folio}`,
+            orderId: id,
+            userId: usuario.id,
+          });
+        }
       }
 
       // Efectos sobre la cita asociada: sin cancelaciones en cascada (aclaración del 2026-10-19).

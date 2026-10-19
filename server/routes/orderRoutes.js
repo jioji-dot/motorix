@@ -16,6 +16,7 @@ import {
   updateOrderSchema,
   updateServiceLineSchema,
 } from '../validators/orderValidator.js';
+import { orderPartSchema, updateOrderPartSchema } from '../validators/partValidator.js';
 
 const router = Router();
 
@@ -44,5 +45,10 @@ router.delete('/:id/services/:lineId', documenta, validate(lineParamsSchema, 'pa
 router.post('/:id/labor', documenta, validate(idParamSchema, 'params'), validate(laborSchema), asyncHandler(controlador.addLabor));
 router.patch('/:id/labor/:lineId', documenta, validate(lineParamsSchema, 'params'), validate(updateLaborSchema), asyncHandler(controlador.updateLabor));
 router.delete('/:id/labor/:lineId', documenta, validate(lineParamsSchema, 'params'), asyncHandler(controlador.removeLabor));
+
+// Refacciones usadas: mismas reglas de asignación; cada cambio mueve el inventario en la misma transacción.
+router.post('/:id/parts', documenta, validate(idParamSchema, 'params'), validate(orderPartSchema), asyncHandler(controlador.addPart));
+router.patch('/:id/parts/:lineId', documenta, validate(lineParamsSchema, 'params'), validate(updateOrderPartSchema), asyncHandler(controlador.updatePart));
+router.delete('/:id/parts/:lineId', documenta, validate(lineParamsSchema, 'params'), asyncHandler(controlador.removePart));
 
 export default router;

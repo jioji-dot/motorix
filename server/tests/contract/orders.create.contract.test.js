@@ -51,6 +51,8 @@ describe('POST /api/orders', () => {
         mechanic: { id: usuarios.MECHANIC.id, name: 'Mecánico de prueba' },
         services: [],
         labor: [],
+        parts: [],
+        serviceMileage: null,
         history: [
           {
             fromStatus: null,

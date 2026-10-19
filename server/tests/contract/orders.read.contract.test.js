@@ -81,6 +81,8 @@ describe('GET /api/orders/:id', () => {
         labor: [
           { id: expect.any(Number), description: 'Desmontaje y montaje', hours: '2.50', hourlyRate: '300.00', amount: '750.00' },
         ],
+        parts: [],
+        serviceMileage: null,
         history: [
           {
             fromStatus: null,

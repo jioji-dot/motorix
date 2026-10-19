@@ -55,6 +55,23 @@ const MATRIZ = [
   ['post', '/api/orders/1/labor', DOCUMENTA],
   ['patch', '/api/orders/1/labor/1', DOCUMENTA],
   ['delete', '/api/orders/1/labor/1', DOCUMENTA],
+  // Sprint 3: historial, mantenimientos, refacciones e inventario
+  ['get', '/api/vehicles/1/history', TODOS],
+  ['get', '/api/maintenance', TODOS],
+  ['get', '/api/maintenance/1', TODOS],
+  ['post', '/api/maintenance', DOCUMENTA],
+  ['patch', '/api/maintenance/1', DOCUMENTA],
+  ['get', '/api/parts', TODOS],
+  ['get', '/api/parts/summary', TODOS],
+  ['get', '/api/parts/categories', TODOS],
+  ['get', '/api/parts/1', TODOS],
+  ['get', '/api/parts/1/movements', TODOS],
+  ['post', '/api/parts', SOLO_ADMIN],
+  ['patch', '/api/parts/1', SOLO_ADMIN],
+  ['post', '/api/parts/1/movements', SOLO_ADMIN],
+  ['post', '/api/orders/1/parts', DOCUMENTA],
+  ['patch', '/api/orders/1/parts/1', DOCUMENTA],
+  ['delete', '/api/orders/1/parts/1', DOCUMENTA],
 ];
 
 const enviar = (metodo, ruta, token) => {

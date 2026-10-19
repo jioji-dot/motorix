@@ -1,3 +1,4 @@
+import { orderPartService } from '../services/orderPartService.js';
 import { orderService } from '../services/orderService.js';
 
 export async function create(req, res) {
@@ -47,4 +48,23 @@ export async function removeLabor(req, res) {
 
 export async function changeStatus(req, res) {
   res.json({ data: await orderService.changeStatus(req.valid.params.id, req.valid.body, req.user) });
+}
+
+// Refacciones de la orden: tras cada cambio se devuelve la orden completa (con refacciones y total).
+export async function addPart(req, res) {
+  const { id } = req.valid.params;
+  await orderPartService.add(id, req.valid.body, req.user);
+  res.status(201).json({ data: await orderService.get(id, req.user) });
+}
+
+export async function updatePart(req, res) {
+  const { id, lineId } = req.valid.params;
+  await orderPartService.update(id, lineId, req.valid.body, req.user);
+  res.json({ data: await orderService.get(id, req.user) });
+}
+
+export async function removePart(req, res) {
+  const { id, lineId } = req.valid.params;
+  await orderPartService.remove(id, lineId, req.user);
+  res.json({ data: await orderService.get(id, req.user) });
 }
