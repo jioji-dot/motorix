@@ -242,6 +242,15 @@ Reescritura de **FR-012**, **FR-023** y **FR-024** con la sintaxis EARS (*Easy A
 - **FR-023-b** (comportamiento no deseado): SI la cantidad solicitada supera el stock disponible, ENTONCES el servidor DEBERÁ rechazar la operación, indicar la cantidad disponible y no guardar ningún cambio.
 - **FR-024-a** (comportamiento no deseado): SI varios usos simultáneos piden la misma refacción y no alcanza para todos, ENTONCES el servidor DEBERÁ aplicar solo los que alcanzan y rechazar el resto, sin que el stock quede negativo.
 
+Reescritura también de **FR-008**, **FR-014** y **FR-026**.
+
+- **FR-008-a** (comportamiento no deseado): SI la próxima fecha de un mantenimiento es anterior a la del último servicio, ENTONCES el servidor DEBERÁ rechazar el registro.
+- **FR-008-b** (comportamiento no deseado): SI el próximo kilometraje no es mayor al del último servicio, ENTONCES el servidor DEBERÁ rechazar el registro.
+- **FR-014-a** (por estado): MIENTRAS el usuario tenga el rol de recepción, el servidor DEBERÁ permitirle solo consultar los mantenimientos.
+- **FR-014-b** (comportamiento no deseado): SI un usuario de recepción intenta registrar o editar un mantenimiento, ENTONCES el servidor DEBERÁ rechazar la petición con el código 403.
+- **FR-026-a** (por evento): CUANDO se agregue una refacción a una orden, el servidor DEBERÁ guardar el precio de venta vigente en ese momento.
+- **FR-026-b** (siempre activo): El precio guardado en una refacción de la orden NO DEBERÁ cambiar aunque el precio del catálogo se modifique después.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles

@@ -208,6 +208,15 @@ Reescritura de **FR-020**, **FR-022** y **FR-029** con la sintaxis EARS (*Easy A
 - **FR-029-b** (comportamiento no deseado): SI quien solicita la cancelación es un mecánico, o la orden está Terminada, Entregada o ya Cancelada, ENTONCES el servidor DEBERÁ rechazar la cancelación.
 - **FR-029-c** (siempre activo): Una orden Cancelada NO DEBERÁ admitir más cambios.
 
+Reescritura también de **FR-005**, **FR-018** y **FR-021**.
+
+- **FR-005-a** (comportamiento no deseado): SI la fecha y hora de una cita ya pasaron, ENTONCES el servidor DEBERÁ rechazar su registro.
+- **FR-005-b** (comportamiento no deseado): SI el cliente o el vehículo de una cita está desactivado, ENTONCES el servidor DEBERÁ rechazar su registro.
+- **FR-018-a** (por estado): MIENTRAS el usuario tenga el rol de mecánico, el servidor DEBERÁ devolver únicamente las órdenes que tiene asignadas.
+- **FR-018-b** (por estado): MIENTRAS el usuario tenga el rol de recepción o administración, el servidor DEBERÁ devolver todas las órdenes, con filtros por estado, mecánico y fecha.
+- **FR-021-a** (por evento): CUANDO el mecánico asignado solicite avanzar su orden, el servidor DEBERÁ permitirlo hasta el estado Terminado.
+- **FR-021-b** (comportamiento no deseado): SI quien solicita marcar una orden como Entregada no es de recepción ni administración, ENTONCES el servidor DEBERÁ rechazar el cambio.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles

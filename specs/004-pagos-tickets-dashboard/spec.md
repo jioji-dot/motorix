@@ -231,6 +231,14 @@ Reescritura también de **FR-003** y **FR-015**, con el mismo criterio.
 - **FR-015-b** (comportamiento no deseado): SI la notificación no puede verificarse con Mercado Pago o no corresponde a un pago de Motorix, ENTONCES el servidor DEBERÁ ignorarla sin alterar ningún pago.
 - **FR-015-c** (por evento): CUANDO llegue una notificación repetida de un pago que ya salió de Pendiente, el servidor DEBERÁ conservar su estado sin duplicar el pago.
 
+Reescritura también de **FR-002**, **FR-004** y **FR-011**.
+
+- **FR-002-a** (comportamiento no deseado): SI la orden está en curso o Cancelada, ENTONCES el servidor DEBERÁ rechazar cualquier pago sobre ella.
+- **FR-002-b** (comportamiento no deseado): SI el total de la orden es cero, ENTONCES el servidor DEBERÁ rechazar cualquier pago sobre ella.
+- **FR-004-a** (siempre activo): El saldo pendiente de una orden DEBERÁ ser su total menos la suma de los pagos Pagados y de los pagos Pendientes de Mercado Pago.
+- **FR-004-b** (por evento): CUANDO un pago de Mercado Pago pase a Rechazado o Cancelado, el servidor DEBERÁ liberar su importe en el saldo pendiente.
+- **FR-011-a** (comportamiento no deseado): SI el usuario tiene el rol de mecánico, ENTONCES el servidor DEBERÁ rechazar el registro y la consulta de pagos con el código 403.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles

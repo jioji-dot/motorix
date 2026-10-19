@@ -181,6 +181,14 @@ Reescritura también de **FR-021** y **FR-009**, con el mismo criterio.
 - **FR-009-a** (por evento): CUANDO un administrador cambie el rol de un usuario o lo desactive, el backend DEBERÁ aplicar el cambio en la siguiente petición de ese usuario, sin esperar a que su sesión expire.
 - **FR-009-b** (comportamiento no deseado): SI un usuario desactivado presenta un token todavía vigente, ENTONCES el backend DEBERÁ rechazar la petición.
 
+Reescritura también de **FR-006**, **FR-013** y **FR-022**.
+
+- **FR-006-a** (comportamiento no deseado): SI la contraseña nueva tiene menos de 8 caracteres o le falta una mayúscula, una minúscula o un número, ENTONCES el backend DEBERÁ rechazar el cambio con un mensaje en español que indique la regla incumplida.
+- **FR-006-b** (por evento): CUANDO un usuario cambie su contraseña con una que cumple la política, el backend DEBERÁ guardarla cifrada.
+- **FR-013-a** (comportamiento no deseado): SI desactivar a un administrador o cambiarle el rol dejaría al taller sin administradores activos, ENTONCES el backend DEBERÁ rechazar la operación.
+- **FR-022-a** (comportamiento no deseado): SI las placas de un vehículo nuevo o editado ya existen en otro vehículo, ENTONCES el backend DEBERÁ rechazar la operación indicando que las placas ya están registradas.
+- **FR-022-b** (comportamiento no deseado): SI se captura un número de serie que ya existe en otro vehículo, ENTONCES el backend DEBERÁ rechazar la operación; el número de serie vacío NO DEBERÁ considerarse repetido.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles
