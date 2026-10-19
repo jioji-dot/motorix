@@ -8,6 +8,14 @@
 
 **Entrada**: Descripción del usuario: "Usa la descripcion de @docs/sprints/sprint-1-base-clientes-vehiculos.md"
 
+## Aclaraciones
+
+### Sesión 2026-10-19
+
+- Q: ¿Se usará alguna librería complementaria de componentes de interfaz además de Material Design 3? → A: Ninguna; solo Material 3 con tema propio y las librerías de apoyo permitidas (tipografía, tablas y un único set de íconos).
+- Q: ¿Qué set de íconos único usará la interfaz? → A: `lucide_icons_flutter`, sin mezclar con otros sets.
+- Q: ¿Qué secciones muestra la barra lateral en el Sprint 1 y para qué rol? → A: Clientes y Vehículos para los tres roles (el mecánico solo consulta) y Usuarios solo para ADMIN; la pantalla inicial es Clientes; el cambio de contraseña y el cierre de sesión se acceden desde el usuario al pie de la barra.
+
 ## Escenarios de usuario y pruebas *(obligatorio)*
 
 ### Historia de usuario 1 - Iniciar sesión según mi rol (Prioridad: P1)
@@ -146,7 +154,8 @@ Como administrador, quiero gestionar usuarios y roles de acceso para controlar q
 - **FR-026**: Los datos DEBEN persistir entre sesiones y ser consistentes (no puede existir un vehículo apuntando a un cliente inexistente).
 - **FR-027**: El sistema DEBE incluir datos de ejemplo suficientes (al menos las tres cuentas iniciales, clientes de prueba con sus vehículos) para mostrar información al primer arranque, y su carga repetida NO DEBE duplicar registros.
 - **FR-028**: Toda pantalla DEBE seguir el sistema de diseño del proyecto y mostrar estados de carga, vacío, error y éxito; las acciones destructivas o irreversibles DEBEN pedir confirmación.
-- **FR-029**: El sistema DEBE mostrar a cada usuario solo las secciones permitidas para su rol.
+- **FR-029**: El sistema DEBE mostrar a cada usuario solo las secciones permitidas para su rol: Clientes y Vehículos para los tres roles, y Usuarios únicamente para ADMIN. Tras iniciar sesión, la pantalla inicial es Clientes.
+- **FR-030**: El cambio de contraseña y el cierre de sesión DEBEN estar disponibles desde el usuario mostrado al pie de la barra lateral.
 
 ### Entidades clave *(incluir si la funcionalidad involucra datos)*
 
@@ -177,6 +186,8 @@ Relaciones: un cliente tiene cero o más vehículos; un vehículo pertenece a un
 - Las cuentas y contraseñas estándar (`admin`, `recepcion`, `mecanico`) son solo para pruebas locales; las contraseñas nuevas deben cumplir la política mínima.
 - La sesión dura 8 horas y el bloqueo por intentos fallidos dura 15 minutos (decisiones ya resueltas por el equipo).
 - Las decisiones técnicas resueltas (frontend, acceso a datos, migraciones, pruebas) están en `docs/project-context.md` y en la constitución; se aplican en la fase de planificación, no en esta especificación.
-- Quedan para `/speckit-clarify`: librería complementaria de componentes de interfaz (o ninguna), set de íconos definitivo y estructura exacta de la barra lateral y de las pantallas iniciales.
+- La interfaz no usa librería complementaria de componentes: solo Material Design 3 con tema propio y las librerías de apoyo permitidas por el sistema de diseño.
+- La interfaz usa un único set de íconos (`lucide_icons_flutter`).
+- No hay pantalla de inicio ni Dashboard en este sprint; la navegación solo incluye los módulos del sprint.
 - Fuera de alcance: citas, órdenes de servicio, inventario, pagos y Mercado Pago, tickets, dashboard, chatbot de WhatsApp, recuperación de contraseña, registro público de usuarios y modo oscuro.
 - Dependencia: ninguna funcionalidad previa; este sprint es la base de los sprints 2 a 4.
