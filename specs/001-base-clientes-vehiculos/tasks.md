@@ -32,12 +32,12 @@ description: "Lista de tareas para implementar el Sprint 1: base del sistema, cl
 
 **Propósito**: Inicializar el proyecto y su estructura básica
 
-- [ ] T001 Crear la estructura de carpetas del plan: `server/{config,controllers,models,routes,services,middlewares,validators,utils,scripts,tests}`, `client/`, `database/{migrations,seeds,scripts}`
-- [ ] T002 Inicializar el backend en `server/package.json` con `"type": "module"`, dependencias `express`, `mysql2`, `jsonwebtoken`, `bcryptjs`, `zod`, `dotenv`, `cors` y de desarrollo `jest`, `supertest`, con los scripts `start`, `dev` y `test`
-- [ ] T003 [P] Inicializar el frontend Flutter en `client/` y agregar a `client/pubspec.yaml` `provider`, `http`, `google_fonts`, `data_table_2` 2.6.0 y `lucide_icons_flutter` (sin librería complementaria de componentes)
-- [ ] T004 [P] Crear `.env.example` en la raíz con `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`, `JWT_EXPIRES_IN` y `PORT` sin valores sensibles, y confirmar que `.env` sigue en `.gitignore`
-- [ ] T005 [P] Configurar Jest para ES Modules en `server/jest.config.js` y la validación de lint/formato del backend en `server/eslint.config.js`
-- [ ] T006 [P] Crear `database/README.md` en español con el procedimiento para crear y reiniciar la base local
+- [X] T001 Crear la estructura de carpetas del plan: `server/{config,controllers,models,routes,services,middlewares,validators,utils,scripts,tests}`, `client/`, `database/{migrations,seeds,scripts}`
+- [X] T002 Inicializar el backend en `server/package.json` con `"type": "module"`, dependencias `express`, `mysql2`, `jsonwebtoken`, `bcryptjs`, `zod`, `dotenv`, `cors` y de desarrollo `jest`, `supertest`, con los scripts `start`, `dev` y `test`
+- [X] T003 [P] Inicializar el frontend Flutter en `client/` y agregar a `client/pubspec.yaml` `provider`, `http`, `google_fonts`, `data_table_2` 2.6.0 y `lucide_icons_flutter` (sin librería complementaria de componentes)
+- [X] T004 [P] Crear `.env.example` en la raíz con `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`, `JWT_EXPIRES_IN` y `PORT` sin valores sensibles, y confirmar que `.env` sigue en `.gitignore`
+- [X] T005 [P] Configurar Jest para ES Modules en `server/jest.config.js` y la validación de lint/formato del backend en `server/eslint.config.js`
+- [X] T006 [P] Crear `database/README.md` en español con el procedimiento para crear y reiniciar la base local
 
 ---
 
