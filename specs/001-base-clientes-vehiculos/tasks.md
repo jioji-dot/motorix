@@ -162,19 +162,19 @@ description: "Lista de tareas para implementar el Sprint 1: base del sistema, cl
 
 ### Pruebas de la historia 4 ⚠️
 
-- [ ] T061 [P] [US4] Prueba unitaria del servicio de usuarios (`username` de 3 a 50 caracteres sin espacios y único sin distinguir mayúsculas; `email` válido y único; rechazo de desactivar o cambiar de rol al último ADMIN activo) en `server/tests/unit/userService.test.js`
-- [ ] T062 [P] [US4] Prueba de contrato de `GET /users`, `GET /users/:id`, `POST /users` y `PATCH /users/:id`, incluidos 409 `DUPLICATE_VALUE` y 409 `LAST_ADMIN`, en `server/tests/contract/users.contract.test.js`
-- [ ] T063 [P] [US4] Prueba de integración de usuarios: solo ADMIN accede (403 para los demás), el cambio de rol y la desactivación surten efecto en la siguiente petición, y se rechaza dejar al taller sin ADMIN activo, en `server/tests/integration/users.test.js`
-- [ ] T064 [P] [US4] Prueba de provider y de widgets de la pantalla de usuarios en `client/test/screens/users_screen_test.dart`
+- [X] T061 [P] [US4] Prueba unitaria del servicio de usuarios (`username` de 3 a 50 caracteres sin espacios y único sin distinguir mayúsculas; `email` válido y único; rechazo de desactivar o cambiar de rol al último ADMIN activo) en `server/tests/unit/userService.test.js`
+- [X] T062 [P] [US4] Prueba de contrato de `GET /users`, `GET /users/:id`, `POST /users` y `PATCH /users/:id`, incluidos 409 `DUPLICATE_VALUE` y 409 `LAST_ADMIN`, en `server/tests/contract/users.contract.test.js`
+- [X] T063 [P] [US4] Prueba de integración de usuarios: solo ADMIN accede (403 para los demás), el cambio de rol y la desactivación surten efecto en la siguiente petición, y se rechaza dejar al taller sin ADMIN activo, en `server/tests/integration/users.test.js`
+- [X] T064 [P] [US4] Prueba de provider y de widgets de la pantalla de usuarios en `client/test/screens/users_screen_test.dart`
 
 ### Implementación de la historia 4
 
-- [ ] T065 [US4] Ampliar `server/models/userModel.js` con listado con filtros (`search`, `role`, `active`, paginación), alta y edición sin devolver `passwordHash`
-- [ ] T066 [P] [US4] Crear `server/validators/userValidator.js` con los esquemas de alta y edición, incluida la política de contraseña
-- [ ] T067 [US4] Implementar `server/services/userService.js` con la regla del último ADMIN activo dentro de una transacción y la traducción de duplicados a 409 `DUPLICATE_VALUE`
-- [ ] T068 [US4] Implementar `server/controllers/userController.js` y `server/routes/userRoutes.js` restringidas a ADMIN y registrarlas en `server/app.js`
-- [ ] T069 [P] [US4] Crear `client/lib/providers/users_provider.dart` y ampliar `client/lib/models/user.dart`
-- [ ] T070 [US4] Crear `client/lib/screens/users_screen.dart` y `client/lib/screens/user_form_screen.dart` (rol, estado, restablecimiento de contraseña, confirmación al desactivar y mensaje claro si es el último ADMIN) y mostrar la sección Usuarios solo a ADMIN
+- [X] T065 [US4] Ampliar `server/models/userModel.js` con listado con filtros (`search`, `role`, `active`, paginación), alta y edición sin devolver `passwordHash`
+- [X] T066 [P] [US4] Crear `server/validators/userValidator.js` con los esquemas de alta y edición, incluida la política de contraseña
+- [X] T067 [US4] Implementar `server/services/userService.js` con la regla del último ADMIN activo dentro de una transacción y la traducción de duplicados a 409 `DUPLICATE_VALUE`
+- [X] T068 [US4] Implementar `server/controllers/userController.js` y `server/routes/userRoutes.js` restringidas a ADMIN y registrarlas en `server/app.js`
+- [X] T069 [P] [US4] Crear `client/lib/providers/users_provider.dart` y ampliar `client/lib/models/user.dart`
+- [X] T070 [US4] Crear `client/lib/screens/users_screen.dart` y `client/lib/screens/user_form_screen.dart` (rol, estado, restablecimiento de contraseña, confirmación al desactivar y mensaje claro si es el último ADMIN) y mostrar la sección Usuarios solo a ADMIN
 
 **Punto de control**: Las cuatro historias funcionan de forma independiente
 

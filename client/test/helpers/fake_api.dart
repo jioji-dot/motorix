@@ -45,15 +45,35 @@ Map<String, dynamic> vehiculoJson(
       'client': {'id': clientId, 'name': propietario, 'phone': '5512345601'},
     };
 
+Map<String, dynamic> usuarioJson(
+  int id,
+  String username,
+  String rol, {
+  bool activo = true,
+  String? nombre,
+}) =>
+    {
+      'id': id,
+      'username': username,
+      'name': nombre ?? 'Usuario $username',
+      'email': '$username@motorix.mx',
+      'role': rol,
+      'active': activo,
+      'createdAt': '2026-10-19T10:00:00.000Z',
+      'updatedAt': '2026-10-19T10:00:00.000Z',
+    };
+
 /// Simula la API: inicio de sesión y las rutas de clientes y vehículos con los datos recibidos.
 class ApiSimulada {
-  ApiSimulada({required this.rol, List<Map<String, dynamic>>? clientes, List<Map<String, dynamic>>? vehiculos})
+  ApiSimulada({required this.rol, List<Map<String, dynamic>>? clientes, List<Map<String, dynamic>>? vehiculos, List<Map<String, dynamic>>? usuarios})
       : clientes = clientes ?? [],
-        vehiculos = vehiculos ?? [];
+        vehiculos = vehiculos ?? [],
+        usuarios = usuarios ?? [];
 
   final String rol;
   final List<Map<String, dynamic>> clientes;
   final List<Map<String, dynamic>> vehiculos;
+  final List<Map<String, dynamic>> usuarios;
   final List<http.Request> peticiones = [];
   http.Response? Function(http.Request)? sobrescribir;
 
@@ -69,7 +89,7 @@ class ApiSimulada {
     final metodo = peticion.method;
     final busqueda = (peticion.url.queryParameters['search'] ?? '').toLowerCase();
 
-    if (ruta == '/api/auth/login') return loginOk(rol == 'MECHANIC' ? 'mecanico' : 'recepcion', rol);
+    if (ruta == '/api/auth/login') return loginOk(_usuarioDe(rol), rol);
 
     if (ruta == '/api/clients' && metodo == 'GET') {
       final filtrados = clientes.where((c) => busqueda.isEmpty || (c['name'] as String).toLowerCase().contains(busqueda));
@@ -130,8 +150,45 @@ class ApiSimulada {
       vehiculos[vehiculos.indexOf(actual)] = actualizado;
       return jsonResponse(200, {'data': actualizado});
     }
+    if (ruta == '/api/users' && metodo == 'GET') {
+      final filtrados = usuarios.where((u) =>
+          busqueda.isEmpty ||
+          (u['name'] as String).toLowerCase().contains(busqueda) ||
+          (u['username'] as String).toLowerCase().contains(busqueda));
+      return jsonResponse(200, listaJson(filtrados.toList()));
+    }
+    if (ruta == '/api/users' && metodo == 'POST') {
+      final cuerpo = jsonDecode(peticion.body) as Map<String, dynamic>;
+      final nuevo = usuarioJson(
+        300 + usuarios.length,
+        cuerpo['username'] as String,
+        cuerpo['role'] as String,
+        nombre: cuerpo['name'] as String,
+      );
+      usuarios.add(nuevo);
+      return jsonResponse(201, {'data': nuevo});
+    }
+    final detalleUsuario = RegExp(r'^/api/users/(\d+)$').firstMatch(ruta);
+    if (detalleUsuario != null && metodo == 'PATCH') {
+      final id = int.parse(detalleUsuario.group(1)!);
+      final cuerpo = jsonDecode(peticion.body) as Map<String, dynamic>;
+      final actual = usuarios.firstWhere((u) => u['id'] == id);
+      final actualizado = {
+        ...actual,
+        for (final e in cuerpo.entries)
+          if (e.key != 'password') e.key: e.value,
+      };
+      usuarios[usuarios.indexOf(actual)] = actualizado;
+      return jsonResponse(200, {'data': actualizado});
+    }
     return jsonResponse(404, {'error': {'code': 'NOT_FOUND', 'message': 'No encontrado.'}});
   }
+
+  static String _usuarioDe(String rol) => switch (rol) {
+        'ADMIN' => 'admin',
+        'MECHANIC' => 'mecanico',
+        _ => 'recepcion',
+      };
 }
 
 Future<void> entrar(WidgetTester tester) async {

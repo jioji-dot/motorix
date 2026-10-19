@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 
 import 'providers/auth_provider.dart';
 import 'providers/clients_provider.dart';
+import 'providers/users_provider.dart';
 import 'providers/vehicles_provider.dart';
 import 'providers/sidebar_provider.dart';
 import 'screens/clients_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/users_screen.dart';
 import 'screens/vehicles_screen.dart';
 import 'services/api_client.dart';
 import 'utils/app_theme.dart';
@@ -46,6 +48,13 @@ class MotorixApp extends StatelessWidget {
             return provider;
           },
         ),
+        ChangeNotifierProvider(
+          create: (c) {
+            final provider = UsersProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
       ],
       child: MaterialApp(
         title: 'Motorix',
@@ -72,6 +81,7 @@ class _AuthGate extends StatelessWidget {
               sectionBuilders: {
                 'Clientes': (_) => const ClientsScreen(),
                 'Vehículos': (_) => const VehiclesScreen(),
+                'Usuarios': (_) => const UsersScreen(),
               },
             )
           : const LoginScreen(key: ValueKey('login')),
