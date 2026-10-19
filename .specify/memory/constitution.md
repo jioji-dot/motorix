@@ -183,13 +183,13 @@ como definitivas:
 - Servicio de hosting y proveedor de almacenamiento.
 - Implementación concreta de PDF/tickets.
 - Alcance exacto de Mercado Pago para la demostración.
-- Librería complementaria de componentes de UI en Flutter (u ninguna) y set de íconos
-  definitivo.
 - Modo oscuro (por ahora solo tema claro en el MVP) y logotipo e identidad visual.
 
 Decisiones ya resueltas (acceso a datos con `mysql2` sin ORM, migraciones SQL numeradas,
 MySQL nativo, validación con `zod`, `bcryptjs`, Jest + supertest, estructura del backend sin
-`src/`) se registran en `docs/project-context.md`, sección 27.
+`src/`) se registran en `docs/project-context.md`, sección 27. Desde el 2026-10-19 también están
+resueltas la librería de componentes de UI (ninguna, solo Material 3 con tema propio) y el set de
+íconos (`lucide_icons_flutter`).
 
 ## Gobernanza
 
@@ -204,4 +204,4 @@ MySQL nativo, validación con `zod`, `bcryptjs`, Jest + supertest, estructura de
   explícitamente o descartarse.
 - Guía de trabajo complementaria: `docs/guia-spec-kit.md` y `CLAUDE.md`.
 
-**Versión**: 1.0.0 | **Ratificada**: 2026-10-18 | **Última enmienda**: 2026-10-18
+**Versión**: 1.0.1 | **Ratificada**: 2026-10-18 | **Última enmienda**: 2026-10-19
