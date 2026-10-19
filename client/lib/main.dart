@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/sidebar_provider.dart';
 import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
 import 'services/api_client.dart';
 import 'utils/app_theme.dart';
 
@@ -47,7 +48,7 @@ class _AuthGate extends StatelessWidget {
       duration: AppMotion.navigation,
       child: autenticado
           ? const HomeScreen(key: ValueKey('home'))
-          : const Scaffold(key: ValueKey('login'), body: Center(child: Text('Inicio de sesión'))),
+          : const LoginScreen(key: ValueKey('login')),
     );
   }
 }

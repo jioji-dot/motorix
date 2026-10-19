@@ -77,23 +77,23 @@ description: "Lista de tareas para implementar el Sprint 1: base del sistema, cl
 
 ### Pruebas de la historia 1 ⚠️ (escribir primero; deben fallar)
 
-- [ ] T024 [P] [US1] Prueba unitaria de la política de contraseñas ("mínimo 8 caracteres, con mayúscula, minúscula y número") en `server/tests/unit/passwordPolicy.test.js`
-- [ ] T025 [P] [US1] Prueba unitaria del servicio de autenticación (identificador con `@` busca por `email`, si no por `username`, sin distinguir mayúsculas y con espacios recortados; bloqueo al llegar a 5 intentos por 15 minutos; reinicio del contador al acertar) en `server/tests/unit/authService.test.js`
-- [ ] T026 [P] [US1] Prueba de contrato de `POST /auth/login`, `GET /auth/me` y `POST /auth/change-password` (formas de éxito y de error, 401, 403, 423) en `server/tests/contract/auth.contract.test.js`
-- [ ] T027 [P] [US1] Prueba de integración de inicio de sesión de los tres roles con usuario y con correo, cuenta desactivada y cuenta bloqueada, contra `motorix_test`, en `server/tests/integration/auth.test.js`
-- [ ] T028 [P] [US1] Prueba de widgets de la pantalla de inicio de sesión y del diálogo de cierre de sesión en `client/test/screens/login_screen_test.dart`
+- [X] T024 [P] [US1] Prueba unitaria de la política de contraseñas ("mínimo 8 caracteres, con mayúscula, minúscula y número") en `server/tests/unit/passwordPolicy.test.js`
+- [X] T025 [P] [US1] Prueba unitaria del servicio de autenticación (identificador con `@` busca por `email`, si no por `username`, sin distinguir mayúsculas y con espacios recortados; bloqueo al llegar a 5 intentos por 15 minutos; reinicio del contador al acertar) en `server/tests/unit/authService.test.js`
+- [X] T026 [P] [US1] Prueba de contrato de `POST /auth/login`, `GET /auth/me` y `POST /auth/change-password` (formas de éxito y de error, 401, 403, 423) en `server/tests/contract/auth.contract.test.js`
+- [X] T027 [P] [US1] Prueba de integración de inicio de sesión de los tres roles con usuario y con correo, cuenta desactivada y cuenta bloqueada, contra `motorix_test`, en `server/tests/integration/auth.test.js`
+- [X] T028 [P] [US1] Prueba de widgets de la pantalla de inicio de sesión y del diálogo de cierre de sesión en `client/test/screens/login_screen_test.dart`
 
 ### Implementación de la historia 1
 
-- [ ] T029 [P] [US1] Crear el modelo de acceso a datos de usuarios con consultas parametrizadas (buscar por identificador, por id, actualizar intentos y bloqueo, actualizar contraseña) en `server/models/userModel.js`
-- [ ] T030 [P] [US1] Crear los esquemas `zod` de inicio de sesión y cambio de contraseña, con la política de contraseña, en `server/validators/authValidator.js`
-- [ ] T031 [US1] Implementar `server/services/authService.js`: verificación con `bcryptjs` (costo 10), emisión de JWT de 8 horas (28800 s), bloqueo de 15 minutos tras 5 intentos fallidos, mensaje genérico `INVALID_CREDENTIALS` y cambio de contraseña verificando la actual
-- [ ] T032 [US1] Implementar `server/controllers/authController.js` y `server/routes/authRoutes.js` con `POST /api/auth/login`, `GET /api/auth/me` y `POST /api/auth/change-password`, y registrar las rutas en `server/app.js`
-- [ ] T033 [US1] Crear `server/scripts/create-admin.js` que genera el hash bcrypt de una contraseña recibida por argumento o entorno y crea o actualiza una cuenta de usuario (sin contraseñas en texto plano en SQL)
-- [ ] T034 [US1] Crear `database/seeds/001_initial_users.sql` y el script del backend que carga las cuentas `admin`, `recepcion` y `mecanico` con contraseña hasheada con bcrypt, de forma idempotente (`ON DUPLICATE KEY UPDATE`) y solo para entornos locales
-- [ ] T035 [P] [US1] Crear `client/lib/models/user.dart` y la pantalla `client/lib/screens/login_screen.dart` con un único campo "Usuario o correo", estados de carga y error, y mensajes en español
-- [ ] T036 [US1] Completar `client/lib/providers/auth_provider.dart` (iniciar y cerrar sesión, guardar el token, cargar `/auth/me`) y agregar al pie de la barra el menú del usuario con "Cambiar contraseña" y "Cerrar sesión" con confirmación (FR-030) en `client/lib/widgets/app_shell.dart`
-- [ ] T037 [US1] Crear `client/lib/screens/change_password_screen.dart` con validación de la política y confirmación al salir con cambios sin guardar
+- [X] T029 [P] [US1] Crear el modelo de acceso a datos de usuarios con consultas parametrizadas (buscar por identificador, por id, actualizar intentos y bloqueo, actualizar contraseña) en `server/models/userModel.js`
+- [X] T030 [P] [US1] Crear los esquemas `zod` de inicio de sesión y cambio de contraseña, con la política de contraseña, en `server/validators/authValidator.js`
+- [X] T031 [US1] Implementar `server/services/authService.js`: verificación con `bcryptjs` (costo 10), emisión de JWT de 8 horas (28800 s), bloqueo de 15 minutos tras 5 intentos fallidos, mensaje genérico `INVALID_CREDENTIALS` y cambio de contraseña verificando la actual
+- [X] T032 [US1] Implementar `server/controllers/authController.js` y `server/routes/authRoutes.js` con `POST /api/auth/login`, `GET /api/auth/me` y `POST /api/auth/change-password`, y registrar las rutas en `server/app.js`
+- [X] T033 [US1] Crear `server/scripts/create-admin.js` que genera el hash bcrypt de una contraseña recibida por argumento o entorno y crea o actualiza una cuenta de usuario (sin contraseñas en texto plano en SQL)
+- [X] T034 [US1] Crear `server/scripts/seed.js` (comando `npm run seed`) que carga las cuentas `admin`, `recepcion` y `mecanico` con contraseña hasheada con bcrypt, de forma idempotente (`ON DUPLICATE KEY UPDATE`) y solo para entornos locales; las contraseñas del estándar se leen de variables de entorno locales (`SEED_PASSWORD_*`), no del código
+- [X] T035 [P] [US1] Crear `client/lib/models/user.dart` y la pantalla `client/lib/screens/login_screen.dart` con un único campo "Usuario o correo", estados de carga y error, y mensajes en español
+- [X] T036 [US1] Completar `client/lib/providers/auth_provider.dart` (iniciar y cerrar sesión, guardar el token, cargar `/auth/me`) y agregar al pie de la barra el menú del usuario con "Cambiar contraseña" y "Cerrar sesión" con confirmación (FR-030) en `client/lib/widgets/app_shell.dart`
+- [X] T037 [US1] Crear `client/lib/screens/change_password_screen.dart` con validación de la política y confirmación al salir con cambios sin guardar
 
 **Punto de control**: Se puede iniciar sesión con los tres roles y la sesión funciona de extremo a extremo
 
