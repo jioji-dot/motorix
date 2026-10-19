@@ -31,3 +31,7 @@ Resultado de ejecutar los escenarios de [quickstart.md](quickstart.md) contra la
 
 - Las pantallas de Flutter se verificaron con pruebas de widgets (`flutter test`, incluida una prueba de diseño adaptable a distintos anchos), **no** con una revisión visual manual en una ventana real.
 - No se ejecutó la aplicación Flutter conectada a esta API en un navegador o en Windows de escritorio.
+
+## Actualización posterior (19-oct-2026)
+
+Después de esta validación ejecuté la aplicación Flutter en Chrome (http://localhost:8080) conectada a la API real y tomé capturas de los flujos principales, guardadas en `docs/evidencias/captura-*.png`. Esto reemplaza lo dicho arriba sobre no haber ejecutado la aplicación; sigue sin hacerse una prueba con personas ni en otros navegadores.

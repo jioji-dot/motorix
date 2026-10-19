@@ -74,3 +74,7 @@ comprobación final no encontró restos).
 - La concurrencia se probó con diez peticiones simultáneas por la última pieza y con dos mecánicos reales; no se hicieron
   pruebas de carga.
 - La equivalencia de 50 km por día solo ordena los mantenimientos dentro de un mismo grupo; no afecta la clasificación.
+
+## Actualización posterior (19-oct-2026)
+
+Después de esta validación ejecuté la aplicación Flutter en Chrome (http://localhost:8080) conectada a la API real y tomé capturas de los flujos principales, guardadas en `docs/evidencias/captura-*.png`. Esto reemplaza lo dicho arriba sobre no haber ejecutado la aplicación; sigue sin hacerse una prueba con personas ni en otros navegadores.

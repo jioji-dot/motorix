@@ -81,3 +81,7 @@ queda pendiente (ver "Qué no cubre esta validación").
 - Las pruebas de widgets usan la fuente de prueba de Flutter (cada letra ocupa 14 px), que ensancha los textos.
 - Límite conocido: la aprobación tardía de un pago de Mercado Pago que recepción ya canceló en Motorix se ignora (se registra una
   advertencia) y se concilia fuera del sistema.
+
+## Actualización posterior (19-oct-2026)
+
+Después de esta validación ejecuté la aplicación Flutter en Chrome (http://localhost:8080) conectada a la API real y tomé capturas de los flujos principales, guardadas en `docs/evidencias/captura-*.png`. Esto reemplaza lo dicho arriba sobre no haber ejecutado la aplicación; sigue sin hacerse una prueba con personas ni en otros navegadores.
