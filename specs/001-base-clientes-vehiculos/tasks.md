@@ -135,20 +135,20 @@ description: "Lista de tareas para implementar el Sprint 1: base del sistema, cl
 
 ### Pruebas de la historia 3 ⚠️
 
-- [ ] T050 [P] [US3] Prueba unitaria del servicio de vehículos (`licensePlate` en mayúsculas y sin espacios; `vin` de 17 caracteres alfanuméricos y opcional; `year` entre 1950 y el año actual más 1; `currentMileage` entero mayor o igual a 0 que no disminuye sin `mileageCorrection: true`) en `server/tests/unit/vehicleService.test.js`
-- [ ] T051 [P] [US3] Prueba de contrato de `GET /vehicles`, `GET /vehicles/:id`, `POST /vehicles` y `PATCH /vehicles/:id`, incluidos 404, 409 `DUPLICATE_VALUE` y 409 `MILEAGE_DECREASE`, en `server/tests/contract/vehicles.contract.test.js`
-- [ ] T052 [P] [US3] Prueba de integración de vehículos: sin `clientId` se rechaza, cliente inexistente da 404, placas y VIN duplicados dan 409, varios vehículos sin VIN se permiten, el vehículo aparece en el detalle del cliente, y MECHANIC solo consulta, en `server/tests/integration/vehicles.test.js`
-- [ ] T053 [P] [US3] Prueba de provider y de widgets de la lista y el formulario de vehículos en `client/test/screens/vehicles_screen_test.dart`
+- [X] T050 [P] [US3] Prueba unitaria del servicio de vehículos (`licensePlate` en mayúsculas y sin espacios; `vin` de 17 caracteres alfanuméricos y opcional; `year` entre 1950 y el año actual más 1; `currentMileage` entero mayor o igual a 0 que no disminuye sin `mileageCorrection: true`) en `server/tests/unit/vehicleService.test.js`
+- [X] T051 [P] [US3] Prueba de contrato de `GET /vehicles`, `GET /vehicles/:id`, `POST /vehicles` y `PATCH /vehicles/:id`, incluidos 404, 409 `DUPLICATE_VALUE` y 409 `MILEAGE_DECREASE`, en `server/tests/contract/vehicles.contract.test.js`
+- [X] T052 [P] [US3] Prueba de integración de vehículos: sin `clientId` se rechaza, cliente inexistente da 404, placas y VIN duplicados dan 409, varios vehículos sin VIN se permiten, el vehículo aparece en el detalle del cliente, y MECHANIC solo consulta, en `server/tests/integration/vehicles.test.js`
+- [X] T053 [P] [US3] Prueba de provider y de widgets de la lista y el formulario de vehículos en `client/test/screens/vehicles_screen_test.dart`
 
 ### Implementación de la historia 3
 
-- [ ] T054 [P] [US3] Crear `server/models/vehicleModel.js` con búsqueda por placas, marca, modelo o propietario, detalle con datos del cliente, alta y edición
-- [ ] T055 [P] [US3] Crear `server/validators/vehicleValidator.js` con los esquemas de alta y edición según las reglas de `data-model.md`
-- [ ] T056 [US3] Implementar `server/services/vehicleService.js`: propietario obligatorio y existente, traducción de duplicados de placas o VIN a 409 `DUPLICATE_VALUE` y regla de kilometraje con `MILEAGE_DECREASE`
-- [ ] T057 [US3] Implementar `server/controllers/vehicleController.js` y `server/routes/vehicleRoutes.js` con los permisos de la matriz y registrarlas en `server/app.js`
-- [ ] T058 [P] [US3] Crear `client/lib/models/vehicle.dart` y `client/lib/providers/vehicles_provider.dart`
-- [ ] T059 [US3] Crear `client/lib/screens/vehicles_screen.dart`, `client/lib/screens/vehicle_form_screen.dart` (propietario obligatorio mediante selector de clientes) y `client/lib/screens/vehicle_detail_screen.dart` con el propietario, respetando el rol MECHANIC de solo lectura
-- [ ] T060 [US3] Agregar a `database/seeds/` los vehículos de ejemplo (1 a 2 por cliente, uno sin VIN) de forma idempotente y verificar que cargar los seeds dos veces no duplica registros
+- [X] T054 [P] [US3] Crear `server/models/vehicleModel.js` con búsqueda por placas, marca, modelo o propietario, detalle con datos del cliente, alta y edición
+- [X] T055 [P] [US3] Crear `server/validators/vehicleValidator.js` con los esquemas de alta y edición según las reglas de `data-model.md`
+- [X] T056 [US3] Implementar `server/services/vehicleService.js`: propietario obligatorio y existente, traducción de duplicados de placas o VIN a 409 `DUPLICATE_VALUE` y regla de kilometraje con `MILEAGE_DECREASE`
+- [X] T057 [US3] Implementar `server/controllers/vehicleController.js` y `server/routes/vehicleRoutes.js` con los permisos de la matriz y registrarlas en `server/app.js`
+- [X] T058 [P] [US3] Crear `client/lib/models/vehicle.dart` y `client/lib/providers/vehicles_provider.dart`
+- [X] T059 [US3] Crear `client/lib/screens/vehicles_screen.dart`, `client/lib/screens/vehicle_form_screen.dart` (propietario obligatorio mediante selector de clientes) y `client/lib/screens/vehicle_detail_screen.dart` con el propietario, respetando el rol MECHANIC de solo lectura
+- [X] T060 [US3] Agregar a `database/seeds/` los vehículos de ejemplo (1 a 2 por cliente, uno sin VIN) de forma idempotente y verificar que cargar los seeds dos veces no duplica registros
 
 **Punto de control**: El flujo principal completo funciona: iniciar sesión → registrar cliente → registrar vehículo → asociarlo → consultar
 

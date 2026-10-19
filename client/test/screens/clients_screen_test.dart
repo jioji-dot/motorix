@@ -2,71 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 
+import '../helpers/fake_api.dart';
 import '../helpers/test_app.dart';
-
-Map<String, dynamic> clienteJson(int id, String nombre, {String telefono = '5512345601', bool activo = true}) => {
-      'id': id,
-      'name': nombre,
-      'phone': telefono,
-      'email': null,
-      'active': activo,
-      'createdAt': '2026-10-19T10:00:00.000Z',
-      'updatedAt': '2026-10-19T10:00:00.000Z',
-    };
-
-Map<String, dynamic> listaJson(List<Map<String, dynamic>> items) => {
-      'data': items,
-      'meta': {'page': 1, 'pageSize': 20, 'total': items.length},
-    };
-
-/// Simula la API: inicio de sesión y las rutas de clientes que reciba [clientes].
-class ApiSimulada {
-  ApiSimulada({required this.rol, List<Map<String, dynamic>>? clientes}) : clientes = clientes ?? [];
-
-  final String rol;
-  final List<Map<String, dynamic>> clientes;
-  final List<http.Request> peticiones = [];
-  http.Response? Function(http.Request)? sobrescribir;
-
-  Future<http.Response> call(http.Request peticion) async {
-    peticiones.add(peticion);
-    final personalizada = sobrescribir?.call(peticion);
-    if (personalizada != null) return personalizada;
-
-    final ruta = peticion.url.path;
-    if (ruta == '/api/auth/login') return loginOk(rol == 'MECHANIC' ? 'mecanico' : 'recepcion', rol);
-    if (ruta == '/api/clients' && peticion.method == 'GET') return jsonResponse(200, listaJson(clientes));
-    if (ruta == '/api/clients' && peticion.method == 'POST') {
-      final cuerpo = jsonDecode(peticion.body) as Map<String, dynamic>;
-      final nuevo = clienteJson(100 + clientes.length, cuerpo['name'] as String, telefono: cuerpo['phone'] as String);
-      clientes.add(nuevo);
-      return jsonResponse(201, {'data': nuevo});
-    }
-    final detalle = RegExp(r'^/api/clients/(\d+)$').firstMatch(ruta);
-    if (detalle != null && peticion.method == 'GET') {
-      final id = int.parse(detalle.group(1)!);
-      final cliente = clientes.firstWhere((c) => c['id'] == id);
-      return jsonResponse(200, {
-        'data': {
-          ...cliente,
-          'vehicles': [
-            {'id': 1, 'brand': 'Nissan', 'model': 'Versa', 'year': 2020, 'licensePlate': 'ABC-123-A', 'vin': null, 'currentMileage': 45000},
-          ],
-        },
-      });
-    }
-    return jsonResponse(404, {'error': {'code': 'NOT_FOUND', 'message': 'No encontrado.'}});
-  }
-}
-
-Future<void> entrar(WidgetTester tester) async {
-  await tester.enterText(find.byKey(const Key('campo-identificador')), 'usuario');
-  await tester.enterText(find.byKey(const Key('campo-contrasena')), 'Contrasena2026');
-  await tester.tap(find.widgetWithText(FilledButton, 'Iniciar sesión'));
-  await tester.pumpAndSettle();
-}
 
 void main() {
   group('Lista de clientes', () {
@@ -228,7 +166,11 @@ void main() {
 
   group('Detalle de cliente', () {
     testWidgets('muestra_los_datos_y_los_vehiculos_asociados', (tester) async {
-      final api = ApiSimulada(rol: 'RECEPTIONIST', clientes: [clienteJson(1, 'Roberto Hernández')]);
+      final api = ApiSimulada(
+        rol: 'RECEPTIONIST',
+        clientes: [clienteJson(1, 'Roberto Hernández')],
+        vehiculos: [vehiculoJson(1, 1, 'ABC-123-A')],
+      );
       await bombearApp(tester, api.call);
       await entrar(tester);
 
@@ -241,7 +183,11 @@ void main() {
     });
 
     testWidgets('el_mecanico_ve_el_detalle_sin_acciones_de_edicion', (tester) async {
-      final api = ApiSimulada(rol: 'MECHANIC', clientes: [clienteJson(1, 'Roberto Hernández')]);
+      final api = ApiSimulada(
+        rol: 'MECHANIC',
+        clientes: [clienteJson(1, 'Roberto Hernández')],
+        vehiculos: [vehiculoJson(1, 1, 'ABC-123-A')],
+      );
       await bombearApp(tester, api.call);
       await entrar(tester);
 

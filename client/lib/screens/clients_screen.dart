@@ -14,6 +14,7 @@ import '../widgets/state_views.dart';
 import '../widgets/status_chip.dart';
 import 'client_detail_screen.dart';
 import 'client_form_screen.dart';
+import 'vehicle_form_screen.dart';
 
 /// Listado de clientes con búsqueda, filtro de estado y acciones según el rol.
 class ClientsScreen extends StatefulWidget {
@@ -58,7 +59,9 @@ class _ClientsScreenState extends State<ClientsScreen> {
 
   Future<void> _openDetail(Client client) async {
     await Navigator.of(context).push<void>(
-      MaterialPageRoute(builder: (_) => ClientDetailScreen(clientId: client.id)),
+      MaterialPageRoute(
+        builder: (_) => ClientDetailScreen(clientId: client.id, onRegisterVehicle: registerVehicleForClient),
+      ),
     );
     if (mounted) context.read<ClientsProvider>().load();
   }

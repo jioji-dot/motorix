@@ -71,6 +71,16 @@ class ClientsProvider extends ChangeNotifier {
     load(page: 1);
   }
 
+  /// Busca clientes para el selector de propietario, sin modificar el listado en pantalla.
+  Future<List<Client>> searchClients(String texto) async {
+    final respuesta = await api.get('/clients', query: {
+      'search': texto.trim(),
+      'active': 'true',
+      'pageSize': '20',
+    }) as Map<String, dynamic>;
+    return (respuesta['data'] as List).map((c) => Client.fromJson(c as Map<String, dynamic>)).toList();
+  }
+
   Future<Client> fetchDetail(int id) async {
     final respuesta = await api.get('/clients/$id') as Map<String, dynamic>;
     return Client.fromJson(respuesta['data'] as Map<String, dynamic>);
