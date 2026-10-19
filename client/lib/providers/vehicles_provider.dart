@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../models/history_entry.dart';
 import '../models/vehicle.dart';
 import '../services/api_client.dart';
 
@@ -67,6 +68,12 @@ class VehiclesProvider extends ChangeNotifier {
       'pageSize': '100',
     }) as Map<String, dynamic>;
     return (respuesta['data'] as List).map((v) => Vehicle.fromJson(v as Map<String, dynamic>)).toList();
+  }
+
+  /// Historial de servicios del vehículo (órdenes terminadas y entregadas), del más reciente al más antiguo.
+  Future<List<HistoryEntry>> history(int vehicleId) async {
+    final respuesta = await api.get('/vehicles/$vehicleId/history', query: {'pageSize': '100'}) as Map<String, dynamic>;
+    return (respuesta['data'] as List).map((e) => HistoryEntry.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<Vehicle> fetchDetail(int id) async {

@@ -12,8 +12,10 @@ import '../utils/format.dart';
 import '../widgets/button_spinner.dart';
 import '../widgets/confirm_dialog.dart';
 import '../widgets/order_line_dialogs.dart';
+import '../widgets/part_picker_dialog.dart';
 import '../widgets/state_views.dart';
 import '../widgets/status_chip.dart';
+import 'maintenance_form_screen.dart';
 
 /// Detalle de una orden de servicio: datos, trabajo documentado, líneas, total e historial.
 /// El mecánico asignado (o el administrador) documenta el trabajo mientras la orden está en curso.
@@ -35,6 +37,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   final _diagnosis = TextEditingController();
   final _notes = TextEditingController();
   final _recommendations = TextEditingController();
+  final _serviceMileage = TextEditingController();
 
   @override
   void initState() {
@@ -47,6 +50,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     _diagnosis.dispose();
     _notes.dispose();
     _recommendations.dispose();
+    _serviceMileage.dispose();
     super.dispose();
   }
 
@@ -104,6 +108,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     _diagnosis.text = orden.diagnosis ?? '';
     _notes.text = orden.notes ?? '';
     _recommendations.text = orden.recommendations ?? '';
+    _serviceMileage.text = orden.serviceMileage?.toString() ?? '';
     setState(() => _editingWork = true);
   }
 
@@ -111,8 +116,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final orden = _order!;
     return _diagnosis.text != (orden.diagnosis ?? '') ||
         _notes.text != (orden.notes ?? '') ||
-        _recommendations.text != (orden.recommendations ?? '');
+        _recommendations.text != (orden.recommendations ?? '') ||
+        _serviceMileage.text.trim() != (orden.serviceMileage?.toString() ?? '');
   }
+
+  /// Error del kilometraje del servicio (opcional): entero entre el de entrada y 1,500,000.
+  String? get _errorKilometrajeServicio => validarKilometrajeDelServicio(_serviceMileage.text, _order!.entryMileage);
 
   Future<void> _cancelarEdicion() async {
     if (_hayCambiosDeTrabajo && !await confirmDiscardChanges(context)) return;
@@ -126,6 +135,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         'diagnosis': _diagnosis.text.trim(),
         'notes': _notes.text.trim(),
         'recommendations': _recommendations.text.trim(),
+        if (_serviceMileage.text.trim().isNotEmpty &&
+            _serviceMileage.text.trim() != (_order!.serviceMileage?.toString() ?? ''))
+          'serviceMileage': int.parse(_serviceMileage.text.trim()),
       }),
       'Trabajo documentado guardado.',
     );
@@ -183,6 +195,60 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
     if (!confirmado || !mounted) return;
     await _ejecutar((p) => p.removeLabor(widget.orderId, mano.id), 'Mano de obra quitada.');
+  }
+
+  // ---- Refacciones
+
+  Future<void> _agregarRefaccion() async {
+    final seleccion = await showPartPicker(context);
+    if (seleccion == null || !mounted) return;
+    await _ejecutar((p) => p.addPart(widget.orderId, seleccion.part.id, seleccion.quantity), 'Refacción agregada.');
+  }
+
+  Future<void> _editarRefaccion(OrderPart linea) async {
+    final cantidad = await showQuantityDialog(context, title: 'Cambiar cantidad', label: linea.name, initial: linea.quantity);
+    if (cantidad == null || cantidad == linea.quantity || !mounted) return;
+    await _ejecutar((p) => p.updatePart(widget.orderId, linea.id, cantidad), 'Cantidad actualizada.');
+  }
+
+  Future<void> _quitarRefaccion(OrderPart linea) async {
+    final confirmado = await showConfirmDialog(
+      context,
+      title: 'Quitar refacción',
+      message: '¿Quitar "${linea.name}" de la orden? Las piezas regresarán al inventario y el total se recalculará.',
+      destructive: true,
+    );
+    if (!confirmado || !mounted) return;
+    await _ejecutar((p) => p.removePart(widget.orderId, linea.id), 'Refacción quitada.');
+  }
+
+  // ---- Próximo mantenimiento
+
+  bool get _canScheduleMaintenance {
+    final orden = _order;
+    if (orden == null || !orden.isCompleted) return false;
+    final rol = _user.role;
+    return rol == UserRole.admin || rol == UserRole.mechanic;
+  }
+
+  Future<void> _programarMantenimiento() async {
+    final orden = _order!;
+    // La fecha del servicio es la del cambio a Terminado; si no consta, la de hoy.
+    final terminado = orden.history.where((h) => h.toStatus == 'TERMINADO');
+    final fecha = terminado.isEmpty ? DateTime.now() : terminado.last.changedAt;
+    await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => MaintenanceFormScreen(
+          preset: MaintenancePreset(
+            vehicleId: orden.vehicleId,
+            vehicleLabel: '${orden.vehicleTitle} · ${orden.licensePlate}',
+            lastServiceDate: fecha,
+            lastMileage: orden.serviceMileage ?? orden.entryMileage,
+            sourceOrderId: orden.id,
+          ),
+        ),
+      ),
+    );
   }
 
   // ---- Cambio de estado
@@ -273,6 +339,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       diagnosis: _diagnosis,
                       notes: _notes,
                       recommendations: _recommendations,
+                      serviceMileage: _serviceMileage,
+                      mileageError: _errorKilometrajeServicio,
+                      entryMileage: orden.entryMileage,
                       saving: _saving,
                       onChanged: () => setState(() {}),
                       onSave: _guardarTrabajo,
@@ -289,7 +358,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 onAddLabor: _agregarManoDeObra,
                 onEditLabor: _editarManoDeObra,
                 onRemoveLabor: _quitarManoDeObra,
+                onAddPart: _agregarRefaccion,
+                onEditPart: _editarRefaccion,
+                onRemovePart: _quitarRefaccion,
               ),
+              if (_canScheduleMaintenance) ...[
+                const SizedBox(height: AppSpacing.lg),
+                _ProgramarMantenimiento(onPressed: _programarMantenimiento),
+              ],
               const SizedBox(height: AppSpacing.lg),
               _Historial(orden: orden),
             ],
@@ -428,6 +504,12 @@ class _TrabajoDocumentado extends StatelessWidget {
           _bloque(context, 'Diagnóstico', orden.diagnosis, 'Sin diagnóstico registrado'),
           _bloque(context, 'Observaciones', orden.notes, 'Sin observaciones'),
           _bloque(context, 'Recomendaciones', orden.recommendations, 'Sin recomendaciones'),
+          _bloque(
+            context,
+            'Kilometraje del servicio',
+            orden.serviceMileage == null ? null : formatMileage(orden.serviceMileage!),
+            'No registrado',
+          ),
           if (onEdit != null) OutlinedButton(onPressed: onEdit, child: const Text('Editar trabajo')),
         ],
       ),
@@ -440,6 +522,9 @@ class _EdicionDeTrabajo extends StatelessWidget {
     required this.diagnosis,
     required this.notes,
     required this.recommendations,
+    required this.serviceMileage,
+    required this.mileageError,
+    required this.entryMileage,
     required this.saving,
     required this.onChanged,
     required this.onSave,
@@ -449,6 +534,9 @@ class _EdicionDeTrabajo extends StatelessWidget {
   final TextEditingController diagnosis;
   final TextEditingController notes;
   final TextEditingController recommendations;
+  final TextEditingController serviceMileage;
+  final String? mileageError;
+  final int entryMileage;
   final bool saving;
   final VoidCallback onChanged;
   final VoidCallback onSave;
@@ -477,12 +565,29 @@ class _EdicionDeTrabajo extends StatelessWidget {
           campo('campo-diagnostico', 'Diagnóstico', diagnosis),
           campo('campo-observaciones', 'Observaciones', notes),
           campo('campo-recomendaciones', 'Recomendaciones', recommendations),
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+            child: TextField(
+              key: const Key('campo-km-servicio'),
+              controller: serviceMileage,
+              keyboardType: TextInputType.number,
+              onChanged: (_) => onChanged(),
+              decoration: InputDecoration(
+                labelText: 'Kilometraje del servicio (opcional)',
+                helperText: 'Entrada: ${formatMileage(entryMileage)}',
+                errorText: mileageError,
+              ),
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               OutlinedButton(onPressed: saving ? null : onCancel, child: const Text('Cancelar')),
               const SizedBox(width: AppSpacing.md),
-              FilledButton(onPressed: saving ? null : onSave, child: saving ? const ButtonSpinner() : const Text('Guardar')),
+              FilledButton(
+                onPressed: (saving || mileageError != null) ? null : onSave,
+                child: saving ? const ButtonSpinner() : const Text('Guardar'),
+              ),
             ],
           ),
         ],
@@ -501,6 +606,9 @@ class _Lineas extends StatelessWidget {
     required this.onAddLabor,
     required this.onEditLabor,
     required this.onRemoveLabor,
+    required this.onAddPart,
+    required this.onEditPart,
+    required this.onRemovePart,
   });
 
   final ServiceOrder orden;
@@ -511,6 +619,9 @@ class _Lineas extends StatelessWidget {
   final VoidCallback onAddLabor;
   final void Function(OrderLabor) onEditLabor;
   final void Function(OrderLabor) onRemoveLabor;
+  final VoidCallback onAddPart;
+  final void Function(OrderPart) onEditPart;
+  final void Function(OrderPart) onRemovePart;
 
   Widget _acciones({required String editar, required String quitar, required VoidCallback onEdit, required VoidCallback onRemove}) {
     return Row(
@@ -526,7 +637,7 @@ class _Lineas extends StatelessWidget {
   Widget build(BuildContext context) {
     final texto = Theme.of(context).textTheme;
     return _Seccion(
-      titulo: 'Servicios y mano de obra',
+      titulo: 'Servicios, mano de obra y refacciones',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -589,6 +700,41 @@ class _Lineas extends StatelessWidget {
               ),
           const Divider(height: AppSpacing.xl),
           Row(
+            children: [
+              Expanded(child: Text('Refacciones utilizadas', style: texto.titleSmall)),
+              if (editable)
+                OutlinedButton(
+                  key: const Key('boton-agregar-refaccion'),
+                  onPressed: onAddPart,
+                  child: const Text('Agregar refacción'),
+                ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          if (orden.parts.isEmpty)
+            Text('Sin refacciones registradas', style: texto.bodyLarge?.copyWith(color: AppColors.textSecondary))
+          else
+            for (final r in orden.parts)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                child: Row(
+                  children: [
+                    Expanded(child: Text(r.name, overflow: TextOverflow.ellipsis)),
+                    Text('${r.quantity} × ${formatMoney(r.unitPrice)}', style: texto.bodySmall),
+                    const SizedBox(width: AppSpacing.lg),
+                    Text(formatMoney(r.amount)),
+                    if (editable)
+                      _acciones(
+                        editar: 'Cambiar cantidad',
+                        quitar: 'Quitar refacción',
+                        onEdit: () => onEditPart(r),
+                        onRemove: () => onRemovePart(r),
+                      ),
+                  ],
+                ),
+              ),
+          const Divider(height: AppSpacing.xl),
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text('Total  ', style: texto.titleSmall),
@@ -596,6 +742,28 @@ class _Lineas extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Acceso a programar el próximo mantenimiento desde una orden terminada o entregada.
+class _ProgramarMantenimiento extends StatelessWidget {
+  const _ProgramarMantenimiento({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return _Seccion(
+      titulo: 'Próximo mantenimiento',
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: OutlinedButton(
+          key: const Key('boton-programar-mantenimiento'),
+          onPressed: onPressed,
+          child: const Text('Programar próximo mantenimiento'),
+        ),
       ),
     );
   }

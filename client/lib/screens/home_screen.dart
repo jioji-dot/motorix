@@ -33,6 +33,16 @@ const _todasLasSecciones = [
     roles: {UserRole.admin, UserRole.receptionist, UserRole.mechanic},
   ),
   ShellSection(
+    label: 'Mantenimientos',
+    icon: LucideIcons.wrench,
+    roles: {UserRole.admin, UserRole.receptionist, UserRole.mechanic},
+  ),
+  ShellSection(
+    label: 'Inventario',
+    icon: LucideIcons.package,
+    roles: {UserRole.admin, UserRole.receptionist, UserRole.mechanic},
+  ),
+  ShellSection(
     label: 'Usuarios',
     icon: LucideIcons.userCog,
     roles: {UserRole.admin},

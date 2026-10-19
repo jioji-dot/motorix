@@ -3,11 +3,14 @@ import { z } from 'zod';
 import { MAX_STOCK, MOVEMENT_TYPES, STOCK_LEVELS } from '../utils/constants.js';
 import { importeSchema } from './commonValidator.js';
 
+// Concordancia de género en el mensaje: "La categoría es obligatoria." y "El código es obligatorio."
+const esObligatorio = (etiqueta) => `${etiqueta} es ${etiqueta.startsWith('La ') ? 'obligatoria' : 'obligatorio'}.`;
+
 const texto = (etiqueta, maximo) =>
   z
-    .string({ required_error: `${etiqueta} es obligatorio.`, invalid_type_error: `${etiqueta} no es válido.` })
+    .string({ required_error: esObligatorio(etiqueta), invalid_type_error: `${etiqueta} no es válido.` })
     .trim()
-    .min(1, `${etiqueta} es obligatorio.`)
+    .min(1, esObligatorio(etiqueta))
     .max(maximo, `${etiqueta} no puede tener más de ${maximo} caracteres.`);
 
 const existencia = (etiqueta) => {

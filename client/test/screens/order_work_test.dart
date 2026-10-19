@@ -90,6 +90,8 @@ void main() {
       await tester.enterText(find.byKey(const Key('campo-diagnostico')), 'Falla en la bomba de agua');
       await tester.enterText(find.byKey(const Key('campo-observaciones')), 'Corrosión en mangueras');
       await tester.enterText(find.byKey(const Key('campo-recomendaciones')), 'Cambiar mangueras');
+      await tester.ensureVisible(find.widgetWithText(FilledButton, 'Guardar'));
+      await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(FilledButton, 'Guardar'));
       await tester.pumpAndSettle();
 
@@ -108,6 +110,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byKey(const Key('campo-diagnostico')), 'Algo');
       await tester.pump();
+      await tester.ensureVisible(find.widgetWithText(OutlinedButton, 'Cancelar'));
+      await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(OutlinedButton, 'Cancelar'));
       await tester.pumpAndSettle();
 

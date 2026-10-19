@@ -179,3 +179,16 @@ class _LineDialogState extends State<_LineDialog> {
     );
   }
 }
+
+/// Valida el kilometraje del servicio (opcional): entero entre el de entrada y 1,500,000 km. Nulo si es válido o está vacío.
+String? validarKilometrajeDelServicio(String? valor, int entryMileage) {
+  final texto = (valor ?? '').trim();
+  if (texto.isEmpty) return null;
+  final numero = int.tryParse(texto);
+  const maximo = 1500000;
+  if (numero == null || numero < 0 || numero > maximo) {
+    return 'Debe ser un número entero entre el kilometraje de entrada y 1,500,000 km.';
+  }
+  if (numero < entryMileage) return 'No puede ser menor al kilometraje de entrada ($entryMileage km).';
+  return null;
+}

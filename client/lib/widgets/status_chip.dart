@@ -22,6 +22,26 @@ const _estadosOrden = <String, (String, Color)>{
   'CANCELADA': ('Cancelada', AppColors.danger),
 };
 
+/// Nivel de stock de una refacción (Sprint 3).
+const _nivelesDeStock = <String, (String, Color)>{
+  'OK': ('En orden', AppColors.success),
+  'LOW': ('Stock bajo', AppColors.warning),
+  'OUT': ('Agotada', AppColors.danger),
+};
+
+/// Clasificación de un mantenimiento programado (Sprint 3).
+const _clasificaciones = <String, (String, Color)>{
+  'NORMAL': ('Normal', AppColors.textSecondary),
+  'PROXIMO': ('Próximo', AppColors.warning),
+  'VENCIDO': ('Vencido', AppColors.danger),
+};
+
+/// Etiqueta en español de un nivel de stock.
+String stockLevelLabel(String nivel) => _nivelesDeStock[nivel]?.$1 ?? nivel;
+
+/// Etiqueta en español de la clasificación de un mantenimiento.
+String maintenanceClassLabel(String clase) => _clasificaciones[clase]?.$1 ?? clase;
+
 /// Etiqueta en español de un estado de cita.
 String appointmentStatusLabel(String estado) => _estadosCita[estado]?.$1 ?? estado;
 
@@ -45,6 +65,20 @@ class StatusChip extends StatelessWidget {
   factory StatusChip.order(String estado) {
     final datos = _estadosOrden[estado];
     return StatusChip(label: datos?.$1 ?? estado, color: datos?.$2 ?? AppColors.textSecondary);
+  }
+
+  /// Nivel de stock; una refacción desactivada (sin nivel) se muestra como Inactiva.
+  factory StatusChip.stock(String? nivel) {
+    if (nivel == null) return const StatusChip(label: 'Inactiva', color: AppColors.textSecondary);
+    final datos = _nivelesDeStock[nivel];
+    return StatusChip(label: datos?.$1 ?? nivel, color: datos?.$2 ?? AppColors.textSecondary);
+  }
+
+  /// Clasificación del mantenimiento; los atendidos (sin clasificación) se muestran como Atendido.
+  factory StatusChip.maintenance(String? clase) {
+    if (clase == null) return const StatusChip(label: 'Atendido', color: AppColors.success);
+    final datos = _clasificaciones[clase];
+    return StatusChip(label: datos?.$1 ?? clase, color: datos?.$2 ?? AppColors.textSecondary);
   }
 
   final String label;

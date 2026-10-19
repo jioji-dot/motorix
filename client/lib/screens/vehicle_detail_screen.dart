@@ -9,6 +9,7 @@ import '../utils/app_theme.dart';
 import '../utils/format.dart';
 import '../widgets/state_views.dart';
 import 'vehicle_form_screen.dart';
+import 'vehicle_history_screen.dart';
 
 /// Detalle de un vehículo con su propietario. El mecánico solo consulta.
 class VehicleDetailScreen extends StatefulWidget {
@@ -51,6 +52,15 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       MaterialPageRoute(builder: (_) => VehicleFormScreen(vehicle: _vehicle)),
     );
     if (guardado == true) await _load();
+  }
+
+  void _openHistory() {
+    final vehiculo = _vehicle!;
+    Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => VehicleHistoryScreen(vehicleId: vehiculo.id, vehicleTitle: '${vehiculo.title} · ${vehiculo.licensePlate}'),
+      ),
+    );
   }
 
   @override
@@ -98,10 +108,19 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   ),
                   _Dato(etiqueta: 'Kilometraje', valor: formatMileage(vehiculo.currentMileage)),
                   _Dato(etiqueta: 'Número de serie', valor: vehiculo.vin ?? 'No registrado'),
-                  if (puedeEscribir) ...[
-                    const SizedBox(height: AppSpacing.lg),
-                    OutlinedButton(onPressed: _edit, child: const Text('Editar')),
-                  ],
+                  const SizedBox(height: AppSpacing.lg),
+                  Wrap(
+                    spacing: AppSpacing.md,
+                    runSpacing: AppSpacing.md,
+                    children: [
+                      FilledButton(
+                        key: const Key('boton-historial'),
+                        onPressed: _openHistory,
+                        child: const Text('Historial'),
+                      ),
+                      if (puedeEscribir) OutlinedButton(onPressed: _edit, child: const Text('Editar')),
+                    ],
+                  ),
                 ],
               ),
             ),

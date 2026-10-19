@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'helpers/fake_api.dart';
 import 'helpers/fake_api_s2.dart';
+import 'helpers/fake_api_s3.dart';
 import 'helpers/test_app.dart';
 
 Future<void> cambiarTamano(WidgetTester tester, double ancho, double alto) async {
@@ -14,7 +15,7 @@ Future<void> cambiarTamano(WidgetTester tester, double ancho, double alto) async
 }
 
 /// Datos con textos largos para provocar desbordamientos si los hubiera.
-ApiTaller crearApi() {
+ApiInventario crearApi() {
   final orden = ordenJson(
     7,
     estado: 'EN_REPARACION',
@@ -23,8 +24,9 @@ ApiTaller crearApi() {
     servicios: [servicioJson(1, 'Banda de accesorios nueva con instalación incluida', '680.00')],
     manoDeObra: [manoDeObraJson(1, 'Cambio de banda y tensor del motor', '1.50', '350.00', '525.00')],
   );
-  orden['total'] = '1205.00';
-  return ApiTaller(
+  orden['parts'] = [refaccionDeOrdenJson(1, 1, 'Filtro de aceite de alto rendimiento con empaque incluido', 2, '110.00')];
+  orden['total'] = '1425.00';
+  return ApiInventario(
     rol: 'ADMIN',
     clientes: [clienteJson(1, 'Roberto Hernández Cruz de la Fuente y Asociados'), clienteJson(2, 'María Fernanda López Díaz')],
     vehiculos: [
@@ -37,11 +39,34 @@ ApiTaller crearApi() {
       citaJson(2, clientId: 2, vehicleId: 2, estado: 'PENDIENTE', cliente: 'María Fernanda López Díaz', placas: 'DEF-456-B'),
     ],
     ordenes: [orden],
+    partes: [
+      parteJson(1, 'Filtro de aceite de alto rendimiento con empaque incluido', stock: 25, minimo: 8, categoria: 'Aceites y filtros de alto rendimiento'),
+      parteJson(2, 'Disco de freno delantero ventilado', stock: 3, minimo: 4, categoria: 'Frenos'),
+      parteJson(3, 'Sensor de oxígeno', stock: 0, minimo: 2, categoria: 'Encendido'),
+    ],
+    movimientos: {
+      1: [movimientoJson(1, 'IN', 25, 25, motivo: 'Compra a proveedor con un motivo bastante largo para provocar desbordamientos')],
+    },
+    mantenimientos: [
+      mantenimientoJson(1, tipo: 'Afinación mayor del motor y revisión general', clasificacion: 'VENCIDO', proximaFecha: '2026-10-01', dias: -18, km: 400, cliente: 'Roberto Hernández Cruz de la Fuente y Asociados'),
+      mantenimientoJson(2, vehicleId: 2, clasificacion: 'PROXIMO', proximaFecha: null, proximoKm: 50400, dias: null, km: 400, cliente: 'María Fernanda López Díaz', placas: 'DEF-456-B'),
+    ],
+    historial: {
+      1: [
+        historialJson(
+          7,
+          diagnostico: 'Banda de accesorios desgastada y tensor con juego; se recomienda revisar también el alternador.',
+          servicios: [servicioJson(1, 'Banda de accesorios nueva con instalación incluida', '680.00')],
+          manoDeObra: [manoDeObraJson(1, 'Cambio de banda y tensor del motor', '1.50', '350.00', '525.00')],
+          refacciones: [refaccionDeOrdenJson(1, 1, 'Filtro de aceite de alto rendimiento con empaque incluido', 2, '110.00')],
+        ),
+      ],
+    },
   );
 }
 
 void main() {
-  const secciones = ['Clientes', 'Vehículos', 'Citas', 'Órdenes de servicio', 'Usuarios'];
+  const secciones = ['Clientes', 'Vehículos', 'Citas', 'Órdenes de servicio', 'Mantenimientos', 'Inventario', 'Usuarios'];
 
   for (final ancho in [1400.0, 1000.0, 760.0]) {
     testWidgets('las_secciones_no_desbordan_con_ancho_${ancho.toInt()}_y_barra_expandida_o_colapsada', (tester) async {
@@ -131,6 +156,74 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
+
+  for (final ancho in [1400.0, 1000.0, 760.0, 600.0]) {
+    testWidgets('las_pantallas_del_sprint_3_no_desbordan_con_ancho_${ancho.toInt()}', (tester) async {
+      await bombearApp(tester, crearApi().call);
+      // Una ventana angosta arranca con la barra lateral colapsada, así que se redimensiona antes de iniciar sesión.
+      await cambiarTamano(tester, ancho, 800);
+      await entrar(tester);
+
+      // Historial del vehículo (desde el detalle del vehículo)
+      await tester.tap(find.byTooltip('Vehículos').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('ABC-123-A').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('boton-historial')));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'historial');
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      // Inventario: formulario y detalle de refacción, con el diálogo de movimientos
+      await tester.tap(find.byTooltip('Inventario').first);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'inventario');
+      await tester.tap(find.widgetWithText(FilledButton, 'Registrar refacción').first);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'formulario de refacción');
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Disco de freno delantero ventilado'));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'detalle de refacción');
+      await tester.tap(find.byKey(const Key('boton-registrar-movimiento')));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'diálogo de movimiento');
+      await tester.tap(find.widgetWithText(OutlinedButton, 'Cancelar').last);
+      await tester.pumpAndSettle();
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      // Mantenimientos: lista y formulario
+      await tester.tap(find.byTooltip('Mantenimientos').first);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'mantenimientos');
+      await tester.tap(find.widgetWithText(FilledButton, 'Programar mantenimiento').first);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'formulario de mantenimiento');
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      // Orden: bloque de refacciones y selector de refacción
+      await tester.tap(find.byTooltip('Órdenes de servicio').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('OS-000007'));
+      await tester.pumpAndSettle();
+      final agregar = find.byKey(const Key('boton-agregar-refaccion'));
+      await tester.ensureVisible(agregar);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'refacciones de la orden');
+      await tester.tap(agregar);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'selector de refacción');
+      await tester.tap(find.byKey(const Key('refaccion-1')));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull, reason: 'refacción elegida');
+    });
+  }
 
   testWidgets('las_acciones_y_los_dialogos_de_la_orden_no_desbordan_en_una_ventana_angosta', (tester) async {
     await bombearApp(tester, crearApi().call);

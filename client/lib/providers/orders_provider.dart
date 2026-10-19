@@ -108,4 +108,13 @@ class OrdersProvider extends ChangeNotifier {
 
   Future<ServiceOrder> removeLabor(int id, int laborId) async =>
       _orden(await api.delete('/orders/$id/labor/$laborId'));
+
+  /// Refacciones usadas: cada cambio mueve el inventario en el servidor y devuelve la orden completa.
+  Future<ServiceOrder> addPart(int id, int partId, int quantity) async =>
+      _orden(await api.post('/orders/$id/parts', body: {'partId': partId, 'quantity': quantity}));
+
+  Future<ServiceOrder> updatePart(int id, int lineId, int quantity) async =>
+      _orden(await api.patch('/orders/$id/parts/$lineId', body: {'quantity': quantity}));
+
+  Future<ServiceOrder> removePart(int id, int lineId) async => _orden(await api.delete('/orders/$id/parts/$lineId'));
 }

@@ -40,6 +40,37 @@ class OrderLabor {
       );
 }
 
+/// Refacción usada en una orden, con el precio y el nombre que tenía al agregarla.
+class OrderPart {
+  const OrderPart({
+    required this.id,
+    required this.partId,
+    required this.code,
+    required this.name,
+    required this.quantity,
+    required this.unitPrice,
+    required this.amount,
+  });
+
+  final int id;
+  final int partId;
+  final String code;
+  final String name;
+  final int quantity;
+  final String unitPrice;
+  final String amount;
+
+  factory OrderPart.fromJson(Map<String, dynamic> json) => OrderPart(
+        id: json['id'] as int,
+        partId: json['partId'] as int,
+        code: json['code'] as String,
+        name: json['name'] as String,
+        quantity: json['quantity'] as int,
+        unitPrice: json['unitPrice'].toString(),
+        amount: json['amount'].toString(),
+      );
+}
+
 /// Registro de un cambio de estado de la orden.
 class OrderHistoryEntry {
   const OrderHistoryEntry({
@@ -75,7 +106,7 @@ class Mechanic {
   factory Mechanic.fromJson(Map<String, dynamic> json) => Mechanic(id: json['id'] as int, name: json['name'] as String);
 }
 
-/// Orden de servicio. En los listados `services`, `labor` e `history` vienen vacíos.
+/// Orden de servicio. En los listados `services`, `labor`, `parts` e `history` vienen vacíos.
 class ServiceOrder {
   const ServiceOrder({
     required this.id,
@@ -100,6 +131,8 @@ class ServiceOrder {
     this.deliveredAt,
     this.services = const [],
     this.labor = const [],
+    this.parts = const [],
+    this.serviceMileage,
     this.history = const [],
     this.allowedTransitions = const [],
   });
@@ -128,6 +161,10 @@ class ServiceOrder {
   final String mechanicName;
   final List<OrderService> services;
   final List<OrderLabor> labor;
+  final List<OrderPart> parts;
+
+  /// Kilometraje al que se realizó el servicio (opcional).
+  final int? serviceMileage;
   final List<OrderHistoryEntry> history;
 
   /// Estados a los que el usuario actual puede pasar la orden ahora mismo.
@@ -137,6 +174,9 @@ class ServiceOrder {
   bool get isOpen => const ['RECIBIDO', 'DIAGNOSTICO', 'EN_REPARACION', 'ESPERANDO_REFACCION'].contains(status);
 
   bool get isFinal => status == 'ENTREGADO' || status == 'CANCELADA';
+
+  /// Una orden terminada o entregada admite programar el próximo mantenimiento.
+  bool get isCompleted => status == 'TERMINADO' || status == 'ENTREGADO';
 
   factory ServiceOrder.fromJson(Map<String, dynamic> json) {
     final cliente = json['client'] as Map<String, dynamic>;
@@ -168,6 +208,8 @@ class ServiceOrder {
       mechanicName: mecanico['name'] as String,
       services: lista('services', OrderService.fromJson),
       labor: lista('labor', OrderLabor.fromJson),
+      parts: lista('parts', OrderPart.fromJson),
+      serviceMileage: json['serviceMileage'] as int?,
       history: lista('history', OrderHistoryEntry.fromJson),
       allowedTransitions: ((json['allowedTransitions'] as List?) ?? const []).cast<String>(),
     );
