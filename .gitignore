@@ -1,0 +1,15 @@
+# Secretos y entorno
+.env
+*.env.local
+
+# Dependencias y compilados
+node_modules/
+build/
+.dart_tool/
+coverage/
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
