@@ -213,6 +213,16 @@ Como administrador, quiero visualizar órdenes, citas, mantenimientos y alertas 
 
 Relaciones: una orden tiene muchos pagos y a lo sumo un ticket; un ticket se relaciona con el pago principal de su orden; el panel solo lee las demás entidades.
 
+### Criterios de aceptación en EARS
+
+Reescritura de los requisitos **FR-004** y **FR-005** con la sintaxis EARS (*Easy Approach to Requirements Syntax*). Los requisitos originales no se modifican: estas líneas los complementan, separando cada comportamiento para poder probarlo por separado. Responde siempre el backend.
+
+- **FR-005-a** (por evento): CUANDO se reciba una solicitud de pago para una orden Terminada o Entregada, el backend DEBERÁ bloquear esa orden hasta terminar de registrar el pago, de modo que las solicitudes de pago de una misma orden se procesen una a la vez.
+- **FR-005-b** (por evento): CUANDO el importe de un pago sea menor o igual al saldo disponible de la orden, el backend DEBERÁ registrarlo.
+- **FR-005-c** (comportamiento no deseado): SI el importe de un pago es mayor al saldo disponible de la orden, ENTONCES el backend DEBERÁ rechazarlo con un mensaje en español que indique el saldo disponible, sin registrar nada.
+- **FR-005-d** (por estado): MIENTRAS un pago de Mercado Pago esté Pendiente, el backend DEBERÁ descontar su importe del saldo disponible de la orden.
+- **FR-005-e** (por evento): CUANDO un pago de Mercado Pago pase a Rechazado o Cancelado, el backend DEBERÁ volver a incluir su importe en el saldo disponible de la orden.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles

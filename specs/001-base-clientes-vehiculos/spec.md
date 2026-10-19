@@ -165,6 +165,15 @@ Como administrador, quiero gestionar usuarios y roles de acceso para controlar q
 
 Relaciones: un cliente tiene cero o más vehículos; un vehículo pertenece a un solo cliente; un usuario tiene exactamente un rol.
 
+### Criterios de aceptación en EARS
+
+Reescritura del requisito **FR-004** con la sintaxis EARS (*Easy Approach to Requirements Syntax*). El requisito original no se modifica: estas líneas lo complementan, separando cada comportamiento para poder probarlo por separado. Responde siempre el backend.
+
+- **FR-004-a** (por evento): CUANDO una cuenta acumule 5 intentos fallidos consecutivos de inicio de sesión, el backend DEBERÁ bloquearla durante 15 minutos.
+- **FR-004-b** (comportamiento no deseado): SI una cuenta está bloqueada, ENTONCES el backend DEBERÁ rechazar cualquier intento de inicio de sesión, aunque la contraseña sea correcta, con un mensaje en español que indique cuántos minutos faltan.
+- **FR-004-c** (por evento): CUANDO se cumplan los 15 minutos del bloqueo, el backend DEBERÁ permitir de nuevo el inicio de sesión sin intervención de un administrador.
+- **FR-004-d** (por evento): CUANDO una cuenta inicie sesión correctamente, el backend DEBERÁ reiniciar a cero su contador de intentos fallidos.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles
