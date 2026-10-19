@@ -5,7 +5,7 @@ import * as modeloClientes from '../models/clientModel.js';
 import * as modeloOrdenes from '../models/orderModel.js';
 import * as modeloUsuarios from '../models/userModel.js';
 import * as modeloVehiculos from '../models/vehicleModel.js';
-import { APPOINTMENT_STATUS } from '../utils/constants.js';
+import { APPOINTMENT_STATUS, ORDER_FINAL_STATUSES, ORDER_OPEN_STATUSES } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
 
 function errorDeCampo(campo, mensaje) {
@@ -115,7 +115,104 @@ export function createOrderService({
     return conPermisos(orden, usuario);
   }
 
-  return { create, list, get };
+  // ---- Edición de la orden y de sus líneas (historia 4)
+
+  const esAdmin = (usuario) => usuario.role === 'ADMIN';
+  const esMecanicoAsignado = (usuario, orden) => usuario.role === 'MECHANIC' && orden.mechanicId === usuario.id;
+
+  function noEditable(mensaje) {
+    return new HttpError(409, 'ORDER_NOT_EDITABLE', mensaje);
+  }
+
+  async function bloquear(conexion, id) {
+    const orden = await orderModel.lockOrder(conexion, id);
+    if (!orden) throw HttpError.notFound('No se encontró la orden solicitada.');
+    return orden;
+  }
+
+  // Documentar el trabajo (diagnóstico, observaciones, recomendaciones y líneas) es del mecánico asignado o ADMIN.
+  function exigirQuePuedeDocumentar(orden, usuario) {
+    if (!esAdmin(usuario) && !esMecanicoAsignado(usuario, orden)) {
+      throw HttpError.forbidden('Solo el mecánico asignado o el administrador pueden documentar el trabajo de esta orden.');
+    }
+  }
+
+  function exigirOrdenEnCurso(orden) {
+    if (!ORDER_OPEN_STATUSES.includes(orden.status)) {
+      throw noEditable('La orden ya no está en curso y no admite cambios en el trabajo documentado.');
+    }
+  }
+
+  const CAMPOS_DE_TRABAJO = ['diagnosis', 'notes', 'recommendations'];
+  const CAMPOS_DE_RECEPCION = ['reportedProblem', 'mechanicId'];
+
+  async function update(id, datos, usuario) {
+    await transaction(async (conexion) => {
+      const orden = await bloquear(conexion, id);
+      const envia = (campos) => campos.some((campo) => datos[campo] !== undefined);
+
+      if (usuario.role === 'MECHANIC' && orden.mechanicId !== usuario.id) {
+        throw HttpError.forbidden('Esta orden está asignada a otro mecánico.');
+      }
+      if (envia(CAMPOS_DE_TRABAJO)) {
+        exigirQuePuedeDocumentar(orden, usuario);
+        exigirOrdenEnCurso(orden);
+      }
+      if (envia(CAMPOS_DE_RECEPCION)) {
+        if (usuario.role !== 'RECEPTIONIST' && !esAdmin(usuario)) {
+          throw HttpError.forbidden('Solo recepción o el administrador pueden cambiar el problema reportado o el mecánico.');
+        }
+        if (datos.reportedProblem !== undefined) exigirOrdenEnCurso(orden);
+        if (datos.mechanicId !== undefined) {
+          if (ORDER_FINAL_STATUSES.includes(orden.status)) {
+            throw noEditable('Una orden Entregada o Cancelada no puede reasignarse.');
+          }
+          const mecanico = await userModel.findById(datos.mechanicId);
+          if (!mecanico) throw HttpError.notFound('El mecánico indicado no existe.');
+          if (mecanico.role !== 'MECHANIC' || !mecanico.active) {
+            throw errorDeCampo('mechanicId', 'El mecánico debe ser un usuario activo con rol de mecánico.');
+          }
+        }
+      }
+      await orderModel.updateFields(conexion, id, datos);
+    });
+    return conPermisos(await orderModel.findDetail(id), usuario);
+  }
+
+  // Ejecuta una operación sobre las líneas y recalcula el total en la misma transacción.
+  async function sobreLineas(id, usuario, operacion) {
+    await transaction(async (conexion) => {
+      const orden = await bloquear(conexion, id);
+      exigirQuePuedeDocumentar(orden, usuario);
+      exigirOrdenEnCurso(orden);
+      const resultado = await operacion(conexion);
+      if (resultado === 0) throw HttpError.notFound('No se encontró la línea indicada en esta orden.');
+      await orderModel.recalculateTotal(conexion, id);
+    });
+    return conPermisos(await orderModel.findDetail(id), usuario);
+  }
+
+  const addService = (id, datos, usuario) => sobreLineas(id, usuario, (c) => orderModel.addService(c, id, datos));
+  const updateService = (id, lineId, datos, usuario) =>
+    sobreLineas(id, usuario, (c) => orderModel.updateService(c, id, lineId, datos));
+  const removeService = (id, lineId, usuario) => sobreLineas(id, usuario, (c) => orderModel.removeService(c, id, lineId));
+  const addLabor = (id, datos, usuario) => sobreLineas(id, usuario, (c) => orderModel.addLabor(c, id, datos));
+  const updateLabor = (id, lineId, datos, usuario) =>
+    sobreLineas(id, usuario, (c) => orderModel.updateLabor(c, id, lineId, datos));
+  const removeLabor = (id, lineId, usuario) => sobreLineas(id, usuario, (c) => orderModel.removeLabor(c, id, lineId));
+
+  return {
+    create,
+    list,
+    get,
+    update,
+    addService,
+    updateService,
+    removeService,
+    addLabor,
+    updateLabor,
+    removeLabor,
+  };
 }
 
 export const orderService = createOrderService();

@@ -5,7 +5,16 @@ import { authorize } from '../middlewares/authorize.js';
 import { validate } from '../middlewares/validate.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { idParamSchema } from '../validators/commonValidator.js';
-import { createOrderSchema, orderListQuerySchema } from '../validators/orderValidator.js';
+import {
+  createOrderSchema,
+  laborSchema,
+  lineParamsSchema,
+  orderListQuerySchema,
+  serviceLineSchema,
+  updateLaborSchema,
+  updateOrderSchema,
+  updateServiceLineSchema,
+} from '../validators/orderValidator.js';
 
 const router = Router();
 
@@ -19,5 +28,17 @@ router.get('/:id', todos, validate(idParamSchema, 'params'), asyncHandler(contro
 
 // Solo recepción y administración crean órdenes.
 router.post('/', authorize('ADMIN', 'RECEPTIONIST'), validate(createOrderSchema), asyncHandler(controlador.create));
+
+// El permiso por campo (mecánico asignado o recepción) lo aplica el servicio; aquí solo se exige un rol válido.
+router.patch('/:id', todos, validate(idParamSchema, 'params'), validate(updateOrderSchema), asyncHandler(controlador.update));
+
+// Servicios y mano de obra: solo el mecánico asignado o el administrador (el servicio comprueba la asignación).
+const documenta = authorize('ADMIN', 'MECHANIC');
+router.post('/:id/services', documenta, validate(idParamSchema, 'params'), validate(serviceLineSchema), asyncHandler(controlador.addService));
+router.patch('/:id/services/:lineId', documenta, validate(lineParamsSchema, 'params'), validate(updateServiceLineSchema), asyncHandler(controlador.updateService));
+router.delete('/:id/services/:lineId', documenta, validate(lineParamsSchema, 'params'), asyncHandler(controlador.removeService));
+router.post('/:id/labor', documenta, validate(idParamSchema, 'params'), validate(laborSchema), asyncHandler(controlador.addLabor));
+router.patch('/:id/labor/:lineId', documenta, validate(lineParamsSchema, 'params'), validate(updateLaborSchema), asyncHandler(controlador.updateLabor));
+router.delete('/:id/labor/:lineId', documenta, validate(lineParamsSchema, 'params'), asyncHandler(controlador.removeLabor));
 
 export default router;

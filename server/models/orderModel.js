@@ -159,3 +159,98 @@ export async function list({ status, mechanicId, from, to, search, page, pageSiz
   ]);
   return { items: filas.map(toOrderSummary), total };
 }
+
+// Bloquea la orden durante la transacción para que ediciones y cambios de estado no se pisen.
+export async function lockOrder(conexion, id) {
+  const [filas] = await conexion.execute(
+    'SELECT id, status, mechanicId FROM service_orders WHERE id = ? FOR UPDATE',
+    [id],
+  );
+  return filas[0] ?? null;
+}
+
+const CAMPOS_EDITABLES = ['diagnosis', 'notes', 'recommendations', 'reportedProblem', 'mechanicId'];
+
+export async function updateFields(conexion, id, datos) {
+  const asignaciones = [];
+  const parametros = [];
+  for (const campo of CAMPOS_EDITABLES) {
+    if (datos[campo] !== undefined) {
+      asignaciones.push(`${campo} = ?`);
+      parametros.push(datos[campo]);
+    }
+  }
+  if (asignaciones.length > 0) {
+    await conexion.execute(`UPDATE service_orders SET ${asignaciones.join(', ')} WHERE id = ?`, [...parametros, id]);
+  }
+}
+
+// Total = servicios + mano de obra, recalculado dentro de la misma transacción de cada cambio de línea.
+export async function recalculateTotal(conexion, orderId) {
+  await conexion.execute(
+    `UPDATE service_orders
+        SET total = (SELECT COALESCE(SUM(amount), 0) FROM order_services WHERE orderId = ?)
+                  + (SELECT COALESCE(SUM(amount), 0) FROM order_labor WHERE orderId = ?)
+      WHERE id = ?`,
+    [orderId, orderId, orderId],
+  );
+}
+
+export async function addService(conexion, orderId, { description, amount }) {
+  const [resultado] = await conexion.execute(
+    'INSERT INTO order_services (orderId, description, amount) VALUES (?, ?, ?)',
+    [orderId, description, amount],
+  );
+  return resultado.insertId;
+}
+
+// Las operaciones de edición y baja devuelven las filas afectadas (0 si la línea no pertenece a la orden).
+export async function updateService(conexion, orderId, lineId, datos) {
+  const asignaciones = [];
+  const parametros = [];
+  for (const campo of ['description', 'amount']) {
+    if (datos[campo] !== undefined) {
+      asignaciones.push(`${campo} = ?`);
+      parametros.push(datos[campo]);
+    }
+  }
+  const [resultado] = await conexion.execute(
+    `UPDATE order_services SET ${asignaciones.join(', ')} WHERE id = ? AND orderId = ?`,
+    [...parametros, lineId, orderId],
+  );
+  return resultado.affectedRows;
+}
+
+export async function removeService(conexion, orderId, lineId) {
+  const [resultado] = await conexion.execute('DELETE FROM order_services WHERE id = ? AND orderId = ?', [lineId, orderId]);
+  return resultado.affectedRows;
+}
+
+export async function addLabor(conexion, orderId, { description, hours, hourlyRate }) {
+  const [resultado] = await conexion.execute(
+    'INSERT INTO order_labor (orderId, description, hours, hourlyRate) VALUES (?, ?, ?, ?)',
+    [orderId, description, hours, hourlyRate],
+  );
+  return resultado.insertId;
+}
+
+export async function updateLabor(conexion, orderId, lineId, datos) {
+  const asignaciones = [];
+  const parametros = [];
+  for (const campo of ['description', 'hours', 'hourlyRate']) {
+    if (datos[campo] !== undefined) {
+      asignaciones.push(`${campo} = ?`);
+      parametros.push(datos[campo]);
+    }
+  }
+  const [resultado] = await conexion.execute(
+    `UPDATE order_labor SET ${asignaciones.join(', ')} WHERE id = ? AND orderId = ?`,
+    [...parametros, lineId, orderId],
+  );
+  return resultado.affectedRows;
+}
+
+export async function removeLabor(conexion, orderId, lineId) {
+  const [resultado] = await conexion.execute('DELETE FROM order_labor WHERE id = ? AND orderId = ?', [lineId, orderId]);
+  return resultado.affectedRows;
+}

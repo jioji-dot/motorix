@@ -1,7 +1,7 @@
 // Esquemas de validación de órdenes de servicio (mensajes en español). Reglas según data-model.md.
 import { z } from 'zod';
 import { MAX_MILEAGE, ORDER_STATUSES } from '../utils/constants.js';
-import { fechaSchema, listQuerySchema } from './commonValidator.js';
+import { fechaSchema, importeSchema, listQuerySchema } from './commonValidator.js';
 
 const identificador = (mensaje) =>
   z.number({ required_error: mensaje, invalid_type_error: mensaje }).int(mensaje).positive(mensaje);
@@ -46,4 +46,56 @@ export const orderListQuerySchema = listQuerySchema.extend({
   mechanicId: z.coerce.number().int().positive('El mecánico no es válido.').optional(),
   from: fechaSchema.optional(),
   to: fechaSchema.optional(),
+});
+
+// Textos largos de la orden; un texto vacío se guarda como nulo.
+const textoLargo = (etiqueta) =>
+  z.preprocess(
+    (valor) => (typeof valor === 'string' && valor.trim() === '' ? null : valor),
+    z
+      .string({ invalid_type_error: `${etiqueta} no es válido.` })
+      .trim()
+      .max(4000, `${etiqueta} no puede tener más de 4000 caracteres.`)
+      .nullable()
+      .optional(),
+  );
+
+const alMenosUnCampo = (datos) => Object.values(datos).some((valor) => valor !== undefined);
+const MENSAJE_SIN_CAMPOS = { message: 'Envía al menos un campo para actualizar.' };
+
+export const updateOrderSchema = z
+  .object({
+    diagnosis: textoLargo('El diagnóstico'),
+    notes: textoLargo('Las observaciones'),
+    recommendations: textoLargo('Las recomendaciones'),
+    reportedProblem: problemaReportado.optional(),
+    mechanicId: identificador('El mecánico no es válido.').optional(),
+  })
+  .refine(alMenosUnCampo, MENSAJE_SIN_CAMPOS);
+
+const descripcionDeLinea = z
+  .string({ required_error: 'La descripción es obligatoria.', invalid_type_error: 'La descripción no es válida.' })
+  .trim()
+  .min(1, 'La descripción es obligatoria.')
+  .max(255, 'La descripción no puede tener más de 255 caracteres.');
+
+const importe = importeSchema('El importe');
+const horas = importeSchema('El número de horas', { minimo: 0.01, maximo: 999.99 });
+const tarifa = importeSchema('El valor de la tarifa por hora');
+
+export const serviceLineSchema = z.object({ description: descripcionDeLinea, amount: importe });
+
+export const updateServiceLineSchema = z
+  .object({ description: descripcionDeLinea.optional(), amount: importe.optional() })
+  .refine(alMenosUnCampo, MENSAJE_SIN_CAMPOS);
+
+export const laborSchema = z.object({ description: descripcionDeLinea, hours: horas, hourlyRate: tarifa });
+
+export const updateLaborSchema = z
+  .object({ description: descripcionDeLinea.optional(), hours: horas.optional(), hourlyRate: tarifa.optional() })
+  .refine(alMenosUnCampo, MENSAJE_SIN_CAMPOS);
+
+export const lineParamsSchema = z.object({
+  id: z.coerce.number().int().positive('El identificador no es válido.'),
+  lineId: z.coerce.number().int().positive('El identificador de la línea no es válido.'),
 });

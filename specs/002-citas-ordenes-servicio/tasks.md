@@ -145,18 +145,18 @@ description: "Lista de tareas para implementar el Sprint 2: citas y órdenes de 
 
 ### Pruebas de la historia 4 ⚠️
 
-- [ ] T045 [P] [US4] Prueba unitaria del servicio de líneas: `description` "obligatoria, 1 a 255 caracteres"; `amount` entre 0 y 99,999,999.99; `hours` "mayor a 0 y hasta 999.99"; `hourlyRate` no negativa; importe de mano de obra `ROUND(hours * hourlyRate, 2)`; total igual a la suma de servicios y mano de obra tras cada alta, edición o baja; solo se edita en RECIBIDO, DIAGNOSTICO, EN_REPARACION o ESPERANDO_REFACCION (409 `ORDER_NOT_EDITABLE` en otro caso); permisos por campo de `PATCH /orders/:id`, en `server/tests/unit/orderLines.test.js`
-- [ ] T046 [P] [US4] Prueba de contrato de `PATCH /orders/:id` y de `POST`, `PATCH` y `DELETE` de `/orders/:id/services` y `/orders/:id/labor` (respuesta con la orden completa y el total recalculado, 400, 403, 404 y 409) en `server/tests/contract/orders.lines.contract.test.js`
-- [ ] T047 [P] [US4] Prueba de integración: el mecánico asignado y ADMIN editan; otro mecánico y RECEPTIONIST reciben 403 en diagnóstico y líneas; RECEPTIONIST sí cambia `reportedProblem` y `mechanicId`; las órdenes TERMINADO, ENTREGADO y CANCELADA son de solo lectura; el total coincide siempre con las líneas, en `server/tests/integration/orders.lines.test.js`
-- [ ] T048 [P] [US4] Prueba de provider y de widgets de la edición en el detalle (guardar diagnóstico, agregar, editar y quitar servicios y mano de obra con confirmación al quitar, total en pantalla, validaciones en español) en `client/test/screens/order_work_test.dart`
+- [X] T045 [P] [US4] Prueba unitaria del servicio de líneas: `description` "obligatoria, 1 a 255 caracteres"; `amount` entre 0 y 99,999,999.99; `hours` "mayor a 0 y hasta 999.99"; `hourlyRate` no negativa; importe de mano de obra `ROUND(hours * hourlyRate, 2)`; total igual a la suma de servicios y mano de obra tras cada alta, edición o baja; solo se edita en RECIBIDO, DIAGNOSTICO, EN_REPARACION o ESPERANDO_REFACCION (409 `ORDER_NOT_EDITABLE` en otro caso); permisos por campo de `PATCH /orders/:id`, en `server/tests/unit/orderLines.test.js`
+- [X] T046 [P] [US4] Prueba de contrato de `PATCH /orders/:id` y de `POST`, `PATCH` y `DELETE` de `/orders/:id/services` y `/orders/:id/labor` (respuesta con la orden completa y el total recalculado, 400, 403, 404 y 409) en `server/tests/contract/orders.lines.contract.test.js`
+- [X] T047 [P] [US4] Prueba de integración: el mecánico asignado y ADMIN editan; otro mecánico y RECEPTIONIST reciben 403 en diagnóstico y líneas; RECEPTIONIST sí cambia `reportedProblem` y `mechanicId`; las órdenes TERMINADO, ENTREGADO y CANCELADA son de solo lectura; el total coincide siempre con las líneas, en `server/tests/integration/orders.lines.test.js`
+- [X] T048 [P] [US4] Prueba de provider y de widgets de la edición en el detalle (guardar diagnóstico, agregar, editar y quitar servicios y mano de obra con confirmación al quitar, total en pantalla, validaciones en español) en `client/test/screens/order_work_test.dart`
 
 ### Implementación de la historia 4
 
-- [ ] T049 [P] [US4] Agregar a `server/validators/orderValidator.js` los esquemas de edición de la orden, de servicios y de mano de obra
-- [ ] T050 [P] [US4] Agregar a `server/models/orderModel.js` las operaciones de edición de campos, alta, edición y baja de líneas, y el recálculo del `total` con `SUM` dentro de la transacción
-- [ ] T051 [US4] Agregar a `server/services/orderService.js` las reglas de edición: permisos por campo y por asignación, estados editables y recálculo del total
-- [ ] T052 [US4] Implementar `PATCH /api/orders/:id` y las rutas de `/services` y `/labor` en `server/controllers/orderController.js` y `server/routes/orderRoutes.js`
-- [ ] T053 [US4] Ampliar `client/lib/screens/order_detail_screen.dart` con la edición para el mecánico asignado y ADMIN: diagnóstico, observaciones y recomendaciones; tabla de servicios y de mano de obra con diálogos para agregar y editar, confirmación al quitar, total visible y modo solo lectura según estado
+- [X] T049 [P] [US4] Agregar a `server/validators/orderValidator.js` los esquemas de edición de la orden, de servicios y de mano de obra
+- [X] T050 [P] [US4] Agregar a `server/models/orderModel.js` las operaciones de edición de campos, alta, edición y baja de líneas, y el recálculo del `total` con `SUM` dentro de la transacción
+- [X] T051 [US4] Agregar a `server/services/orderService.js` las reglas de edición: permisos por campo y por asignación, estados editables y recálculo del total
+- [X] T052 [US4] Implementar `PATCH /api/orders/:id` y las rutas de `/services` y `/labor` en `server/controllers/orderController.js` y `server/routes/orderRoutes.js`
+- [X] T053 [US4] Ampliar `client/lib/screens/order_detail_screen.dart` con la edición para el mecánico asignado y ADMIN: diagnóstico, observaciones y recomendaciones; tabla de servicios y de mano de obra con diálogos para agregar y editar, confirmación al quitar, total visible y modo solo lectura según estado
 
 **Punto de control**: Las historias 1 a 4 funcionan de forma independiente
 
