@@ -18,6 +18,8 @@ export async function limpiarBase() {
   asegurarBaseDePruebas();
   await pool.query('SET FOREIGN_KEY_CHECKS = 0');
   for (const tabla of [
+    'tickets',
+    'payments',
     'maintenance',
     'inventory_movements',
     'order_parts',
@@ -206,6 +208,25 @@ export async function crearMantenimiento({
     [vehicleId, serviceType, lastServiceDate, lastMileage, nextDate, nextMileage, status, createdBy],
   );
   return resultado.insertId;
+}
+
+// Inserta un pago directamente en la base (por defecto, efectivo ya pagado).
+export async function crearPago({ orderId, createdBy, amount = 100, method = 'EFECTIVO', status = 'PAGADO', reference = null, externalReference = null, externalId = null }) {
+  asegurarBaseDePruebas();
+  const [resultado] = await pool.execute(
+    `INSERT INTO payments (orderId, amount, method, status, reference, externalReference, externalId, paidAt, createdBy)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ${status === 'PAGADO' ? 'NOW()' : 'NULL'}, ?)`,
+    [orderId, amount, method, status, reference, externalReference, externalId, createdBy],
+  );
+  return resultado.insertId;
+}
+
+// Crea una orden Terminada con un servicio que fija su total (por defecto 1000.00) lista para cobrarse.
+export async function crearOrdenCobrable({ clientId, vehicleId, mechanicId, createdBy, total = 1000, status = 'TERMINADO' }) {
+  const id = await crearOrden({ clientId, vehicleId, mechanicId, createdBy, status, diagnosis: 'Diagnóstico de prueba' });
+  await pool.execute('INSERT INTO order_services (orderId, description, amount) VALUES (?, ?, ?)', [id, 'Servicio de prueba', total]);
+  await pool.execute('UPDATE service_orders SET total = ? WHERE id = ?', [total, id]);
+  return id;
 }
 
 export async function cerrarConexiones() {

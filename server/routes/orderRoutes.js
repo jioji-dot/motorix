@@ -16,6 +16,9 @@ import {
   updateOrderSchema,
   updateServiceLineSchema,
 } from '../validators/orderValidator.js';
+import * as pagos from '../controllers/paymentController.js';
+import * as tickets from '../controllers/ticketController.js';
+import { createPaymentSchema } from '../validators/paymentValidator.js';
 import { orderPartSchema, updateOrderPartSchema } from '../validators/partValidator.js';
 
 const router = Router();
@@ -50,5 +53,13 @@ router.delete('/:id/labor/:lineId', documenta, validate(lineParamsSchema, 'param
 router.post('/:id/parts', documenta, validate(idParamSchema, 'params'), validate(orderPartSchema), asyncHandler(controlador.addPart));
 router.patch('/:id/parts/:lineId', documenta, validate(lineParamsSchema, 'params'), validate(updateOrderPartSchema), asyncHandler(controlador.updatePart));
 router.delete('/:id/parts/:lineId', documenta, validate(lineParamsSchema, 'params'), asyncHandler(controlador.removePart));
+
+// Pagos y ticket: solo recepción y administración (el mecánico no tiene acceso).
+const cobranza = authorize('ADMIN', 'RECEPTIONIST');
+router.get('/:id/payments', cobranza, validate(idParamSchema, 'params'), asyncHandler(pagos.listByOrder));
+router.post('/:id/payments', cobranza, validate(idParamSchema, 'params'), validate(createPaymentSchema), asyncHandler(pagos.create));
+router.post('/:id/ticket', cobranza, validate(idParamSchema, 'params'), asyncHandler(tickets.generate));
+router.get('/:id/ticket', cobranza, validate(idParamSchema, 'params'), asyncHandler(tickets.get));
+router.post('/:id/ticket/print-link', cobranza, validate(idParamSchema, 'params'), asyncHandler(tickets.printLink));
 
 export default router;

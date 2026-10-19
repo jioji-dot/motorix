@@ -52,3 +52,31 @@ export const MAINTENANCE_WARNING_DAYS = 15;
 export const MAINTENANCE_WARNING_KM = 500;
 
 export const MAX_STOCK = 1000000;
+
+// ---- Sprint 4: pagos y tickets
+
+export const PAYMENT_METHOD = Object.freeze({
+  CASH: 'EFECTIVO',
+  CARD: 'TARJETA',
+  TRANSFER: 'TRANSFERENCIA',
+  MERCADO_PAGO: 'MERCADO_PAGO',
+});
+export const PAYMENT_METHODS = Object.values(PAYMENT_METHOD);
+
+export const PAYMENT_STATUS = Object.freeze({
+  PENDING: 'PENDIENTE',
+  PAID: 'PAGADO',
+  REJECTED: 'RECHAZADO',
+  CANCELLED: 'CANCELADO',
+});
+
+// Estado de cobro de una orden (calculado a partir de sus pagos).
+export const COLLECTION_STATUS = Object.freeze({
+  NO_CHARGE: 'SIN_COBRO',
+  UNPAID: 'SIN_PAGOS',
+  PARTIAL: 'PARCIAL',
+  PAID: 'PAGADA',
+});
+
+// Solo las órdenes terminadas o entregadas admiten pagos y ticket.
+export const BILLABLE_ORDER_STATUSES = Object.freeze([ORDER_STATUS.FINISHED, ORDER_STATUS.DELIVERED]);

@@ -7,7 +7,10 @@ import authRoutes from './routes/authRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
 import maintenanceRoutes from './routes/maintenanceRoutes.js';
 import mechanicRoutes from './routes/mechanicRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 import partRoutes from './routes/partRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import ticketRoutes from './routes/ticketRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import vehicleRoutes from './routes/vehicleRoutes.js';
@@ -28,6 +31,9 @@ export function createApp() {
   app.use('/api/orders', orderRoutes);
   app.use('/api/maintenance', maintenanceRoutes);
   app.use('/api/parts', partRoutes);
+  app.use('/api/payments', paymentRoutes);
+  app.use('/api/dashboard', dashboardRoutes);
+  app.use('/api/tickets', ticketRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

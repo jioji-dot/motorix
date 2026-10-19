@@ -29,4 +29,19 @@ export const env = {
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN || '8h',
   },
+  // Mercado Pago (sandbox): las credenciales viven solo en variables de entorno y nunca se escriben en respuestas ni registros.
+  mercadoPago: {
+    accessToken: process.env.MP_ACCESS_TOKEN || '',
+    webhookSecret: process.env.MP_WEBHOOK_SECRET || '',
+    notificationUrl: process.env.MP_NOTIFICATION_URL || '',
+    apiUrl: process.env.MP_API_URL || 'https://api.mercadopago.com',
+  },
+  // Datos básicos del taller que aparecen en el ticket.
+  workshop: {
+    name: process.env.WORKSHOP_NAME || 'Motorix Taller Mecánico',
+    address: process.env.WORKSHOP_ADDRESS || 'Dirección del taller',
+    phone: process.env.WORKSHOP_PHONE || 'Teléfono del taller',
+  },
+  // Dirección pública del servidor, para armar los enlaces de impresión del ticket.
+  publicUrl: process.env.PUBLIC_API_URL || '',
 };
