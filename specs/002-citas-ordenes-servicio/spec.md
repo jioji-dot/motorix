@@ -8,6 +8,15 @@
 
 **Entrada**: Descripción del usuario: "Usa la descripcion de @docs/sprints/sprint-2-citas-ordenes.md"
 
+## Aclaraciones
+
+### Sesión 2026-10-19
+
+- Q: ¿Se podrá anular una orden de servicio que todavía no está terminada? → A: Sí. Existe el estado Cancelada, que solo aplican recepción o administración, antes de Terminado, con confirmación y motivo obligatorio; la orden se conserva como historial.
+- Q: Si el vehículo aún no tiene kilometraje registrado, ¿qué validación se aplica al kilometraje de entrada? → A: Se acepta cualquier valor entre 0 y 1,500,000 km; ese mismo tope aplica siempre, tenga o no kilometraje previo.
+- Q: ¿Cómo se asigna el mecánico a una orden? → A: Siempre lo asigna recepción o administración al crear la orden (el mecánico es obligatorio); solo ellos pueden reasignarla y el mecánico no puede tomar órdenes por su cuenta.
+- Q: ¿Qué pasa con una cita cuando se cancela, y con la orden relacionada si ya existe? → A: No se cancela una cita que tiene una orden asociada; primero se cancela la orden y la cita vuelve a Confirmada, desde donde ya puede cancelarse. Citas y órdenes no se cancelan en cascada.
+
 ## Escenarios de usuario y pruebas *(obligatorio)*
 
 ### Historia de usuario 1 - Registrar y gestionar citas (Prioridad: P1)
@@ -26,6 +35,7 @@ Como recepcionista, quiero registrar, consultar, modificar y cancelar citas para
 4. **Dado** una cita Pendiente, **Cuando** la confirmo, **Entonces** pasa a Confirmada; **Cuando** cambio su fecha u hora, **Entonces** el cambio se guarda y se refleja en la agenda.
 5. **Dado** una cita que aún no generó una orden, **Cuando** elijo cancelarla, **Entonces** el sistema pide confirmación y, al confirmar, la cita queda Cancelada y se conserva en el historial.
 6. **Dado** una cita Cancelada o Completada, **Cuando** intento modificarla, **Entonces** el sistema lo impide.
+6b. **Dado** una cita En proceso con una orden asociada, **Cuando** intento cancelarla, **Entonces** el sistema lo impide e indica que primero debe cancelarse la orden; **Cuando** la orden se cancela, **Entonces** la cita vuelve a Confirmada y ya puede cancelarse.
 7. **Dado** que soy mecánico, **Cuando** intento registrar o modificar una cita, **Entonces** el sistema lo rechaza.
 
 ---
@@ -45,8 +55,11 @@ Como recepcionista, quiero crear órdenes de servicio asociadas a un cliente y a
 3. **Dado** que intento crear una orden sin vehículo o con uno inexistente, **Cuando** envío el formulario, **Entonces** el sistema lo rechaza con un mensaje claro.
 4. **Dado** que intento crear una orden sin kilometraje de entrada, **Cuando** envío el formulario, **Entonces** el sistema lo rechaza por ser obligatorio.
 5. **Dado** un vehículo con kilometraje registrado, **Cuando** capturo un kilometraje de entrada menor, **Entonces** el sistema lo rechaza y solo lo acepta si confirmo explícitamente que es una corrección.
+5b. **Dado** un vehículo sin kilometraje registrado (0 km), **Cuando** capturo un kilometraje de entrada entre 0 y 1,500,000 km, **Entonces** el sistema lo acepta; **Cuando** capturo uno mayor a 1,500,000 km, **Entonces** lo rechaza por ser un valor fuera de rango.
 6. **Dado** que la orden se crea con un kilometraje de entrada válido y mayor al registrado, **Cuando** se guarda, **Entonces** el kilometraje actual del vehículo se actualiza a ese valor.
 7. **Dado** que elijo como responsable a un usuario que no es mecánico activo, **Cuando** guardo, **Entonces** el sistema lo rechaza.
+8. **Dado** que intento crear una orden sin mecánico asignado, **Cuando** guardo, **Entonces** el sistema lo rechaza por ser obligatorio.
+9. **Dado** una orden abierta, **Cuando** recepción la reasigna a otro mecánico activo, **Entonces** la orden deja de aparecer al mecánico anterior y aparece al nuevo, conservando todo lo ya registrado.
 
 ---
 
@@ -104,6 +117,9 @@ Como mecánico, quiero cambiar el estado de una orden para reflejar su avance, s
 5. **Dado** una orden Terminada, **Cuando** recepción la marca como Entregada, **Entonces** el sistema pide confirmación y, al confirmar, la orden queda Entregada y ya no admite cambios ni eliminación.
 6. **Dado** una orden que pasa a Terminado sin diagnóstico ni servicios registrados, **Cuando** intento terminarla, **Entonces** el sistema lo rechaza indicando qué falta.
 7. **Dado** una orden Entregada, **Cuando** intento cambiar su estado, **Entonces** el sistema lo impide.
+8. **Dado** una orden en Recibido, Diagnóstico, En reparación o Esperando refacción, **Cuando** recepción o administración la cancela indicando un motivo y confirma, **Entonces** la orden queda Cancelada, conserva todo lo registrado y ya no admite cambios.
+9. **Dado** una orden Terminada, Entregada o ya Cancelada, **Cuando** intento cancelarla, **Entonces** el sistema lo impide.
+10. **Dado** que soy mecánico, **Cuando** intento cancelar una orden, **Entonces** el sistema lo rechaza.
 
 ---
 
@@ -112,12 +128,13 @@ Como mecánico, quiero cambiar el estado de una orden para reflejar su avance, s
 - Una cita en la misma fecha y hora para el mismo vehículo que otra cita activa: se avisa del posible duplicado.
 - Una cita con fecha y hora pasadas: no se permite registrarla, salvo que se capture como parte de una corrección de recepción.
 - Un cliente o vehículo desactivado: no se pueden agendar citas ni crear órdenes con ellos.
-- Un mecánico desactivado con órdenes asignadas: las órdenes se conservan y pueden reasignarse.
+- Un mecánico desactivado con órdenes asignadas: las órdenes se conservan y recepción o administración deben reasignarlas; mientras tanto no las ve nadie con rol de mecánico.
 - Una orden creada desde una cita que luego se cancela: la cancelación se impide si la cita ya generó una orden.
-- Kilometraje de entrada igual al registrado: se acepta; vehículo sin kilometraje previo (valor cero): se acepta cualquier valor mayor o igual a cero.
+- Kilometraje de entrada igual al registrado: se acepta; vehículo sin kilometraje previo (valor cero): se acepta cualquier valor entre 0 y 1,500,000 km; un valor mayor a 1,500,000 km se rechaza siempre como error de captura.
 - Dos usuarios cambian el estado de la misma orden al mismo tiempo: se aplica una sola transición válida y el segundo recibe un aviso para recargar.
 - Eliminar una orden: no existe esa operación; las órdenes se conservan como historial.
-- Reasignar una orden a otro mecánico: solo recepción o administrador, mientras no esté Entregada.
+- Reasignar una orden a otro mecánico: solo recepción o administrador, mientras no esté Entregada ni Cancelada.
+- Cancelar una orden creada desde una cita: la cita vuelve a Confirmada para poder reutilizarse o cancelarse.
 
 ## Requisitos *(obligatorio)*
 
@@ -128,7 +145,7 @@ Como mecánico, quiero cambiar el estado de una orden para reflejar su avance, s
 - **FR-001**: El sistema DEBE permitir registrar citas con cliente, vehículo del mismo cliente, fecha, hora, motivo y observaciones, en estado inicial Pendiente.
 - **FR-002**: El sistema DEBE manejar los estados de cita Pendiente, Confirmada, En proceso, Completada y Cancelada, y permitir consultar la agenda con filtros por fecha y estado.
 - **FR-003**: El sistema DEBE permitir modificar fecha, hora, motivo y observaciones de una cita Pendiente o Confirmada, y confirmarla.
-- **FR-004**: El sistema DEBE permitir cancelar una cita Pendiente o Confirmada que no haya generado una orden, solicitando confirmación, y conservarla como historial en estado Cancelada.
+- **FR-004**: El sistema DEBE permitir cancelar una cita Pendiente o Confirmada que no tenga una orden asociada, solicitando confirmación, y conservarla como historial en estado Cancelada. Una cita con una orden asociada NO DEBE poder cancelarse; si esa orden se cancela, la cita vuelve a Confirmada. Citas y órdenes no se cancelan en cascada.
 - **FR-005**: El sistema NO DEBE permitir registrar citas con fecha y hora pasadas, ni con un cliente o vehículo desactivado.
 - **FR-006**: El sistema DEBE avisar cuando exista otra cita activa del mismo vehículo en la misma fecha y hora.
 
@@ -137,9 +154,9 @@ Como mecánico, quiero cambiar el estado de una orden para reflejar su avance, s
 - **FR-007**: El sistema DEBE permitir crear una orden asociada a un cliente y a un vehículo existentes de ese cliente, con kilometraje de entrada, problema reportado y mecánico asignado.
 - **FR-008**: El sistema DEBE asignar a cada orden un folio único y legible, y crearla en estado Recibido.
 - **FR-009**: El sistema DEBE permitir crear una orden a partir de una cita Confirmada, tomando de ella cliente, vehículo y motivo, y pasando la cita a En proceso.
-- **FR-010**: El sistema DEBE exigir el kilometraje de entrada en toda orden y rechazar uno menor al kilometraje actual del vehículo, salvo que se confirme explícitamente como corrección.
+- **FR-010**: El sistema DEBE exigir el kilometraje de entrada en toda orden, entero y entre 0 y 1,500,000 km, y rechazar uno menor al kilometraje actual del vehículo, salvo que se confirme explícitamente como corrección. Si el vehículo no tiene kilometraje registrado (0 km), se acepta cualquier valor dentro de ese rango.
 - **FR-011**: El sistema DEBE actualizar el kilometraje actual del vehículo con el kilometraje de entrada de la orden.
-- **FR-012**: El sistema DEBE permitir asignar la orden solo a un usuario activo con rol de mecánico, y permitir reasignarla a recepción o administración mientras no esté Entregada.
+- **FR-012**: El sistema DEBE exigir un mecánico asignado en toda orden, que solo puede ser un usuario activo con rol de mecánico. Solo recepción o administración DEBEN poder asignarlo al crear la orden y reasignarlo mientras la orden no esté Entregada ni Cancelada; el mecánico NO DEBE poder tomar ni reasignar órdenes por su cuenta.
 - **FR-013**: El sistema NO DEBE permitir eliminar órdenes; una orden Entregada se conserva como historial y no admite modificaciones.
 
 **Trabajo del mecánico**
@@ -156,10 +173,11 @@ Como mecánico, quiero cambiar el estado de una orden para reflejar su avance, s
 
 **Estados de la orden**
 
-- **FR-020**: El sistema DEBE permitir únicamente las transiciones Recibido → Diagnóstico → En reparación → Terminado → Entregado, más Esperando refacción desde En reparación y su regreso a En reparación; cualquier otra transición DEBE rechazarse indicando las permitidas.
+- **FR-020**: El sistema DEBE permitir únicamente las transiciones Recibido → Diagnóstico → En reparación → Terminado → Entregado, más Esperando refacción desde En reparación y su regreso a En reparación, y la cancelación descrita en FR-029; cualquier otra transición DEBE rechazarse indicando las permitidas.
 - **FR-021**: El mecánico asignado DEBE poder avanzar la orden hasta Terminado; solo recepción o administración DEBEN poder marcarla como Entregada, con confirmación.
 - **FR-022**: El sistema NO DEBE permitir marcar una orden como Terminado sin diagnóstico y al menos un servicio o mano de obra registrados.
 - **FR-023**: El sistema DEBE registrar cada cambio de estado con el usuario, la fecha y la hora.
+- **FR-029**: Recepción o administración DEBEN poder cancelar una orden en Recibido, Diagnóstico, En reparación o Esperando refacción, con confirmación y un motivo obligatorio; la orden queda en el estado final Cancelada, se conserva como historial con todo lo registrado y no admite más cambios. El mecánico NO DEBE poder cancelar órdenes, y no se puede cancelar una orden Terminada, Entregada o ya Cancelada.
 
 **Calidad general**
 
@@ -172,7 +190,7 @@ Como mecánico, quiero cambiar el estado de una orden para reflejar su avance, s
 ### Entidades clave *(incluir si la funcionalidad involucra datos)*
 
 - **Cita**: visita agendada de un cliente con uno de sus vehículos. Tiene fecha y hora, motivo, observaciones y estado (Pendiente, Confirmada, En proceso, Completada, Cancelada).
-- **Orden de servicio**: trabajo realizado durante una visita. Tiene folio único, cliente, vehículo, mecánico asignado, kilometraje de entrada, problema reportado, diagnóstico, observaciones, recomendaciones, estado y total; puede originarse en una cita.
+- **Orden de servicio**: trabajo realizado durante una visita. Tiene folio único, cliente, vehículo, mecánico asignado, kilometraje de entrada, problema reportado, diagnóstico, observaciones, recomendaciones, estado (incluido Cancelada, con su motivo) y total; puede originarse en una cita.
 - **Servicio realizado**: trabajo concreto de una orden, con descripción e importe.
 - **Mano de obra**: tiempo de trabajo de una orden, con descripción, horas, tarifa por hora e importe calculado.
 - **Cambio de estado**: registro de cada transición de una orden, con el estado anterior y el nuevo, el usuario, la fecha y la hora.
@@ -188,18 +206,15 @@ Relaciones: una orden pertenece a un cliente y a un vehículo (del mismo cliente
 - **SC-003**: El 100 % de los intentos de saltarse el orden de estados es rechazado con un mensaje que indica las transiciones permitidas, comprobado por pruebas automáticas de todas las combinaciones de estado.
 - **SC-004**: Un mecánico ve el 100 % de sus órdenes y 0 órdenes de otros mecánicos, comprobado con al menos dos mecánicos.
 - **SC-005**: El 100 % de los intentos de registrar un kilometraje de entrada menor al del vehículo, sin corrección explícita, es rechazado.
-- **SC-006**: Ninguna orden Entregada puede modificarse ni eliminarse; el 100 % de los intentos es rechazado.
+- **SC-006**: Ninguna orden Entregada o Cancelada puede modificarse ni eliminarse; el 100 % de los intentos es rechazado.
 - **SC-007**: El total de cada orden coincide con la suma de sus servicios y mano de obra en el 100 % de los casos de prueba.
 - **SC-008**: Recién instalado el entorno, las pantallas de citas y órdenes muestran información de ejemplo sin capturar datos a mano.
 
 ## Supuestos
 
 - Se apoya en los clientes, vehículos y usuarios del Sprint 1; los mecánicos son usuarios activos con rol de mecánico.
-- La asignación del mecánico es manual (la elige recepción o administración al crear la orden); no hay asignación automática por disponibilidad.
 - Las citas no bloquean horarios ni manejan capacidad del taller: solo avisan de duplicados del mismo vehículo.
 - Los importes se manejan en una sola moneda (pesos mexicanos) con dos decimales.
-- La cancelación de citas no elimina información; una cita con orden asociada no se cancela.
-- Anular o cancelar una orden en curso no se incluye en este sprint; se evaluará en la aclaración.
-- Quedan por confirmar en `/speckit-clarify`: el modelo de estados y sus transiciones, las reglas de asignación de mecánico, la validación de kilometraje cuando no existe un valor previo y la política de cancelación de citas y su efecto en las órdenes relacionadas.
+- La cancelación de citas no elimina información; una cita con orden asociada no se cancela hasta que se cancele la orden.
 - Fuera de alcance: historial de mantenimiento por vehículo, próximo mantenimiento, inventario y refacciones, pagos, Mercado Pago, tickets, dashboard y notificaciones.
 - Dependencia: Sprint 1 completado (autenticación, clientes, vehículos y usuarios).
