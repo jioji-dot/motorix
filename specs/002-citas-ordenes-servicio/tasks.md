@@ -120,18 +120,18 @@ description: "Lista de tareas para implementar el Sprint 2: citas y órdenes de 
 
 ### Pruebas de la historia 3 ⚠️
 
-- [ ] T036 [P] [US3] Prueba unitaria del servicio de consulta: el mecánico siempre se filtra por su propio `mechanicId` aunque envíe otro; recepción y ADMIN ven todas; el detalle de una orden ajena lanza `FORBIDDEN` para el mecánico, en `server/tests/unit/orderAccess.test.js`
-- [ ] T037 [P] [US3] Prueba de contrato de `GET /orders` y `GET /orders/:id` (listado con `meta`, detalle con `services`, `labor`, `history` y `allowedTransitions`, 403 y 404) en `server/tests/contract/orders.read.contract.test.js`
-- [ ] T038 [P] [US3] Prueba de integración de consulta con dos mecánicos: cada uno ve solo las suyas, no puede abrir las ajenas ni forzar `mechanicId`; recepción filtra por estado, mecánico y fecha y busca por folio, cliente y placas, en `server/tests/integration/orders.read.test.js`
-- [ ] T039 [P] [US3] Prueba de provider y de widgets de la lista y del detalle de órdenes (mecánico sin órdenes ve el estado vacío, filtros, búsqueda, error con reintentar) en `client/test/screens/orders_screen_test.dart`
+- [X] T036 [P] [US3] Prueba unitaria del servicio de consulta: el mecánico siempre se filtra por su propio `mechanicId` aunque envíe otro; recepción y ADMIN ven todas; el detalle de una orden ajena lanza `FORBIDDEN` para el mecánico, en `server/tests/unit/orderAccess.test.js`
+- [X] T037 [P] [US3] Prueba de contrato de `GET /orders` y `GET /orders/:id` (listado con `meta`, detalle con `services`, `labor`, `history` y `allowedTransitions`, 403 y 404) en `server/tests/contract/orders.read.contract.test.js`
+- [X] T038 [P] [US3] Prueba de integración de consulta con dos mecánicos: cada uno ve solo las suyas, no puede abrir las ajenas ni forzar `mechanicId`; recepción filtra por estado, mecánico y fecha y busca por folio, cliente y placas, en `server/tests/integration/orders.read.test.js`
+- [X] T039 [P] [US3] Prueba de provider y de widgets de la lista y del detalle de órdenes (mecánico sin órdenes ve el estado vacío, filtros, búsqueda, error con reintentar) en `client/test/screens/orders_screen_test.dart`
 
 ### Implementación de la historia 3
 
-- [ ] T040 [P] [US3] Agregar a `server/models/orderModel.js` el listado con filtros (`status`, `mechanicId`, `from`, `to`, `search` por folio, cliente o placas) y paginación
-- [ ] T041 [US3] Agregar a `server/services/orderService.js` las funciones de consulta con el control de acceso por asignación y el cálculo de `allowedTransitions` para el usuario actual
-- [ ] T042 [US3] Implementar `GET /api/orders` y `GET /api/orders/:id` en `server/controllers/orderController.js` y `server/routes/orderRoutes.js` para los tres roles
-- [ ] T043 [US3] Crear `client/lib/screens/orders_screen.dart`: lista con filtros por estado y fecha, búsqueda, chips de estado, botón **Nueva orden** solo para recepción y administración, y estado vacío específico para el mecánico
-- [ ] T044 [US3] Crear `client/lib/screens/order_detail_screen.dart` en modo lectura (datos de la orden, cliente, vehículo, mecánico, diagnóstico, líneas, total e historial de estados) y registrar la sección **Órdenes de servicio** en `client/lib/main.dart`
+- [X] T040 [P] [US3] Agregar a `server/models/orderModel.js` el listado con filtros (`status`, `mechanicId`, `from`, `to`, `search` por folio, cliente o placas) y paginación
+- [X] T041 [US3] Agregar a `server/services/orderService.js` las funciones de consulta con el control de acceso por asignación y el cálculo de `allowedTransitions` para el usuario actual
+- [X] T042 [US3] Implementar `GET /api/orders` y `GET /api/orders/:id` en `server/controllers/orderController.js` y `server/routes/orderRoutes.js` para los tres roles
+- [X] T043 [US3] Crear `client/lib/screens/orders_screen.dart`: lista con filtros por estado y fecha, búsqueda, chips de estado, botón **Nueva orden** solo para recepción y administración, y estado vacío específico para el mecánico
+- [X] T044 [US3] Crear `client/lib/screens/order_detail_screen.dart` en modo lectura (datos de la orden, cliente, vehículo, mecánico, diagnóstico, líneas, total e historial de estados) y registrar la sección **Órdenes de servicio** en `client/lib/main.dart`
 
 **Punto de control**: Las historias 1 a 3 funcionan de forma independiente
 

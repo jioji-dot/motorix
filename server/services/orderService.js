@@ -99,7 +99,23 @@ export function createOrderService({
     return conPermisos(await orderModel.findDetail(id), usuario);
   }
 
-  return { create };
+  async function list(filtros, usuario) {
+    // El mecánico solo ve sus órdenes: el servidor ignora cualquier otro `mechanicId` que envíe.
+    const consulta = usuario.role === 'MECHANIC' ? { ...filtros, mechanicId: usuario.id } : filtros;
+    const { items, total } = await orderModel.list(consulta);
+    return { items, meta: { page: filtros.page, pageSize: filtros.pageSize, total } };
+  }
+
+  async function get(id, usuario) {
+    const orden = await orderModel.findDetail(id);
+    if (!orden) throw HttpError.notFound('No se encontró la orden solicitada.');
+    if (usuario.role === 'MECHANIC' && orden.mechanicId !== usuario.id) {
+      throw HttpError.forbidden('Esta orden está asignada a otro mecánico.');
+    }
+    return conPermisos(orden, usuario);
+  }
+
+  return { create, list, get };
 }
 
 export const orderService = createOrderService();

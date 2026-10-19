@@ -1,6 +1,7 @@
 // Acceso a datos de órdenes de servicio con consultas parametrizadas.
 // Las funciones de escritura reciben la conexión de la transacción en curso.
 import { pool } from '../config/db.js';
+import { escaparLike } from '../validators/commonValidator.js';
 
 const SELECT_ORDEN = `
   SELECT o.id, o.folio, o.appointmentId, o.clientId, o.vehicleId, o.mechanicId, o.entryMileage,
@@ -16,6 +17,17 @@ const SELECT_ORDEN = `
 
 export function folioDe(id) {
   return `OS-${String(id).padStart(6, '0')}`;
+}
+
+// Forma del listado: sin diagnóstico, líneas ni historial.
+const CAMPOS_RESUMEN = [
+  'id', 'folio', 'status', 'appointmentId', 'clientId', 'vehicleId', 'mechanicId', 'entryMileage',
+  'reportedProblem', 'total', 'createdAt', 'updatedAt', 'client', 'vehicle', 'mechanic',
+];
+
+function toOrderSummary(fila) {
+  const orden = toOrder(fila);
+  return Object.fromEntries(CAMPOS_RESUMEN.map((campo) => [campo, orden[campo]]));
 }
 
 function toOrder(fila) {
@@ -106,4 +118,44 @@ export async function findDetail(id, conexion = pool) {
       changedAt: h.changedAt,
     })),
   };
+}
+
+export async function list({ status, mechanicId, from, to, search, page, pageSize }) {
+  const condiciones = [];
+  const parametros = [];
+
+  if (status) {
+    condiciones.push('o.status = ?');
+    parametros.push(status);
+  }
+  if (mechanicId !== undefined) {
+    condiciones.push('o.mechanicId = ?');
+    parametros.push(mechanicId);
+  }
+  if (from) {
+    condiciones.push('o.createdAt >= ?');
+    parametros.push(`${from} 00:00:00`);
+  }
+  if (to) {
+    condiciones.push('o.createdAt < DATE_ADD(?, INTERVAL 1 DAY)');
+    parametros.push(`${to} 00:00:00`);
+  }
+  if (search) {
+    const patron = `%${escaparLike(search)}%`;
+    condiciones.push('(o.folio LIKE ? OR c.name LIKE ? OR v.licensePlate LIKE ?)');
+    parametros.push(patron, patron, patron);
+  }
+  const donde = condiciones.length > 0 ? `WHERE ${condiciones.join(' AND ')}` : '';
+
+  const [[{ total }]] = await pool.query(
+    `SELECT COUNT(*) AS total FROM service_orders o
+       JOIN clients c ON c.id = o.clientId JOIN vehicles v ON v.id = o.vehicleId ${donde}`,
+    parametros,
+  );
+  const [filas] = await pool.query(`${SELECT_ORDEN} ${donde} ORDER BY o.createdAt DESC, o.id DESC LIMIT ? OFFSET ?`, [
+    ...parametros,
+    pageSize,
+    (page - 1) * pageSize,
+  ]);
+  return { items: filas.map(toOrderSummary), total };
 }

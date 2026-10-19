@@ -12,6 +12,7 @@ import 'screens/appointments_screen.dart';
 import 'screens/clients_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/orders_screen.dart';
 import 'screens/users_screen.dart';
 import 'screens/vehicles_screen.dart';
 import 'services/api_client.dart';
@@ -99,6 +100,7 @@ class _AuthGate extends StatelessWidget {
                 'Clientes': (_) => const ClientsScreen(),
                 'Vehículos': (_) => const VehiclesScreen(),
                 'Citas': (_) => const AppointmentsScreen(),
+                'Órdenes de servicio': (_) => const OrdersScreen(),
                 'Usuarios': (_) => const UsersScreen(),
               },
             )

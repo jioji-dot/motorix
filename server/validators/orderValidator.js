@@ -1,6 +1,7 @@
 // Esquemas de validación de órdenes de servicio (mensajes en español). Reglas según data-model.md.
 import { z } from 'zod';
-import { MAX_MILEAGE } from '../utils/constants.js';
+import { MAX_MILEAGE, ORDER_STATUSES } from '../utils/constants.js';
+import { fechaSchema, listQuerySchema } from './commonValidator.js';
 
 const identificador = (mensaje) =>
   z.number({ required_error: mensaje, invalid_type_error: mensaje }).int(mensaje).positive(mensaje);
@@ -39,3 +40,10 @@ export const createOrderSchema = z
       });
     }
   });
+
+export const orderListQuerySchema = listQuerySchema.extend({
+  status: z.enum(ORDER_STATUSES, { errorMap: () => ({ message: 'El estado de la orden no es válido.' }) }).optional(),
+  mechanicId: z.coerce.number().int().positive('El mecánico no es válido.').optional(),
+  from: fechaSchema.optional(),
+  to: fechaSchema.optional(),
+});
