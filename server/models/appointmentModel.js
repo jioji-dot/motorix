@@ -92,8 +92,8 @@ export async function findDuplicate(vehicleId, scheduledAt, excluirId = null) {
   return filas[0] ?? null;
 }
 
-export async function hasActiveOrder(appointmentId) {
-  const [[{ total }]] = await pool.execute(
+export async function hasActiveOrder(appointmentId, conexion = pool) {
+  const [[{ total }]] = await conexion.execute(
     "SELECT COUNT(*) AS total FROM service_orders WHERE appointmentId = ? AND status <> 'CANCELADA'",
     [appointmentId],
   );

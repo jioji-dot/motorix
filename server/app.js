@@ -5,6 +5,8 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
+import mechanicRoutes from './routes/mechanicRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import vehicleRoutes from './routes/vehicleRoutes.js';
 
@@ -20,6 +22,8 @@ export function createApp() {
   app.use('/api/vehicles', vehicleRoutes);
   app.use('/api/users', userRoutes);
   app.use('/api/appointments', appointmentRoutes);
+  app.use('/api/mechanics', mechanicRoutes);
+  app.use('/api/orders', orderRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

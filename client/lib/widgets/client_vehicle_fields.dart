@@ -15,6 +15,7 @@ class ClientVehicleFields extends StatefulWidget {
   const ClientVehicleFields({
     super.key,
     required this.onChanged,
+    this.onVehicleSelected,
     this.initialClient,
     this.initialVehicleId,
     this.locked = false,
@@ -28,6 +29,9 @@ class ClientVehicleFields extends StatefulWidget {
 
   /// Se invoca cada vez que cambia el cliente o el vehículo elegidos.
   final void Function(int? clientId, int? vehicleId) onChanged;
+
+  /// Se invoca con el vehículo elegido (o `null`), por ejemplo para mostrar su kilometraje actual.
+  final void Function(Vehicle? vehicle)? onVehicleSelected;
 
   @override
   State<ClientVehicleFields> createState() => _ClientVehicleFieldsState();
@@ -65,8 +69,20 @@ class _ClientVehicleFieldsState extends State<ClientVehicleFields> {
       _vehicleId = null;
       _vehicles = [];
     });
-    widget.onChanged(elegido.id, null);
+    _notificar();
     await _loadVehicles();
+  }
+
+  Vehicle? get _selectedVehicle {
+    for (final v in _vehicles) {
+      if (v.id == _vehicleId) return v;
+    }
+    return null;
+  }
+
+  void _notificar() {
+    widget.onChanged(_client?.id, _vehicleId);
+    widget.onVehicleSelected?.call(_selectedVehicle);
   }
 
   Future<void> _loadVehicles() async {
@@ -85,7 +101,7 @@ class _ClientVehicleFieldsState extends State<ClientVehicleFields> {
         if (_vehicleId != null && !vehiculos.any((v) => v.id == _vehicleId)) _vehicleId = null;
         if (_vehicleId == null && vehiculos.length == 1) _vehicleId = vehiculos.first.id;
       });
-      widget.onChanged(cliente.id, _vehicleId);
+      _notificar();
     } on ApiException catch (e) {
       if (mounted) setState(() => _error = e.message);
     } finally {
@@ -130,7 +146,7 @@ class _ClientVehicleFieldsState extends State<ClientVehicleFields> {
               ? null
               : (valor) {
                   setState(() => _vehicleId = valor);
-                  widget.onChanged(_client?.id, valor);
+                  _notificar();
                 },
           validator: (v) => v == null ? 'El vehículo es obligatorio.' : null,
         ),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'providers/appointments_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/clients_provider.dart';
+import 'providers/orders_provider.dart';
 import 'providers/users_provider.dart';
 import 'providers/vehicles_provider.dart';
 import 'providers/sidebar_provider.dart';
@@ -53,6 +54,13 @@ class MotorixApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (c) {
             final provider = AppointmentsProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (c) {
+            final provider = OrdersProvider(api);
             c.read<AuthProvider>().addSessionEndListener(provider.reset);
             return provider;
           },

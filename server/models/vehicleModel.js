@@ -85,3 +85,8 @@ export async function update(id, datos) {
   }
   return findById(id);
 }
+
+// Actualiza el kilometraje actual (por ejemplo, al crear una orden). Acepta la conexión de una transacción.
+export async function updateMileage(id, currentMileage, conexion = pool) {
+  await conexion.execute('UPDATE vehicles SET currentMileage = ? WHERE id = ?', [currentMileage, id]);
+}

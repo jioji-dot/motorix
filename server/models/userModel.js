@@ -158,3 +158,11 @@ export async function update(id, datos, conexion = pool) {
   }
   return findPublicById(id, conexion);
 }
+
+// Mecánicos activos, para que recepción asigne las órdenes sin acceder a la gestión de usuarios.
+export async function listActiveMechanics() {
+  const [filas] = await pool.query(
+    "SELECT id, name FROM users WHERE role = 'MECHANIC' AND active = 1 ORDER BY name ASC, id ASC",
+  );
+  return filas;
+}

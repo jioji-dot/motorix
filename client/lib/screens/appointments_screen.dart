@@ -14,6 +14,7 @@ import '../widgets/state_views.dart';
 import '../widgets/status_chip.dart';
 import 'appointment_detail_screen.dart';
 import 'appointment_form_screen.dart';
+import 'order_form_screen.dart';
 
 /// Agenda de citas con búsqueda y filtros por estado y periodo (solo recepción y administración).
 class AppointmentsScreen extends StatefulWidget {
@@ -56,7 +57,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   Future<void> _openDetail(Appointment appointment) async {
     await Navigator.of(context).push<void>(
-      MaterialPageRoute(builder: (_) => AppointmentDetailScreen(appointmentId: appointment.id)),
+      MaterialPageRoute(
+        builder: (_) => AppointmentDetailScreen(appointmentId: appointment.id, onCreateOrder: crearOrdenDesdeCita),
+      ),
     );
     if (mounted) context.read<AppointmentsProvider>().load();
   }

@@ -45,6 +45,8 @@ class ApiClient {
 
   Future<dynamic> patch(String path, {Object? body}) => _send('PATCH', path, body: body);
 
+  Future<dynamic> delete(String path) => _send('DELETE', path);
+
   Future<dynamic> _send(String method, String path, {Object? body, Map<String, String?> query = const {}}) async {
     final parametros = {
       for (final entrada in query.entries)

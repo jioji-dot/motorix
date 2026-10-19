@@ -92,21 +92,21 @@ description: "Lista de tareas para implementar el Sprint 2: citas y órdenes de 
 
 ### Pruebas de la historia 2 ⚠️
 
-- [ ] T024 [P] [US2] Prueba unitaria del validador y del servicio de alta de órdenes: `entryMileage` "entero entre 0 y 1,500,000"; 409 `MILEAGE_DECREASE` salvo `mileageCorrection: true`; con 0 km previos se acepta cualquier valor del rango; `mechanicId` obligatorio, activo y con rol MECHANIC; vehículo del cliente; `reportedProblem` "obligatorio, 1 a 2000 caracteres"; con `appointmentId` la cita debe estar CONFIRMADA y coincidir, y el motivo se toma de ella; una sola orden activa por cita; el kilometraje del vehículo se actualiza; el primer registro del historial se crea, en `server/tests/unit/orderCreation.test.js`
-- [ ] T025 [P] [US2] Prueba de contrato de `POST /orders` y `GET /mechanics` (forma de la orden creada con folio `OS-` más seis dígitos, errores 400, 404 y 409) en `server/tests/contract/orders.create.contract.test.js`
-- [ ] T026 [P] [US2] Prueba de integración de alta de órdenes: RECEPTIONIST y ADMIN crean, MECHANIC recibe 403; creación directa y desde cita (la cita pasa a EN_PROCESO); kilometraje menor, fuera de rango y con corrección; mecánico inactivo o ajeno al rol; una cita con orden activa no admite otra; el folio es único y legible, en `server/tests/integration/orders.create.test.js`
-- [ ] T027 [P] [US2] Prueba de provider y de widgets del formulario de orden (campos obligatorios, kilometraje, corrección de kilometraje con confirmación, prellenado desde una cita) en `client/test/screens/order_form_screen_test.dart`
+- [X] T024 [P] [US2] Prueba unitaria del validador y del servicio de alta de órdenes: `entryMileage` "entero entre 0 y 1,500,000"; 409 `MILEAGE_DECREASE` salvo `mileageCorrection: true`; con 0 km previos se acepta cualquier valor del rango; `mechanicId` obligatorio, activo y con rol MECHANIC; vehículo del cliente; `reportedProblem` "obligatorio, 1 a 2000 caracteres"; con `appointmentId` la cita debe estar CONFIRMADA y coincidir, y el motivo se toma de ella; una sola orden activa por cita; el kilometraje del vehículo se actualiza; el primer registro del historial se crea, en `server/tests/unit/orderCreation.test.js`
+- [X] T025 [P] [US2] Prueba de contrato de `POST /orders` y `GET /mechanics` (forma de la orden creada con folio `OS-` más seis dígitos, errores 400, 404 y 409) en `server/tests/contract/orders.create.contract.test.js`
+- [X] T026 [P] [US2] Prueba de integración de alta de órdenes: RECEPTIONIST y ADMIN crean, MECHANIC recibe 403; creación directa y desde cita (la cita pasa a EN_PROCESO); kilometraje menor, fuera de rango y con corrección; mecánico inactivo o ajeno al rol; una cita con orden activa no admite otra; el folio es único y legible, en `server/tests/integration/orders.create.test.js`
+- [X] T027 [P] [US2] Prueba de provider y de widgets del formulario de orden (campos obligatorios, kilometraje, corrección de kilometraje con confirmación, prellenado desde una cita) en `client/test/screens/order_form_screen_test.dart`
 
 ### Implementación de la historia 2
 
-- [ ] T028 [P] [US2] Crear `server/validators/orderValidator.js` con el esquema de alta de órdenes con los límites del modelo de datos
-- [ ] T029 [P] [US2] Crear `server/models/orderModel.js` con alta transaccional (inserción, asignación del folio `OS-` más el `id` con ceros, historial inicial), detalle con cliente, vehículo, mecánico, líneas, historial y `total`, y búsqueda de la orden activa de una cita
-- [ ] T030 [US2] Implementar `server/services/orderService.js` (función de alta): validaciones de cliente, vehículo, mecánico, cita y kilometraje; actualización de `vehicles.currentMileage` y de la cita a EN_PROCESO en una sola transacción
-- [ ] T031 [P] [US2] Implementar `GET /api/mechanics` en `server/controllers/mechanicController.js` y `server/routes/mechanicRoutes.js` para ADMIN y RECEPTIONIST
-- [ ] T032 [US2] Implementar `POST /api/orders` en `server/controllers/orderController.js` y `server/routes/orderRoutes.js` para ADMIN y RECEPTIONIST, y registrar ambas rutas en `server/app.js`
-- [ ] T033 [P] [US2] Crear `client/lib/models/service_order.dart` (orden, líneas e historial) y `client/lib/providers/orders_provider.dart` (alta y lista de mecánicos; se vacía al cerrar sesión)
-- [ ] T034 [US2] Crear `client/lib/screens/order_form_screen.dart`: cliente, vehículo del cliente, mecánico, kilometraje de entrada con aviso y confirmación de corrección, y problema reportado; si se abre desde una cita llega prellenado y bloqueado
-- [ ] T035 [US2] Agregar la acción **Crear orden** al detalle de la cita confirmada en `client/lib/screens/appointment_detail_screen.dart`, y registrar `OrdersProvider` en `client/lib/main.dart`
+- [X] T028 [P] [US2] Crear `server/validators/orderValidator.js` con el esquema de alta de órdenes con los límites del modelo de datos
+- [X] T029 [P] [US2] Crear `server/models/orderModel.js` con alta transaccional (inserción, asignación del folio `OS-` más el `id` con ceros, historial inicial), detalle con cliente, vehículo, mecánico, líneas, historial y `total`, y búsqueda de la orden activa de una cita
+- [X] T030 [US2] Implementar `server/services/orderService.js` (función de alta): validaciones de cliente, vehículo, mecánico, cita y kilometraje; actualización de `vehicles.currentMileage` y de la cita a EN_PROCESO en una sola transacción
+- [X] T031 [P] [US2] Implementar `GET /api/mechanics` en `server/controllers/mechanicController.js` y `server/routes/mechanicRoutes.js` para ADMIN y RECEPTIONIST
+- [X] T032 [US2] Implementar `POST /api/orders` en `server/controllers/orderController.js` y `server/routes/orderRoutes.js` para ADMIN y RECEPTIONIST, y registrar ambas rutas en `server/app.js`
+- [X] T033 [P] [US2] Crear `client/lib/models/service_order.dart` (orden, líneas e historial) y `client/lib/providers/orders_provider.dart` (alta y lista de mecánicos; se vacía al cerrar sesión)
+- [X] T034 [US2] Crear `client/lib/screens/order_form_screen.dart`: cliente, vehículo del cliente, mecánico, kilometraje de entrada con aviso y confirmación de corrección, y problema reportado; si se abre desde una cita llega prellenado y bloqueado
+- [X] T035 [US2] Agregar la acción **Crear orden** al detalle de la cita confirmada en `client/lib/screens/appointment_detail_screen.dart`, y registrar `OrdersProvider` en `client/lib/main.dart`
 
 **Punto de control**: Las historias 1 y 2 funcionan de forma independiente
 
