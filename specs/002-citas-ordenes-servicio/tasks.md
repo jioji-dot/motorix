@@ -192,14 +192,14 @@ description: "Lista de tareas para implementar el Sprint 2: citas y órdenes de 
 
 **Propósito**: Datos de ejemplo, seguridad, diseño y validación final
 
-- [ ] T064 Crear `database/seeds/004_service_orders.sql` con al menos 7 órdenes de ejemplo (una por cada estado, incluida una CANCELADA con motivo), repartidas entre `mecanico` y `mecanico2`, con servicios, mano de obra e historial coherentes, ligadas a las citas COMPLETADA y EN_PROCESO donde corresponda, asignando el folio `OS-` más el `id` con ceros, de forma idempotente
-- [ ] T065 Actualizar `server/scripts/seed.js` para crear la cuenta `mecanico2` (segundo mecánico de ejemplo) con la misma variable `SEED_PASSWORD_MECANICO` y ejecutar los seeds nuevos; verificar que correrlo dos veces no duplica registros
-- [ ] T066 [P] Extender `server/tests/integration/permissions.test.js` con todos los endpoints nuevos de `contracts/api.md` (sin token 401, token inválido 401, rol sin permiso 403, rol permitido distinto de 401 y 403)
-- [ ] T067 [P] Extender `client/test/layout_responsive_test.dart` con las secciones Citas y Órdenes de servicio, el formulario de cita, el de orden y el detalle de la orden en anchos de 1400, 1000, 760 y 600 px, con la barra lateral expandida y colapsada
-- [ ] T068 [P] Revisar que no haya valores sueltos de color, espaciado o radio en las pantallas nuevas (`git grep` de `Color(0x`, `Colors.` y números en `EdgeInsets`) y que ninguna contraseña ni secreto aparezca en el repositorio ni en los seeds
-- [ ] T069 [P] Actualizar `README.md` y `docs/project-context.md` con los endpoints y las decisiones del Sprint 2 (estado CANCELADA de la orden, mecánico obligatorio, tope de kilometraje, cancelación de citas, `GET /mechanics`)
-- [ ] T070 Ejecutar la suite completa del backend (`npm test`, `npx eslint .`) y del frontend (`flutter test`, `flutter analyze`) y corregir cualquier fallo
-- [ ] T071 Ejecutar la validación de `quickstart.md` contra la API real con los 17 escenarios, limpiar los datos temporales y registrar el resultado en `specs/002-citas-ordenes-servicio/validacion-quickstart.md`
+- [X] T064 Crear `database/seeds/004_service_orders.sql` con al menos 7 órdenes de ejemplo (una por cada estado, incluida una CANCELADA con motivo), repartidas entre `mecanico` y `mecanico2`, con servicios, mano de obra e historial coherentes, ligadas a las citas COMPLETADA y EN_PROCESO donde corresponda, asignando el folio `OS-` más el `id` con ceros, de forma idempotente
+- [X] T065 Actualizar `server/scripts/seed.js` para crear la cuenta `mecanico2` (segundo mecánico de ejemplo) con la misma variable `SEED_PASSWORD_MECANICO` y ejecutar los seeds nuevos; verificar que correrlo dos veces no duplica registros
+- [X] T066 [P] Extender `server/tests/integration/permissions.test.js` con todos los endpoints nuevos de `contracts/api.md` (sin token 401, token inválido 401, rol sin permiso 403, rol permitido distinto de 401 y 403)
+- [X] T067 [P] Extender `client/test/layout_responsive_test.dart` con las secciones Citas y Órdenes de servicio, el formulario de cita, el de orden y el detalle de la orden en anchos de 1400, 1000, 760 y 600 px, con la barra lateral expandida y colapsada
+- [X] T068 [P] Revisar que no haya valores sueltos de color, espaciado o radio en las pantallas nuevas (`git grep` de `Color(0x`, `Colors.` y números en `EdgeInsets`) y que ninguna contraseña ni secreto aparezca en el repositorio ni en los seeds
+- [X] T069 [P] Actualizar `README.md` y `docs/project-context.md` con los endpoints y las decisiones del Sprint 2 (estado CANCELADA de la orden, mecánico obligatorio, tope de kilometraje, cancelación de citas, `GET /mechanics`)
+- [X] T070 Ejecutar la suite completa del backend (`npm test`, `npx eslint .`) y del frontend (`flutter test`, `flutter analyze`) y corregir cualquier fallo
+- [X] T071 Ejecutar la validación de `quickstart.md` contra la API real con los 17 escenarios, limpiar los datos temporales y registrar el resultado en `specs/002-citas-ordenes-servicio/validacion-quickstart.md`
 
 ---
 

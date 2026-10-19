@@ -1315,6 +1315,28 @@ Antes de asumirlas como definitivas, el equipo debe decidir:
 - **Sesión**: los datos de las pantallas (providers) viven sobre el `Navigator` y se vacían al terminar la
   sesión.
 
+### Decisiones resueltas con Spec Kit para el Sprint 2 (2026-10-19)
+
+- **Estados de la orden**: `RECIBIDO`, `DIAGNOSTICO`, `EN_REPARACION`, `ESPERANDO_REFACCION`, `TERMINADO`, `ENTREGADO` y
+  `CANCELADA`. El mecánico asignado (o ADMIN) avanza el trabajo hasta Terminado; recepción (o ADMIN) entrega y cancela.
+  `ENTREGADO` y `CANCELADA` son finales. Terminar exige diagnóstico y al menos un servicio o mano de obra. Los cambios de
+  estado quedan en el historial (quién, cuándo y motivo) y se aplican con bloqueo para evitar cambios simultáneos.
+- **Cancelar órdenes** (`/speckit-clarify`): sí existe, solo recepción o administración, antes de Terminado, con motivo
+  obligatorio y confirmación; la orden se conserva como historial.
+- **Mecánico** (`/speckit-clarify`): es obligatorio en toda orden y lo asigna siempre recepción o administración; solo
+  ellos pueden reasignarlo. El mecánico no toma órdenes por su cuenta. `GET /api/mechanics` lista los mecánicos activos
+  para recepción.
+- **Kilometraje de entrada** (`/speckit-clarify`): entero entre 0 y 1,500,000 km. Si es menor al del vehículo se exige
+  corrección explícita (`mileageCorrection`); con 0 km previos se acepta cualquier valor del rango. Al crear la orden el
+  kilometraje del vehículo se actualiza.
+- **Citas** (`/speckit-clarify`): estados `PENDIENTE`, `CONFIRMADA`, `EN_PROCESO`, `COMPLETADA` y `CANCELADA`. No se cancela una
+  cita con orden activa: primero se cancela la orden (la cita vuelve a Confirmada). Sin cancelaciones en cascada. Entregar la
+  orden completa la cita. No se agenda en el pasado y un duplicado (mismo vehículo, fecha y hora) avisa y pide confirmación.
+  Solo ADMIN y RECEPTIONIST ven la agenda.
+- **Folio**: `OS-000123` (el id con ceros), único. **Importes**: `DECIMAL(10,2)`; el importe de la mano de obra es la
+  columna calculada `ROUND(horas × tarifa, 2)` y el total de la orden se recalcula en cada cambio de línea.
+- **Datos de ejemplo**: el seed agrega la cuenta `mecanico2`, citas relativas a la fecha de carga y 7 órdenes de ejemplo.
+
 CLAUDE puede proponer opciones para estas decisiones, pero no debe
 introducir dependencias grandes sin justificar su necesidad.
 

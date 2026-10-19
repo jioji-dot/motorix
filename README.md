@@ -3,8 +3,13 @@
 Sistema de Gestión para Taller Mecánico. Proyecto académico de Ingeniería en Sistemas Computacionales,
 desarrollado con **Desarrollo Guiado por Especificaciones (SDD)** usando Spec Kit.
 
-Este repositorio contiene el **Sprint 1** del MVP: autenticación con roles, gestión de usuarios, clientes y
-vehículos. El alcance completo y las reglas de negocio están en [`docs/project-context.md`](docs/project-context.md)
+Este repositorio contiene los **Sprints 1 y 2** del MVP:
+
+- **Sprint 1**: autenticación con roles, gestión de usuarios, clientes y vehículos.
+- **Sprint 2**: agenda de citas y órdenes de servicio (asignación de mecánico, diagnóstico, servicios, mano de obra,
+  total calculado, estados con historial y cancelación).
+
+El alcance completo y las reglas de negocio están en [`docs/project-context.md`](docs/project-context.md)
 y las reglas del proyecto en la [constitución](.specify/memory/constitution.md).
 
 ## Estructura
@@ -19,9 +24,13 @@ motorix/
 └── .specify/    Constitución, plantillas y scripts de Spec Kit
 ```
 
-La documentación de la funcionalidad del Sprint 1 está en [`specs/001-base-clientes-vehiculos/`](specs/001-base-clientes-vehiculos/):
-`spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/api.md`, `quickstart.md`, `tasks.md` y
-`validacion-quickstart.md`.
+La documentación de cada funcionalidad está en `specs/`:
+
+- [`specs/001-base-clientes-vehiculos/`](specs/001-base-clientes-vehiculos/) (Sprint 1)
+- [`specs/002-citas-ordenes-servicio/`](specs/002-citas-ordenes-servicio/) (Sprint 2)
+
+Cada carpeta incluye `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/api.md`, `quickstart.md`,
+`tasks.md` y `validacion-quickstart.md`.
 
 ## Requisitos
 
@@ -65,7 +74,20 @@ npm run seed     # usuarios, clientes y vehículos de ejemplo (idempotente)
 npm start        # API en http://localhost:3000/api
 ```
 
-Cuentas iniciales: `admin`, `recepcion` y `mecanico` (se puede entrar con el usuario o con el correo).
+Cuentas iniciales: `admin`, `recepcion`, `mecanico` y `mecanico2` (se puede entrar con el usuario o con el correo).
+El seed carga clientes, vehículos, 8 citas (una o más por estado) y 7 órdenes de servicio (una por estado) repartidas entre
+los dos mecánicos, para que cada pantalla muestre información al abrirla.
+
+### Qué puede hacer cada rol
+
+| Rol | Clientes y vehículos | Citas | Órdenes de servicio | Usuarios |
+|-----|----------------------|-------|---------------------|----------|
+| Administrador | Gestiona | Gestiona | Todo (crea, documenta, cambia estado) | Gestiona |
+| Recepcionista | Gestiona | Gestiona | Crea, reasigna, entrega y cancela | — |
+| Mecánico | Consulta | — | Ve solo las suyas; documenta y avanza el trabajo hasta Terminado | — |
+
+Estados de la orden: Recibido → Diagnóstico → En reparación → Terminado → Entregado (Esperando refacción es un desvío
+desde En reparación; una orden en curso puede cancelarse con motivo). Una orden entregada o cancelada ya no cambia.
 
 ### 4. Frontend
 

@@ -15,6 +15,8 @@ afterAll(cerrarConexiones);
 const TODOS = ['ADMIN', 'RECEPTIONIST', 'MECHANIC'];
 const ESCRITURA = ['ADMIN', 'RECEPTIONIST'];
 const SOLO_ADMIN = ['ADMIN'];
+const AGENDA = ['ADMIN', 'RECEPTIONIST']; // citas y lista de mecánicos
+const DOCUMENTA = ['ADMIN', 'MECHANIC']; // servicios y mano de obra (el servicio comprueba la asignación)
 
 // [método, ruta, roles permitidos]. Las escrituras se envían vacías: si el rol está permitido, la
 // petición pasa la autorización y la validación la rechaza con 400 (nunca con 401 ni 403).
@@ -33,6 +35,26 @@ const MATRIZ = [
   ['get', '/api/vehicles/1', TODOS],
   ['post', '/api/vehicles', ESCRITURA],
   ['patch', '/api/vehicles/1', ESCRITURA],
+  // Sprint 2: citas
+  ['get', '/api/appointments', AGENDA],
+  ['get', '/api/appointments/1', AGENDA],
+  ['post', '/api/appointments', AGENDA],
+  ['patch', '/api/appointments/1', AGENDA],
+  ['post', '/api/appointments/1/confirm', AGENDA],
+  ['post', '/api/appointments/1/cancel', AGENDA],
+  ['get', '/api/mechanics', AGENDA],
+  // Sprint 2: órdenes de servicio
+  ['get', '/api/orders', TODOS],
+  ['get', '/api/orders/1', TODOS],
+  ['post', '/api/orders', ESCRITURA],
+  ['patch', '/api/orders/1', TODOS],
+  ['post', '/api/orders/1/status', TODOS],
+  ['post', '/api/orders/1/services', DOCUMENTA],
+  ['patch', '/api/orders/1/services/1', DOCUMENTA],
+  ['delete', '/api/orders/1/services/1', DOCUMENTA],
+  ['post', '/api/orders/1/labor', DOCUMENTA],
+  ['patch', '/api/orders/1/labor/1', DOCUMENTA],
+  ['delete', '/api/orders/1/labor/1', DOCUMENTA],
 ];
 
 const enviar = (metodo, ruta, token) => {

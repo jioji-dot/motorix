@@ -1,9 +1,9 @@
-// Carga los datos de ejemplo del Sprint 1. Es idempotente: ejecutarlo de nuevo no duplica registros.
+// Carga los datos de ejemplo de los Sprints 1 y 2. Es idempotente: ejecutarlo de nuevo no duplica registros.
 //
-// - Usuarios: cuentas iniciales (admin, recepcion, mecanico) con hash bcrypt. Las contraseñas del estándar
+// - Usuarios: cuentas iniciales (admin, recepcion, mecanico y mecanico2) con hash bcrypt. Las contraseñas del estándar
 //   del MVP se leen de variables de entorno locales (SEED_PASSWORD_ADMIN, SEED_PASSWORD_RECEPCION y
 //   SEED_PASSWORD_MECANICO); nunca están escritas en el código ni en el repositorio.
-// - Clientes y vehículos: scripts SQL de database/seeds/ (también idempotentes).
+// - Clientes, vehículos, citas y órdenes de servicio: scripts SQL de database/seeds/ (también idempotentes).
 import bcrypt from 'bcryptjs';
 import fs from 'node:fs/promises';
 import mysql from 'mysql2/promise';
@@ -19,6 +19,8 @@ const CUENTAS_INICIALES = [
   { username: 'admin', name: 'Administrador del taller', email: 'admin@motorix.mx', role: 'ADMIN', variable: 'SEED_PASSWORD_ADMIN' },
   { username: 'recepcion', name: 'Recepción del taller', email: 'recepcion@motorix.mx', role: 'RECEPTIONIST', variable: 'SEED_PASSWORD_RECEPCION' },
   { username: 'mecanico', name: 'Mecánico del taller', email: 'mecanico@motorix.mx', role: 'MECHANIC', variable: 'SEED_PASSWORD_MECANICO' },
+  // Segundo mecánico de ejemplo (Sprint 2): permite ver que cada mecánico solo ve sus órdenes.
+  { username: 'mecanico2', name: 'Segundo mecánico del taller', email: 'mecanico2@motorix.mx', role: 'MECHANIC', variable: 'SEED_PASSWORD_MECANICO' },
 ];
 
 async function cargarUsuarios() {

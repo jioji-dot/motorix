@@ -114,5 +114,5 @@ Solicitud: `{ "description", "hours", "hourlyRate" }`. `hours` mayor a 0 y hasta
 
 ### `POST /orders/:id/status`
 
-Solicitud: `{ "status": "DIAGNOSTICO", "reason"? }`. `reason` es obligatorio cuando `status` es `CANCELADA`. Respuesta 200 con la orden completa.
+Solicitud: `{ "status": "DIAGNOSTICO", "reason"?, "expectedStatus"? }`. `reason` es obligatorio cuando `status` es `CANCELADA`. `expectedStatus` es el estado que la persona estaba viendo: si la orden ya no está en él, la respuesta es 409 `STATE_CONFLICT` (la aplicación lo envía siempre para detectar cambios simultáneos). Respuesta 200 con la orden completa.
 Errores: 403 `FORBIDDEN` (rol o asignación), 409 `INVALID_TRANSITION` (con las permitidas en `details`), 409 `ORDER_INCOMPLETE` (al pasar a `TERMINADO`), 409 `STATE_CONFLICT` (cambio simultáneo), 400 (motivo faltante al cancelar). Efectos sobre la cita: cancelar la orden devuelve la cita a `CONFIRMADA`; entregarla la pasa a `COMPLETADA`.
