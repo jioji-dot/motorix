@@ -174,6 +174,13 @@ Reescritura del requisito **FR-004** con la sintaxis EARS (*Easy Approach to Req
 - **FR-004-c** (por evento): CUANDO se cumplan los 15 minutos del bloqueo, el backend DEBERÁ permitir de nuevo el inicio de sesión sin intervención de un administrador.
 - **FR-004-d** (por evento): CUANDO una cuenta inicie sesión correctamente, el backend DEBERÁ reiniciar a cero su contador de intentos fallidos.
 
+Reescritura también de **FR-021** y **FR-009**, con el mismo criterio.
+
+- **FR-021-a** (siempre activo): Cada vehículo DEBERÁ pertenecer a un solo cliente.
+- **FR-021-b** (comportamiento no deseado): SI una solicitud de alta de vehículo no indica un propietario existente, ENTONCES el backend DEBERÁ rechazarla con el mensaje «El propietario es obligatorio».
+- **FR-009-a** (por evento): CUANDO un administrador cambie el rol de un usuario o lo desactive, el backend DEBERÁ aplicar el cambio en la siguiente petición de ese usuario, sin esperar a que su sesión expire.
+- **FR-009-b** (comportamiento no deseado): SI un usuario desactivado presenta un token todavía vigente, ENTONCES el backend DEBERÁ rechazar la petición.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles

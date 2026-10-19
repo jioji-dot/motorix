@@ -223,6 +223,14 @@ Reescritura de los requisitos **FR-004** y **FR-005** con la sintaxis EARS (*Eas
 - **FR-005-d** (por estado): MIENTRAS un pago de Mercado Pago esté Pendiente, el backend DEBERÁ descontar su importe del saldo disponible de la orden.
 - **FR-005-e** (por evento): CUANDO un pago de Mercado Pago pase a Rechazado o Cancelado, el backend DEBERÁ volver a incluir su importe en el saldo disponible de la orden.
 
+Reescritura también de **FR-003** y **FR-015**, con el mismo criterio.
+
+- **FR-003-a** (comportamiento no deseado): SI el importe de un pago es cero, negativo o tiene más de dos decimales, ENTONCES el servidor DEBERÁ rechazarlo.
+- **FR-003-b** (comportamiento no deseado): SI el importe de un pago es mayor al saldo pendiente de la orden, ENTONCES el servidor DEBERÁ rechazarlo e indicar el saldo pendiente.
+- **FR-015-a** (por evento): CUANDO llegue una notificación de Mercado Pago, el servidor DEBERÁ consultar a Mercado Pago el pago real antes de cambiar el estado de cualquier pago.
+- **FR-015-b** (comportamiento no deseado): SI la notificación no puede verificarse con Mercado Pago o no corresponde a un pago de Motorix, ENTONCES el servidor DEBERÁ ignorarla sin alterar ningún pago.
+- **FR-015-c** (por evento): CUANDO llegue una notificación repetida de un pago que ya salió de Pendiente, el servidor DEBERÁ conservar su estado sin duplicar el pago.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles

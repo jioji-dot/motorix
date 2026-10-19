@@ -197,6 +197,17 @@ Como mecánico, quiero cambiar el estado de una orden para reflejar su avance, s
 
 Relaciones: una orden pertenece a un cliente y a un vehículo (del mismo cliente) y tiene un mecánico; una orden puede tener varios servicios y varias manos de obra; una cita puede originar una sola orden; un vehículo puede tener varias citas y varias órdenes.
 
+### Criterios de aceptación en EARS
+
+Reescritura de **FR-020**, **FR-022** y **FR-029** con la sintaxis EARS (*Easy Approach to Requirements Syntax*). Los requisitos originales no se modifican: estas líneas los complementan, separando cada comportamiento para poder probarlo por separado. Responde siempre el servidor.
+
+- **FR-020-a** (siempre activo): El servidor DEBERÁ permitir únicamente las transiciones Recibido → Diagnóstico → En reparación → Terminado → Entregado, además de Esperando refacción desde En reparación y su regreso.
+- **FR-020-b** (comportamiento no deseado): SI se solicita una transición que no está permitida, ENTONCES el servidor DEBERÁ rechazarla e indicar las transiciones permitidas desde el estado actual.
+- **FR-022-a** (comportamiento no deseado): SI una orden no tiene diagnóstico, o no tiene al menos un servicio o una mano de obra, ENTONCES el servidor DEBERÁ rechazar el cambio a Terminado.
+- **FR-029-a** (por evento): CUANDO recepción o administración cancelen una orden en Recibido, Diagnóstico, En reparación o Esperando refacción con un motivo, el servidor DEBERÁ dejarla en estado Cancelada y conservarla como historial.
+- **FR-029-b** (comportamiento no deseado): SI quien solicita la cancelación es un mecánico, o la orden está Terminada, Entregada o ya Cancelada, ENTONCES el servidor DEBERÁ rechazar la cancelación.
+- **FR-029-c** (siempre activo): Una orden Cancelada NO DEBERÁ admitir más cambios.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles

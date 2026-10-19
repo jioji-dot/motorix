@@ -231,6 +231,17 @@ Como administrador, quiero visualizar alertas de stock bajo para reabastecer a t
 
 Relaciones: una refacción tiene muchos movimientos; una orden tiene muchas refacciones utilizadas y cada una genera movimientos ligados a la orden; un vehículo tiene muchos mantenimientos programados y su historial sale de sus órdenes.
 
+### Criterios de aceptación en EARS
+
+Reescritura de **FR-012**, **FR-023** y **FR-024** con la sintaxis EARS (*Easy Approach to Requirements Syntax*). Los requisitos originales no se modifican: estas líneas los complementan, separando cada comportamiento para poder probarlo por separado. Responde siempre el servidor.
+
+- **FR-012-a** (por evento): CUANDO la próxima fecha de un mantenimiento pendiente ya pasó o el kilometraje actual del vehículo alcanzó el próximo kilometraje, el servidor DEBERÁ clasificarlo como Vencido.
+- **FR-012-b** (por evento): CUANDO falten 15 días o menos, o 500 km o menos, para el mantenimiento pendiente y no esté Vencido, el servidor DEBERÁ clasificarlo como Próximo.
+- **FR-012-c** (por estado): MIENTRAS un mantenimiento tenga fecha y kilometraje próximos, el servidor DEBERÁ aplicar la condición más urgente de las dos.
+- **FR-023-a** (por evento): CUANDO el mecánico agregue una refacción a una orden, el servidor DEBERÁ registrar, en la misma operación, una salida de inventario ligada a la orden.
+- **FR-023-b** (comportamiento no deseado): SI la cantidad solicitada supera el stock disponible, ENTONCES el servidor DEBERÁ rechazar la operación, indicar la cantidad disponible y no guardar ningún cambio.
+- **FR-024-a** (comportamiento no deseado): SI varios usos simultáneos piden la misma refacción y no alcanza para todos, ENTONCES el servidor DEBERÁ aplicar solo los que alcanzan y rechazar el resto, sin que el stock quede negativo.
+
 ## Criterios de éxito *(obligatorio)*
 
 ### Resultados medibles
