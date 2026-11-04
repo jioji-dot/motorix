@@ -293,6 +293,7 @@ Antes de ejecutar cualquiera de las siguientes acciones, el sistema **DEBE** mos
 - Cancelar, anular o marcar como entregada una orden de servicio.
 - Eliminar o desactivar cualquier registro (clientes, vehículos, usuarios, refacciones).
 - Registrar un pago de forma definitiva.
+- Guardar una refacción con un precio de venta menor al de compra (el aviso dice que la venta es menor al costo; el administrador debe confirmar de forma explícita).
 - Salir de un formulario con cambios sin guardar (por ejemplo, al pulsar "atrás" o cerrar la ventana).
 - Cualquier otra operación que el equipo considere destructiva o irreversible.
 
@@ -303,6 +304,14 @@ El diálogo debe ser breve, claro y en español. Texto sugerido:
 ### 8.6 Tarjetas
 
 Usar `Card` solo para agrupar contenido que lo necesite (indicadores del dashboard, resúmenes). **Por defecto, no usar tarjetas:** preferir tablas, listas y divisores.
+
+### 8.7 Información financiera según el rol
+
+Las pantallas **NO DEBEN mostrar** datos que el servidor no entrega al rol de la persona que las usa:
+
+- El **precio de compra** solo se muestra al administrador.
+- El **mecánico** no ve ningún precio ni importe de refacciones ni el total de la orden: la pantalla omite esas columnas, etiquetas y totales **sin dejar marcadores de posición** (nada de ceros, guiones ni textos como "No disponible" que parezcan un importe). Sí ve los importes de servicios y de mano de obra.
+- Los modelos del cliente tratan esos campos como opcionales: si no llegan, no se dibujan.
 
 ---
 
