@@ -15,7 +15,7 @@
 
 ## Completitud de los requisitos
 
-- [ ] No quedan marcadores [NEEDS CLARIFICATION]
+- [x] No quedan marcadores [NEEDS CLARIFICATION]
 - [x] Los requisitos son comprobables y no ambiguos
 - [x] Los criterios de éxito son medibles
 - [x] Los criterios de éxito no dependen de la tecnología
@@ -33,6 +33,5 @@
 
 ## Notas
 
-- Quedan 3 marcadores [NEEDS CLARIFICATION] a propósito, para resolverse en `/speckit.clarify`: FR-004 (precio de venta menor al de compra, D-02), FR-008 (precios que ve el mecánico, D-01) y FR-020 (corrección del precio de una línea, D-05). Es el máximo permitido por especificación.
-- Las decisiones D-03 y D-04 del insumo quedaron con un valor por defecto en los Supuestos, y D-06 y D-07 se resolvieron con el comportamiento actual del código y la aclaración del Sprint 4; las cuatro se confirman en `/speckit.clarify`.
+- Los 3 marcadores [NEEDS CLARIFICATION] (FR-004, FR-008 y FR-020) se resolvieron en la sesión de aclaraciones del 2026-11-03, junto con las decisiones D-03 y D-04 del insumo. Las decisiones D-06 y D-07 se resolvieron con el comportamiento actual del código y la aclaración del Sprint 4.
 - Cada requisito indica si mantiene un comportamiento que ya existe (y que ahora debe quedar probado) o si agrega uno nuevo (hallazgo H-02 del aseguramiento de la calidad).

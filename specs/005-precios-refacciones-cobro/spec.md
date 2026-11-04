@@ -10,6 +10,16 @@
 
 > Nota de contexto (hallazgo H-02 del aseguramiento de la calidad): los Sprints 3 y 4 ya dejaron construidos los precios de las refacciones, el precio guardado en cada línea de la orden, el total con refacciones, el cobro y el ticket con refacciones. Este sprint no los construye de nuevo: los completa donde faltan reglas, los protege y los demuestra con pruebas. Cada requisito indica si **mantiene** un comportamiento existente (que ahora debe quedar probado) o **agrega** uno nuevo.
 
+## Aclaraciones
+
+### Sesión 2026-11-03
+
+- Q: ¿Qué precios debe ver el mecánico en el inventario y en las líneas de la orden? → A: Ninguno. El mecánico no ve el precio de compra ni el de venta, ni el importe de cada línea de refacción, ni el desglose, ni el total de la orden; solo ve código, nombre, unidad, cantidad y existencia de las refacciones.
+- Q: ¿Qué debe hacer el sistema cuando el administrador guarda un precio de venta menor al de compra? → A: Advertir y pedir confirmación: el servidor rechaza el guardado con un aviso claro hasta que el administrador lo confirme de forma explícita; con la confirmación se guarda.
+- Q: ¿Se permite corregir a mano el precio de una línea de refacción de una orden en curso? → A: No, queda fuera de este sprint. Un precio equivocado se corrige quitando la refacción y agregándola de nuevo mientras la orden siga en curso; la línea nueva toma el precio vigente.
+- Q: ¿Se permite un precio de venta igual a 0? → A: Sí, como hoy, para piezas sin cargo o de garantía.
+- Q: ¿Cuál es el máximo de un precio, de una línea y del total de una orden? → A: 99,999,999.99 para los tres, el valor que cabe en el almacenamiento actual; lo que lo exceda se rechaza.
+
 ## Escenarios de usuario y pruebas *(obligatorio)*
 
 ### Historia de usuario 1 - Reglas y límites de los precios de una refacción (Prioridad: P1)
@@ -25,7 +35,7 @@ Como administrador, quiero que los precios de compra y de venta de una refacció
 1. **Dado** el formulario de refacción, **Cuando** el administrador captura categoría, marca, precio de compra y precio de venta válidos, **Entonces** la refacción se guarda y esos datos se conservan al consultarla de nuevo.
 2. **Dado** un precio negativo, no numérico, vacío, con más de dos decimales o mayor al máximo permitido, **Cuando** el administrador guarda, **Entonces** el sistema lo rechaza indicando qué precio falla y por qué.
 3. **Dado** una refacción existente, **Cuando** el administrador edita solo su nombre, **Entonces** los precios no cambian.
-4. **Dado** un precio de venta menor al de compra, **Cuando** el administrador guarda, **Entonces** el sistema actúa según la decisión de FR-004.
+4. **Dado** un precio de venta menor al de compra, **Cuando** el administrador guarda sin confirmar, **Entonces** el sistema no guarda y le avisa que la venta es menor al costo; **Cuando** confirma de forma explícita, **Entonces** se guarda.
 5. **Dado** que agregar una refacción a una orden produciría un importe de línea o un total de orden mayor al máximo permitido, **Cuando** se intenta agregar, **Entonces** el sistema lo rechaza con un mensaje claro y la orden no cambia.
 
 ---
@@ -41,7 +51,7 @@ Como mecánico, quiero seguir usando las refacciones en una orden sin ver precio
 **Escenarios de aceptación**:
 
 1. **Dado** que soy mecánico asignado a una orden, **Cuando** agrego, cambio la cantidad o quito una refacción, **Entonces** puedo hacerlo y veo código, nombre, unidad, cantidad y existencia.
-2. **Dado** que soy mecánico, **Cuando** consulto el inventario, el detalle de una orden, el historial de un vehículo o las alertas de stock, **Entonces** no recibo el precio de compra en ninguna respuesta; el tratamiento del precio de venta, de los importes de las líneas y del total sigue la decisión de FR-008.
+2. **Dado** que soy mecánico, **Cuando** consulto el inventario, el detalle o el listado de órdenes, el historial de un vehículo o las alertas de stock, **Entonces** no recibo ningún precio de refacciones (ni de compra ni de venta), ni importes de línea, ni desglose, ni el total de la orden.
 3. **Dado** que soy recepcionista, **Cuando** consulto cualquier información de refacciones, **Entonces** recibo el precio de venta y los importes, pero nunca el precio de compra.
 4. **Dado** que soy administrador, **Cuando** consulto el inventario, **Entonces** veo tanto el precio de compra como el de venta.
 5. **Dado** un intento de saltarse la interfaz (petición directa al servidor), **Cuando** un rol sin permiso pide un precio, **Entonces** el servidor no lo entrega: la restricción no depende de la pantalla.
@@ -125,14 +135,15 @@ Como administrador, quiero datos de ejemplo y documentación al día para demost
 - **FR-001** (mantiene): El sistema DEBE guardar, para cada refacción, categoría, marca, precio de compra y precio de venta, y DEBE devolverlos al consultarla, de modo que el administrador pueda crearla y editarla con esos datos.
 - **FR-002** (mantiene): Los precios de compra y de venta DEBEN ser numéricos, no negativos, con hasta dos decimales y no mayores a 99,999,999.99; cualquier otro valor DEBE rechazarse con un mensaje en español que indique qué precio falla.
 - **FR-003** (agrega): El sistema NO DEBE permitir que el importe de una línea de refacción (cantidad por precio guardado) ni el total de una orden superen 99,999,999.99; ante un intento, DEBE rechazarlo con un mensaje claro y sin modificar la orden ni el inventario.
-- **FR-004** (agrega): Un precio de venta menor al precio de compra: [NEEDS CLARIFICATION: ¿se permite, se advierte al administrador y se pide confirmación, o se rechaza? (decisión D-02 del insumo)]
+- **FR-004** (agrega): Cuando el administrador crea una refacción o cambia sus precios y el precio de venta resulta menor al de compra, el sistema NO DEBE guardar hasta recibir una confirmación explícita; sin ella DEBE rechazar con un aviso claro de que la venta es menor al costo. Editar otros datos sin cambiar los precios no exige confirmación.
+- **FR-004-b** (mantiene): Un precio de venta igual a 0 DEBE permitirse (piezas sin cargo o de garantía).
 
 **Visibilidad por rol**
 
 - **FR-005** (mantiene): El precio de compra DEBE ser visible solo para el administrador; el sistema NO DEBE entregarlo a recepción ni al mecánico en ninguna consulta (inventario, alertas, movimientos, historial del vehículo, panel de control, órdenes, pagos y tickets).
 - **FR-006** (mantiene): Recepción y administración DEBEN recibir el precio de venta y los importes de las refacciones de las órdenes.
 - **FR-007** (mantiene): El mecánico asignado DEBE poder agregar, cambiar la cantidad y quitar refacciones de una orden en curso y consultar el inventario con código, nombre, unidad y existencia.
-- **FR-008** (agrega): Precio de venta, importes de las líneas de refacción y total de la orden para el mecánico: [NEEDS CLARIFICATION: ¿el mecánico no ve ningún precio (ni de venta, ni importes de línea, ni total) o solo se le oculta el precio de compra? Hoy recibe el precio de venta y los importes (decisión D-01 del insumo)]
+- **FR-008** (agrega): El mecánico NO DEBE recibir ningún precio ni importe de refacciones en ninguna consulta: ni el precio de compra, ni el de venta, ni el importe de una línea, ni el desglose, ni el total de la orden (en el detalle ni en el listado de órdenes). Hoy recibe el precio de venta, los importes y el total, así que este requisito cambia el contrato actual.
 - **FR-009** (mantiene): Las restricciones de visibilidad DEBEN aplicarse en el servidor, no solo en la interfaz.
 
 **Integridad del dinero**
@@ -153,7 +164,7 @@ Como administrador, quiero datos de ejemplo y documentación al día para demost
 
 **Corrección de precios en una orden abierta**
 
-- **FR-020** (agrega): Corrección del precio de una línea de refacción de una orden abierta: [NEEDS CLARIFICATION: ¿se permite que el administrador corrija ese precio (con qué permiso y motivo) o queda fuera de este sprint? Hoy solo se puede cambiar la cantidad (decisión D-05 del insumo)]
+- **FR-020** (mantiene): El sistema NO DEBE ofrecer corregir a mano el precio de una línea de refacción; solo se puede cambiar su cantidad. Un precio equivocado se corrige quitando la refacción y agregándola de nuevo mientras la orden esté en curso, y la línea nueva toma el precio vigente.
 
 **Datos de ejemplo, pruebas y documentación**
 
@@ -176,7 +187,7 @@ Relaciones: una orden tiene muchas líneas de refacción, cada una apunta a una 
 ### Resultados medibles
 
 - **SC-001**: En el 100 % de los casos de prueba, cambiar el precio de una refacción no altera ninguna línea, total, pago ni ticket ya registrados, incluso con el cambio y el alta de la línea al mismo tiempo.
-- **SC-002**: En el 100 % de las rutas de lectura probadas, el precio de compra no aparece para recepción ni mecánico, y los precios que el mecánico no debe ver (según FR-008) no aparecen en ninguna respuesta que reciba.
+- **SC-002**: En el 100 % de las rutas de lectura probadas, el precio de compra no aparece para recepción ni mecánico, y ningún precio ni importe de refacciones ni el total de la orden aparece en las respuestas que recibe el mecánico.
 - **SC-003**: En el 100 % de los casos de prueba, el total de la orden, el pago y el subtotal y total del ticket coinciden, incluso con importes que requieren redondeo.
 - **SC-004**: Recepción cobra una orden con refacciones y genera su ticket en menos de 2 minutos.
 - **SC-005**: Todo precio o importe fuera de las reglas se rechaza con un mensaje claro en el 100 % de los casos de prueba, y ninguno deja datos a medias.
@@ -186,11 +197,11 @@ Relaciones: una orden tiene muchas líneas de refacción, cada una apunta a una 
 ## Supuestos
 
 - Se apoya en el inventario (Sprint 3) y en los pagos, tickets y panel (Sprint 4); no se cambia su estructura de datos salvo que una decisión lo exija, y cualquier migración nueva es aditiva.
-- Decisión D-06 del insumo, resuelta por el comportamiento actual y por la aclaración del Sprint 4: una orden Terminada solo puede pasar a Entregada, sus líneas no se editan y su total no cambia; por tanto, no hay un total que se desfase de un pago pendiente de Mercado Pago. Se confirma en `/speckit.clarify`.
-- Decisión D-07 del insumo, resuelta por la aclaración del Sprint 4: el ticket se arma al consultarlo con los datos de la orden, sus líneas y sus pagos, y no guarda un contenido propio; como las líneas conservan su precio y las órdenes cobradas no cambian, el ticket emitido no varía. Se confirma en `/speckit.clarify`.
-- Decisión D-03 del insumo (valor por defecto): un precio de venta igual a 0 se permite, como hoy, para piezas sin cargo. Se confirma en `/speckit.clarify`.
-- Decisión D-04 del insumo (valor por defecto): el máximo de un precio, de una línea y del total es 99,999,999.99, el valor que cabe en el almacenamiento actual; se rechaza lo que lo exceda.
+- Decisión D-06 del insumo, resuelta por el comportamiento actual y por la aclaración del Sprint 4: una orden Terminada solo puede pasar a Entregada, sus líneas no se editan y su total no cambia; por tanto, no hay un total que se desfase de un pago pendiente de Mercado Pago. No se preguntó en la sesión de aclaraciones porque el código y el Sprint 4 la respaldan.
+- Decisión D-07 del insumo, resuelta por la aclaración del Sprint 4: el ticket se arma al consultarlo con los datos de la orden, sus líneas y sus pagos, y no guarda un contenido propio; como las líneas conservan su precio y las órdenes cobradas no cambian, el ticket emitido no varía. No se preguntó en la sesión de aclaraciones por la misma razón.
+- Decisiones D-01 a D-05 del insumo: resueltas en la sesión de aclaraciones del 2026-11-03 (ver «Aclaraciones»).
+- Los importes de los servicios y de la mano de obra que ve el mecánico no cambian en este sprint; la restricción nueva se refiere solo a las refacciones y al total de la orden.
 - Los pagos parciales ya existen desde el Sprint 4 y no se tocan; no hay reembolsos, impuestos ni descuentos.
 - El precio de compra nunca llega a recepción ni al mecánico, y esto ya se cumple; el sprint lo protege con pruebas.
 - Los importes se calculan en centavos enteros y se guardan con dos decimales, igual que en el Sprint 4.
-- Las decisiones D-01, D-02 y D-05 quedan como marcadores `[NEEDS CLARIFICATION]` (máximo 3 por especificación) para resolverse en `/speckit.clarify`.
+- Los precios de la refacción no se corrigen en las líneas ya agregadas; esa corrección manual queda fuera del sprint (aclaración del 2026-11-03).

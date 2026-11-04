@@ -53,8 +53,8 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 | ID | Puerta | Estado | Evidencia |
 |:--:|---|---|---|
 | G-01 | Insumo del sprint revisado contra el código | Aprobado con observación | `docs/sprints/sprint-5-precios-refacciones-cobro.md` reformulado el 2026-11-03 (H-02, H-04 a H-06). Observación: dos puntos del código quedan por decidir en `/speckit.clarify` (D-06 y D-07 del insumo) |
-| G-02 | Especificación (`/speckit.specify`) | Aprobado con observación | `specs/005-precios-refacciones-cobro/spec.md`: 5 historias de usuario, 23 requisitos funcionales y 7 criterios de éxito. Cada requisito indica si mantiene lo existente o agrega algo nuevo. Observación: quedan 3 marcadores `[NEEDS CLARIFICATION]` (FR-004, FR-008 y FR-020), que se resuelven en la puerta G-03 |
-| G-03 | Aclaraciones (`/speckit.clarify`) | Pendiente | |
+| G-02 | Especificación (`/speckit.specify`) | Aprobado | `specs/005-precios-refacciones-cobro/spec.md`: 5 historias de usuario, 23 requisitos funcionales y 7 criterios de éxito. Cada requisito indica si mantiene lo existente o agrega algo nuevo. Los 3 marcadores `[NEEDS CLARIFICATION]` iniciales se resolvieron en G-03 |
+| G-03 | Aclaraciones (`/speckit.clarify`) | Aprobado | 5 decisiones resueltas en la sesión del 2026-11-03 (sección 4); sin marcadores `[NEEDS CLARIFICATION]`; D-06 y D-07 se respaldan con el código y el Sprint 4 |
 | G-04 | Lista de calidad de requisitos (`/speckit.checklist`) | Pendiente | |
 | G-05 | Plan (`/speckit.plan`) | Pendiente | |
 | G-06 | Tareas (`/speckit.tasks`) | Pendiente | |
@@ -63,7 +63,17 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 
 ## 4. Decisiones de aclaración
 
-Pendiente: se llena después de `/speckit.clarify`. El insumo reformulado lista 7 decisiones abiertas (D-01 a D-07) en su sección 9.
+Las 7 decisiones abiertas del insumo (D-01 a D-07) se resolvieron el 2026-11-03: cinco en la etapa de aclaraciones, con la aprobación de Jorge Francisco Dominguez Ramirez, y dos con el comportamiento actual del código. El texto completo está en `specs/005-precios-refacciones-cobro/spec.md` (sección «Aclaraciones»).
+
+| ID | Decisión | Resolución | Requisito afectado |
+|:--:|---|---|---|
+| D-01 | Precios que ve el mecánico | Ninguno: ni precio de compra ni de venta, ni importes de línea, ni desglose, ni el total de la orden | FR-008 |
+| D-02 | Venta menor a compra | Advertir y pedir confirmación explícita antes de guardar | FR-004 |
+| D-03 | Precio de venta 0 | Se permite, como hoy | FR-004-b |
+| D-04 | Límites máximos | 99,999,999.99 para el precio, la línea y el total | FR-002, FR-003 |
+| D-05 | Corregir el precio de una línea | Fuera del sprint: se quita la refacción y se agrega de nuevo | FR-020 |
+| D-06 | Orden Terminada que vuelve a estar en curso | No ocurre: Terminada solo pasa a Entregada (`orderStateMachine.js`) | Supuestos |
+| D-07 | Contenido del ticket | Se sigue armando al consultarlo con los datos de la orden (aclaración del Sprint 4) | Supuestos |
 
 ## 5. Riesgos y mitigaciones
 
@@ -85,6 +95,7 @@ Se registra todo lo que se encuentre, sea en los documentos, en el análisis o e
 | H-04 | El insumo cita `docs/sprints/propuesta-sprints-post-mvp.md`, que no existe en el repositorio | Baja | G-01 | Resuelto | Se quitó la referencia del insumo | `docs/sprints/sprint-5-precios-refacciones-cobro.md`, línea 12 |
 | H-05 | El insumo menciona el error `NOTHING_TO_CHARGE`, que no existe en el código; una orden con total cero responde `ORDER_NOT_PAYABLE` («La orden tiene total cero y no admite pagos.») | Baja | G-01 | Resuelto | El insumo reformulado ya no lo cita. Además, una orden con solo refacciones sí es cobrable, porque el único bloqueo es el total cero | `server/services/paymentService.js`, línea 39 |
 | H-06 | El insumo daba por rechazado el importe que no coincide con el total y dejaba los pagos parciales fuera de alcance, pero desde el Sprint 4 el pago se valida contra el saldo disponible: admite pagos parciales y solo rechaza el que lo excede (`PAYMENT_EXCEEDS_BALANCE`) | Media | G-01 | Resuelto | CA-5 del insumo se reescribió con la regla real y la sección 8 aclara que los pagos parciales ya existen y no se tocan | `server/services/paymentService.js`, líneas 28 a 50 |
+| H-07 | La decisión D-01 (FR-008) cambia un contrato existente: el mecánico hoy recibe el precio de venta, los importes de las líneas de refacción y el total de la orden, y a partir del sprint no recibirá ninguno. Las pruebas y las pantallas que dependen de esos datos deberán ajustarse | Media | G-03 | Abierto | Se resolverá en la implementación: se registrarán aquí las pruebas ajustadas y su razón | `specs/005-precios-refacciones-cobro/spec.md`, FR-008 |
 
 ## 8. Línea base de regresión
 
