@@ -25,6 +25,8 @@ const brand = texto('La marca', 60);
 const minimumStock = existencia('El stock mínimo');
 const purchasePrice = importeSchema('El precio de compra');
 const salePrice = importeSchema('El precio de venta');
+// Confirmación explícita de una venta menor al costo (Sprint 5, FR-004): acompaña la solicitud y no se guarda.
+const confirmBelowCost = z.boolean({ invalid_type_error: 'La confirmación debe ser verdadera o falsa.' }).optional();
 
 export const createPartSchema = z.object({
   code,
@@ -35,6 +37,7 @@ export const createPartSchema = z.object({
   purchasePrice,
   salePrice,
   initialStock: existencia('La existencia inicial').optional(),
+  confirmBelowCost,
 });
 
 // El código y el stock no se editan: cualquier valor enviado se descarta.
@@ -47,8 +50,10 @@ export const updatePartSchema = z
     purchasePrice: purchasePrice.optional(),
     salePrice: salePrice.optional(),
     active: z.boolean({ invalid_type_error: 'El campo "active" debe ser verdadero o falso.' }).optional(),
+    confirmBelowCost,
   })
-  .refine((datos) => Object.values(datos).some((valor) => valor !== undefined), {
+  // La confirmación sola no cambia nada: hace falta al menos un campo de la refacción.
+  .refine((datos) => Object.entries(datos).some(([campo, valor]) => campo !== 'confirmBelowCost' && valor !== undefined), {
     message: 'Envía al menos un campo para actualizar.',
   });
 

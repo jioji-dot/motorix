@@ -2,6 +2,7 @@
 import * as modeloHistorial from '../models/historyModel.js';
 import * as modeloVehiculos from '../models/vehicleModel.js';
 import { HttpError } from '../utils/httpError.js';
+import { serializeHistoryItem } from './serializers.js';
 
 function agruparPorOrden(filas) {
   const mapa = new Map();
@@ -13,7 +14,7 @@ function agruparPorOrden(filas) {
 }
 
 export function createVehicleHistoryService({ historyModel = modeloHistorial, vehicleModel = modeloVehiculos } = {}) {
-  async function list(vehicleId, { page, pageSize }) {
+  async function list(vehicleId, { page, pageSize }, usuario) {
     const vehiculo = await vehicleModel.findById(vehicleId);
     if (!vehiculo) throw HttpError.notFound('No se encontró el vehículo solicitado.');
 
@@ -28,21 +29,27 @@ export function createVehicleHistoryService({ historyModel = modeloHistorial, ve
     const porManoDeObra = agruparPorOrden(manoDeObra);
     const porRefaccion = agruparPorOrden(refacciones);
 
-    const items = filas.map((fila) => ({
-      orderId: fila.id,
-      folio: fila.folio,
-      status: fila.status,
-      serviceDate: fila.serviceDate,
-      mileage: fila.mileage,
-      mechanic: { id: fila.mechanicId, name: fila.mechanicName },
-      diagnosis: fila.diagnosis,
-      notes: fila.notes,
-      recommendations: fila.recommendations,
-      total: fila.total,
-      services: porServicio.get(fila.id) ?? [],
-      labor: porManoDeObra.get(fila.id) ?? [],
-      parts: porRefaccion.get(fila.id) ?? [],
-    }));
+    // El mecánico no recibe el total ni los precios e importes de las refacciones (Sprint 5, FR-008).
+    const items = filas.map((fila) =>
+      serializeHistoryItem(
+        {
+          orderId: fila.id,
+          folio: fila.folio,
+          status: fila.status,
+          serviceDate: fila.serviceDate,
+          mileage: fila.mileage,
+          mechanic: { id: fila.mechanicId, name: fila.mechanicName },
+          diagnosis: fila.diagnosis,
+          notes: fila.notes,
+          recommendations: fila.recommendations,
+          total: fila.total,
+          services: porServicio.get(fila.id) ?? [],
+          labor: porManoDeObra.get(fila.id) ?? [],
+          parts: porRefaccion.get(fila.id) ?? [],
+        },
+        usuario,
+      ),
+    );
     return { items, meta: { page, pageSize, total } };
   }
 

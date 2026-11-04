@@ -6,7 +6,9 @@ import * as modeloLineas from '../models/orderPartModel.js';
 import * as modeloOrdenes from '../models/orderModel.js';
 import { MOVEMENT_TYPE, ORDER_OPEN_STATUSES } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
+import { aCentavos } from '../utils/money.js';
 import { inventoryService as servicioInventario } from './inventoryService.js';
+import { exigirDentroDelLimite, importeDeLinea } from './orderLimits.js';
 
 export function createOrderPartService({
   orderModel = modeloOrdenes,
@@ -47,6 +49,10 @@ export function createOrderPartService({
           'Esa refacción ya está en la orden. Edita su cantidad en lugar de agregarla otra vez.',
         );
       }
+      // El límite se valida antes de tocar el inventario: un rechazo no deja nada a medias (FR-003, FR-024).
+      const importe = importeDeLinea(quantity, parte.salePrice);
+      exigirDentroDelLimite(importe, { campo: 'quantity', descripcion: 'El importe de la línea' });
+      exigirDentroDelLimite(aCentavos(orden.total) + importe, { campo: 'quantity', descripcion: 'El total de la orden' });
       await movimiento(conexion, orden, usuario, partId, MOVEMENT_TYPE.OUT, -quantity, `Uso en la orden ${orden.folio}`);
       // El precio se fija con el de venta vigente y se conserva aunque el catálogo cambie después.
       await orderPartModel.add(conexion, {
@@ -69,6 +75,12 @@ export function createOrderPartService({
       const diferencia = quantity - linea.quantity;
       if (diferencia !== 0) {
         if (diferencia > 0) {
+          const importe = importeDeLinea(quantity, linea.unitPrice);
+          exigirDentroDelLimite(importe, { campo: 'quantity', descripcion: 'El importe de la línea' });
+          exigirDentroDelLimite(aCentavos(orden.total) + importe - importeDeLinea(linea.quantity, linea.unitPrice), {
+            campo: 'quantity',
+            descripcion: 'El total de la orden',
+          });
           const parte = await inventoryModel.lockPart(conexion, linea.partId);
           if (!parte.active) {
             throw new HttpError(409, 'PART_INACTIVE', `La refacción "${parte.name}" está desactivada y no se puede usar.`);

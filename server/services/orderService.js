@@ -8,8 +8,11 @@ import * as modeloUsuarios from '../models/userModel.js';
 import * as modeloVehiculos from '../models/vehicleModel.js';
 import { APPOINTMENT_STATUS, MOVEMENT_TYPE, ORDER_FINAL_STATUSES, ORDER_OPEN_STATUSES } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
+import { aCentavos } from '../utils/money.js';
 import { inventoryService as servicioInventario } from './inventoryService.js';
+import { errorDeLimite, esErrorDeRango, exigirDentroDelLimite } from './orderLimits.js';
 import { allowedTransitions, canTransition, transitionExists } from './orderStateMachine.js';
+import { serializeOrder, serializeOrderListItem } from './serializers.js';
 
 function errorDeCampo(campo, mensaje) {
   return HttpError.validation('Revisa los datos enviados.', [{ field: campo, message: mensaje }]);
@@ -25,9 +28,10 @@ export function createOrderService({
   inventoryService = servicioInventario,
   transaction = withTransaction,
 } = {}) {
-  // Cada orden se devuelve con las transiciones que el usuario actual puede aplicar ahora.
+  // Cada orden se devuelve con las transiciones que el usuario actual puede aplicar ahora y con el dinero que su rol
+  // puede ver: el mecánico no recibe el total ni los precios e importes de refacciones (Sprint 5, FR-008).
   function conPermisos(orden, usuario) {
-    return { ...orden, allowedTransitions: allowedTransitions(orden, usuario) };
+    return serializeOrder({ ...orden, allowedTransitions: allowedTransitions(orden, usuario) }, usuario);
   }
 
   // Crea la orden, actualiza el kilometraje del vehículo y, si viene de una cita, la pasa a En proceso.
@@ -104,7 +108,10 @@ export function createOrderService({
     // El mecánico solo ve sus órdenes: el servidor ignora cualquier otro `mechanicId` que envíe.
     const consulta = usuario.role === 'MECHANIC' ? { ...filtros, mechanicId: usuario.id } : filtros;
     const { items, total } = await orderModel.list(consulta);
-    return { items, meta: { page: filtros.page, pageSize: filtros.pageSize, total } };
+    return {
+      items: items.map((orden) => serializeOrderListItem(orden, usuario)),
+      meta: { page: filtros.page, pageSize: filtros.pageSize, total },
+    };
   }
 
   async function get(id, usuario) {
@@ -196,8 +203,17 @@ export function createOrderService({
       const orden = await bloquear(conexion, id);
       exigirQuePuedeDocumentar(orden, usuario);
       exigirOrdenEnCurso(orden);
-      const resultado = await operacion(conexion);
+      let resultado;
+      try {
+        resultado = await operacion(conexion);
+      } catch (error) {
+        // Un importe de línea fuera del rango de la base (por ejemplo, horas por tarifa) se informa como límite superado.
+        if (esErrorDeRango(error)) throw errorDeLimite({ campo: 'amount', descripcion: 'El importe de la línea' });
+        throw error;
+      }
       if (resultado === 0) throw HttpError.notFound('No se encontró la línea indicada en esta orden.');
+      // El total nuevo se valida antes de guardarlo: si pasa del máximo, la transacción se revierte completa (FR-003).
+      exigirDentroDelLimite(aCentavos(await orderModel.computeTotal(conexion, id)), { campo: 'amount', descripcion: 'El total de la orden' });
       await orderModel.recalculateTotal(conexion, id);
     });
     return conPermisos(await orderModel.findDetail(id), usuario);

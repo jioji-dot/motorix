@@ -4,6 +4,7 @@ import * as modeloInventario from '../models/inventoryModel.js';
 import * as modeloRefacciones from '../models/partModel.js';
 import { MOVEMENT_TYPE } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
+import { aCentavos, deCentavos } from '../utils/money.js';
 import { inventoryService as servicioInventario } from './inventoryService.js';
 import { serializePart } from './serializers.js';
 
@@ -40,7 +41,19 @@ export function createPartService({
     return { ...serializePart(parte, usuario), movements: items };
   }
 
-  async function create({ initialStock = 0, ...datos }, usuario) {
+  // Venta menor al costo (FR-004): se guarda solo con una confirmación explícita; la confirmación no se almacena.
+  function exigirConfirmacionSiVentaMenorAlCosto({ purchasePrice, salePrice }, confirmBelowCost) {
+    if (aCentavos(salePrice) >= aCentavos(purchasePrice) || confirmBelowCost === true) return;
+    throw new HttpError(409, 'PRICE_BELOW_COST', 'El precio de venta es menor al de compra. Confirma para guardar de todos modos.', [
+      {
+        field: 'salePrice',
+        message: `La venta (${deCentavos(aCentavos(salePrice))}) es menor al costo (${deCentavos(aCentavos(purchasePrice))}).`,
+      },
+    ]);
+  }
+
+  async function create({ initialStock = 0, confirmBelowCost, ...datos }, usuario) {
+    exigirConfirmacionSiVentaMenorAlCosto(datos, confirmBelowCost);
     if (await partModel.findByCode(datos.code)) {
       throw HttpError.duplicate('Ya existe una refacción con ese código.', [
         { field: 'code', message: 'Ya existe una refacción con ese código.' },
@@ -62,8 +75,15 @@ export function createPartService({
     return serializePart(await partModel.findById(id), usuario);
   }
 
-  async function update(id, datos, usuario) {
-    await exigirRefaccion(id);
+  async function update(id, { confirmBelowCost, ...datos }, usuario) {
+    const parte = await exigirRefaccion(id);
+    // Solo se vuelve a pedir confirmación si cambia algún precio: editar otros datos no la exige.
+    if (datos.purchasePrice !== undefined || datos.salePrice !== undefined) {
+      exigirConfirmacionSiVentaMenorAlCosto(
+        { purchasePrice: datos.purchasePrice ?? parte.purchasePrice, salePrice: datos.salePrice ?? parte.salePrice },
+        confirmBelowCost,
+      );
+    }
     await partModel.update(id, datos);
     return serializePart(await partModel.findById(id), usuario);
   }

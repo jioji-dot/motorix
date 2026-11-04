@@ -169,7 +169,7 @@ export async function list({ status, mechanicId, from, to, search, page, pageSiz
 // Bloquea la orden durante la transacción para que ediciones y cambios de estado no se pisen.
 export async function lockOrder(conexion, id) {
   const [filas] = await conexion.execute(
-    'SELECT id, folio, status, mechanicId, appointmentId, vehicleId, entryMileage, diagnosis FROM service_orders WHERE id = ? FOR UPDATE',
+    'SELECT id, folio, status, mechanicId, appointmentId, vehicleId, entryMileage, diagnosis, total FROM service_orders WHERE id = ? FOR UPDATE',
     [id],
   );
   return filas[0] ?? null;
@@ -189,6 +189,17 @@ export async function updateFields(conexion, id, datos) {
   if (asignaciones.length > 0) {
     await conexion.execute(`UPDATE service_orders SET ${asignaciones.join(', ')} WHERE id = ?`, [...parametros, id]);
   }
+}
+
+// Total vigente = servicios + mano de obra + refacciones, calculado sin escribirlo (para validar el límite antes de guardar).
+export async function computeTotal(conexion, orderId) {
+  const [[fila]] = await conexion.execute(
+    `SELECT (SELECT COALESCE(SUM(amount), 0) FROM order_services WHERE orderId = ?)
+          + (SELECT COALESCE(SUM(amount), 0) FROM order_labor WHERE orderId = ?)
+          + (SELECT COALESCE(SUM(amount), 0) FROM order_parts WHERE orderId = ?) AS total`,
+    [orderId, orderId, orderId],
+  );
+  return fila.total;
 }
 
 // Total = servicios + mano de obra + refacciones, recalculado dentro de la misma transacción de cada cambio de línea.
