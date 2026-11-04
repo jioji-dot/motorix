@@ -76,8 +76,14 @@ describe('Consulta de órdenes con dos mecánicos (integración)', () => {
     const porMecanico = await request(app).get(`/api/orders?mechanicId=${usuarios.MECHANIC.id}`).set(como('RECEPTIONIST'));
     expect(porMecanico.body.meta.total).toBe(2);
 
-    const hoy = new Date().toISOString().slice(0, 10);
-    const manana = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+    // Fecha local (no UTC): la base guarda la fecha local, y en UTC el día cambia antes de la medianoche.
+    const fechaLocal = (dias) => {
+      const f = new Date();
+      f.setDate(f.getDate() + dias);
+      return `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}-${String(f.getDate()).padStart(2, '0')}`;
+    };
+    const hoy = fechaLocal(0);
+    const manana = fechaLocal(1);
     expect((await request(app).get(`/api/orders?from=${hoy}&to=${hoy}`).set(como('ADMIN'))).body.meta.total).toBe(3);
     expect((await request(app).get(`/api/orders?from=${manana}`).set(como('ADMIN'))).body.meta.total).toBe(0);
   });
