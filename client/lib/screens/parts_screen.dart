@@ -63,6 +63,8 @@ class _PartsScreenState extends State<PartsScreen> {
   Widget build(BuildContext context) {
     final provider = context.watch<PartsProvider>();
     final esAdmin = context.select<AuthProvider, bool>((a) => a.role == UserRole.admin);
+    // El mecánico no recibe precios (Sprint 5, FR-008): la columna del precio de venta no se dibuja.
+    final verPrecio = context.select<AuthProvider, bool>((a) => a.role != UserRole.mechanic);
 
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.xl),
@@ -122,7 +124,7 @@ class _PartsScreenState extends State<PartsScreen> {
           Expanded(
             child: Card(
               clipBehavior: Clip.antiAlias,
-              child: _buildBody(provider, esAdmin),
+              child: _buildBody(provider, esAdmin, verPrecio),
             ),
           ),
         ],
@@ -130,7 +132,7 @@ class _PartsScreenState extends State<PartsScreen> {
     );
   }
 
-  Widget _buildBody(PartsProvider provider, bool esAdmin) {
+  Widget _buildBody(PartsProvider provider, bool esAdmin, bool verPrecio) {
     if (provider.loading && provider.items.isEmpty) return const LoadingState(message: 'Cargando refacciones...');
     if (provider.error != null) return ErrorState(message: provider.error!, onRetry: provider.load);
 
@@ -161,7 +163,7 @@ class _PartsScreenState extends State<PartsScreen> {
               const DataColumn2(label: Text('Categoría'), size: ColumnSize.M),
               const DataColumn2(label: Text('Stock'), fixedWidth: 80, numeric: true),
               const DataColumn2(label: Text('Nivel'), size: ColumnSize.S),
-              const DataColumn2(label: Text('Precio de venta'), size: ColumnSize.S, numeric: true),
+              if (verPrecio) const DataColumn2(label: Text('Precio de venta'), size: ColumnSize.S, numeric: true),
               if (esAdmin) const DataColumn2(label: Text('Precio de compra'), size: ColumnSize.S, numeric: true),
               const DataColumn2(label: Text('Acciones'), fixedWidth: 110),
             ],
@@ -175,7 +177,7 @@ class _PartsScreenState extends State<PartsScreen> {
                     DataCell(Text(parte.category, overflow: TextOverflow.ellipsis)),
                     DataCell(Text('${parte.stock}')),
                     DataCell(StatusChip.stock(parte.stockLevel)),
-                    DataCell(Text(formatMoney(parte.salePrice))),
+                    if (verPrecio) DataCell(Text(formatMoney(parte.salePrice))),
                     if (esAdmin) DataCell(Text(formatMoney(parte.purchasePrice))),
                     DataCell(Row(
                       children: [

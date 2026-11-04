@@ -138,7 +138,7 @@ class _TicketScreenState extends State<TicketScreen> {
                   ],
                   if (t.parts.isNotEmpty) ...[
                     titulo('Refacciones'),
-                    for (final p in t.parts) linea(p.name, p.amount, detalle: '${p.quantity} × ${formatMoney(p.unitPrice)}'),
+                    for (final p in t.parts) linea(p.name, p.amount ?? '0', detalle: '${p.quantity} × ${formatMoney(p.unitPrice)}'),
                   ],
                   const Divider(height: AppSpacing.xl),
                   fila('Subtotal', formatMoney(t.subtotal)),

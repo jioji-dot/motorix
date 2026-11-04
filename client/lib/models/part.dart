@@ -8,8 +8,8 @@ class Part {
     required this.brand,
     required this.stock,
     required this.minimumStock,
-    required this.salePrice,
     required this.active,
+    this.salePrice,
     this.stockLevel,
     this.purchasePrice,
   });
@@ -24,7 +24,8 @@ class Part {
 
   /// OK, LOW u OUT; nulo si la refacción está desactivada.
   final String? stockLevel;
-  final String salePrice;
+  /// Los nulos significan que el servidor no entrega ese dato a este rol (el mecánico no recibe precios).
+  final String? salePrice;
   final String? purchasePrice;
   final bool active;
 
@@ -37,7 +38,7 @@ class Part {
         stock: json['stock'] as int,
         minimumStock: json['minimumStock'] as int,
         stockLevel: json['stockLevel'] as String?,
-        salePrice: json['salePrice'].toString(),
+        salePrice: json['salePrice']?.toString(),
         purchasePrice: json['purchasePrice']?.toString(),
         active: json['active'] == true || json['active'] == 1,
       );

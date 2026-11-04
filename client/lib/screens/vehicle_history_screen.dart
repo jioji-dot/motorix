@@ -110,7 +110,7 @@ class _TarjetaDeServicio extends StatelessWidget {
     );
   }
 
-  Widget _linea(BuildContext context, String descripcion, String detalle, String importe) {
+  Widget _linea(BuildContext context, String descripcion, String detalle, String? importe) {
     final texto = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
@@ -121,7 +121,7 @@ class _TarjetaDeServicio extends StatelessWidget {
             Flexible(child: Text(detalle, style: texto.bodySmall, overflow: TextOverflow.ellipsis)),
             const SizedBox(width: AppSpacing.md),
           ],
-          Text(formatMoney(importe)),
+          if (importe != null) Text(formatMoney(importe)),
         ],
       ),
     );
@@ -163,19 +163,21 @@ class _TarjetaDeServicio extends StatelessWidget {
             if (entrada.parts.isNotEmpty) ...[
               Text('Refacciones', style: texto.titleSmall),
               for (final p in entrada.parts)
-                _linea(context, p.name, '${p.quantity} × ${formatMoney(p.unitPrice)}', p.amount),
+                _linea(context, p.name, p.unitPrice == null ? 'Cantidad: ${p.quantity}' : '${p.quantity} × ${formatMoney(p.unitPrice)}', p.amount),
               const SizedBox(height: AppSpacing.sm),
             ],
             _texto(context, 'Observaciones', entrada.notes),
             _texto(context, 'Recomendaciones', entrada.recommendations),
-            const Divider(height: AppSpacing.xl),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text('Total  ', style: texto.titleSmall),
-                Text(formatMoney(entrada.total), style: texto.titleMedium),
-              ],
-            ),
+            if (entrada.total != null) ...[
+              const Divider(height: AppSpacing.xl),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text('Total  ', style: texto.titleSmall),
+                  Text(formatMoney(entrada.total), style: texto.titleMedium),
+                ],
+              ),
+            ],
           ],
         ),
       ),

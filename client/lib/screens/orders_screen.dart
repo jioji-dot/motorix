@@ -166,15 +166,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
             horizontalMargin: AppSpacing.lg,
             minWidth: 980,
             showCheckboxColumn: false,
-            columns: const [
-              DataColumn2(label: Text('Folio'), size: ColumnSize.S),
-              DataColumn2(label: Text('Fecha'), size: ColumnSize.S),
-              DataColumn2(label: Text('Cliente'), size: ColumnSize.L),
-              DataColumn2(label: Text('Placas'), size: ColumnSize.S),
-              DataColumn2(label: Text('Mecánico'), size: ColumnSize.M),
-              DataColumn2(label: Text('Estado'), size: ColumnSize.M),
-              DataColumn2(label: Text('Total'), size: ColumnSize.S, numeric: true),
-              DataColumn2(label: Text('Acciones'), fixedWidth: 80),
+            columns: [
+              const DataColumn2(label: Text('Folio'), size: ColumnSize.S),
+              const DataColumn2(label: Text('Fecha'), size: ColumnSize.S),
+              const DataColumn2(label: Text('Cliente'), size: ColumnSize.L),
+              const DataColumn2(label: Text('Placas'), size: ColumnSize.S),
+              const DataColumn2(label: Text('Mecánico'), size: ColumnSize.M),
+              const DataColumn2(label: Text('Estado'), size: ColumnSize.M),
+              // El mecánico no recibe el total de la orden (Sprint 5, FR-008): la columna no se dibuja.
+              if (!esMecanico) const DataColumn2(label: Text('Total'), size: ColumnSize.S, numeric: true),
+              const DataColumn2(label: Text('Acciones'), fixedWidth: 80),
             ],
             rows: [
               for (final orden in provider.items)
@@ -187,7 +188,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     DataCell(Text(orden.licensePlate)),
                     DataCell(Text(orden.mechanicName, overflow: TextOverflow.ellipsis)),
                     DataCell(StatusChip.order(orden.status)),
-                    DataCell(Text(formatMoney(orden.total))),
+                    if (!esMecanico) DataCell(Text(formatMoney(orden.total))),
                     DataCell(IconButton(
                       tooltip: 'Ver detalle',
                       onPressed: () => _openDetail(orden),

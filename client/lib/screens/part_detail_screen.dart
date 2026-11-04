@@ -148,7 +148,7 @@ class _PartDetailScreenState extends State<PartDetailScreen> {
                       _Dato(etiqueta: 'Marca', valor: parte.brand),
                       _Dato(etiqueta: 'Stock actual', valor: '${parte.stock}'),
                       _Dato(etiqueta: 'Stock mínimo', valor: '${parte.minimumStock}'),
-                      _Dato(etiqueta: 'Precio de venta', valor: formatMoney(parte.salePrice)),
+                      if (parte.salePrice != null) _Dato(etiqueta: 'Precio de venta', valor: formatMoney(parte.salePrice)),
                       if (parte.purchasePrice != null)
                         _Dato(etiqueta: 'Precio de compra', valor: formatMoney(parte.purchasePrice)),
                       if (esAdmin) ...[

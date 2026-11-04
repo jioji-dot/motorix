@@ -48,8 +48,8 @@ class OrderPart {
     required this.code,
     required this.name,
     required this.quantity,
-    required this.unitPrice,
-    required this.amount,
+    this.unitPrice,
+    this.amount,
   });
 
   final int id;
@@ -57,8 +57,10 @@ class OrderPart {
   final String code;
   final String name;
   final int quantity;
-  final String unitPrice;
-  final String amount;
+
+  /// Precio e importe: el servidor no los entrega al mecánico, por eso pueden ser nulos.
+  final String? unitPrice;
+  final String? amount;
 
   factory OrderPart.fromJson(Map<String, dynamic> json) => OrderPart(
         id: json['id'] as int,
@@ -66,8 +68,8 @@ class OrderPart {
         code: json['code'] as String,
         name: json['name'] as String,
         quantity: json['quantity'] as int,
-        unitPrice: json['unitPrice'].toString(),
-        amount: json['amount'].toString(),
+        unitPrice: json['unitPrice']?.toString(),
+        amount: json['amount']?.toString(),
       );
 }
 
@@ -117,7 +119,6 @@ class ServiceOrder {
     required this.mechanicId,
     required this.entryMileage,
     required this.reportedProblem,
-    required this.total,
     required this.createdAt,
     required this.clientName,
     required this.vehicleTitle,
@@ -129,6 +130,7 @@ class ServiceOrder {
     this.recommendations,
     this.cancellationReason,
     this.deliveredAt,
+    this.total,
     this.services = const [],
     this.labor = const [],
     this.parts = const [],
@@ -153,7 +155,8 @@ class ServiceOrder {
   final String? recommendations;
   final String? cancellationReason;
   final DateTime? deliveredAt;
-  final String total;
+  /// Nulo para el mecánico: el servidor no le entrega el total de la orden.
+  final String? total;
   final DateTime createdAt;
   final String clientName;
   final String vehicleTitle;
@@ -200,7 +203,7 @@ class ServiceOrder {
       recommendations: json['recommendations'] as String?,
       cancellationReason: json['cancellationReason'] as String?,
       deliveredAt: json['deliveredAt'] == null ? null : DateTime.parse(json['deliveredAt'] as String).toLocal(),
-      total: json['total'].toString(),
+      total: json['total']?.toString(),
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       clientName: cliente['name'] as String,
       vehicleTitle: '${vehiculo['brand']} ${vehiculo['model']} ${vehiculo['year']}',

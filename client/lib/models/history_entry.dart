@@ -9,7 +9,7 @@ class HistoryEntry {
     required this.serviceDate,
     required this.mileage,
     required this.mechanicName,
-    required this.total,
+    this.total,
     this.diagnosis,
     this.notes,
     this.recommendations,
@@ -24,7 +24,8 @@ class HistoryEntry {
   final DateTime serviceDate;
   final int mileage;
   final String mechanicName;
-  final String total;
+  /// Nulo para el mecánico: el servidor no le entrega el total.
+  final String? total;
   final String? diagnosis;
   final String? notes;
   final String? recommendations;
@@ -43,7 +44,7 @@ class HistoryEntry {
       serviceDate: DateTime.parse(json['serviceDate'] as String).toLocal(),
       mileage: json['mileage'] as int,
       mechanicName: (json['mechanic'] as Map<String, dynamic>)['name'] as String,
-      total: json['total'].toString(),
+      total: json['total']?.toString(),
       diagnosis: json['diagnosis'] as String?,
       notes: json['notes'] as String?,
       recommendations: json['recommendations'] as String?,

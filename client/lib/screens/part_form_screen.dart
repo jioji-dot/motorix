@@ -112,7 +112,8 @@ class _PartFormScreenState extends State<PartFormScreen> {
         if (!_editing && _initialStock.text.trim().isNotEmpty) 'initialStock': int.parse(_initialStock.text.trim()),
       };
 
-  Future<void> _save() async {
+  /// Guarda la refacción. Con [ventaMenorConfirmada] se envía la confirmación explícita de una venta menor al costo.
+  Future<void> _save({bool ventaMenorConfirmada = false}) async {
     setState(() => _codeError = null);
     if (!_formKey.currentState!.validate()) return;
     setState(() {
@@ -121,17 +122,27 @@ class _PartFormScreenState extends State<PartFormScreen> {
     });
     final provider = context.read<PartsProvider>();
     try {
+      final datos = {..._datos(), if (ventaMenorConfirmada) 'confirmBelowCost': true};
       if (_editing) {
-        await provider.update(widget.part!.id, _datos());
+        await provider.update(widget.part!.id, datos);
       } else {
-        await provider.create(_datos());
+        await provider.create(datos);
       }
       if (!mounted) return;
       showFeedback(context, _editing ? 'Refacción actualizada correctamente.' : 'Refacción registrada correctamente.');
       Navigator.of(context).pop(true);
     } on ApiException catch (e) {
       if (!mounted) return;
-      if (e.code == 'DUPLICATE_VALUE') {
+      if (e.code == 'PRICE_BELOW_COST') {
+        // El servidor exige confirmar una venta menor al costo (Sprint 5, FR-004): se avisa y, si se confirma, se reenvía.
+        setState(() => _saving = false);
+        final confirmar = await showConfirmDialog(
+          context,
+          title: 'Venta menor al costo',
+          message: 'El precio de venta es menor al de compra. ¿Quieres guardar la refacción de todos modos?',
+        );
+        if (confirmar && mounted) await _save(ventaMenorConfirmada: true);
+      } else if (e.code == 'DUPLICATE_VALUE') {
         setState(() => _codeError = 'Ya existe una refacción con ese código.');
         _formKey.currentState!.validate();
       } else {

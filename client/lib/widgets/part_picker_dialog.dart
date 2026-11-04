@@ -135,7 +135,9 @@ class _PartPickerDialogState extends State<PartPickerDialog> {
                                   enabled: p.stock > 0,
                                   title: Text(p.name, overflow: TextOverflow.ellipsis),
                                   subtitle: Text(
-                                    '${p.code} · ${formatMoney(p.salePrice)} · Stock: ${p.stock}',
+                                    p.salePrice == null
+                                        ? '${p.code} · Stock: ${p.stock}'
+                                        : '${p.code} · ${formatMoney(p.salePrice)} · Stock: ${p.stock}',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   trailing: p.stockLevel == 'OK' ? null : StatusChip.stock(p.stockLevel),

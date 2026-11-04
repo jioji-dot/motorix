@@ -733,9 +733,15 @@ class _Lineas extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(child: Text(r.name, overflow: TextOverflow.ellipsis)),
-                    Text('${r.quantity} × ${formatMoney(r.unitPrice)}', style: texto.bodySmall),
-                    const SizedBox(width: AppSpacing.lg),
-                    Text(formatMoney(r.amount)),
+                    // Sin precio (el mecánico no lo recibe) solo se muestra la cantidad, sin marcadores de importe.
+                    Text(
+                      r.unitPrice == null ? 'Cantidad: ${r.quantity}' : '${r.quantity} × ${formatMoney(r.unitPrice)}',
+                      style: texto.bodySmall,
+                    ),
+                    if (r.amount != null) ...[
+                      const SizedBox(width: AppSpacing.lg),
+                      Text(formatMoney(r.amount)),
+                    ],
                     if (editable)
                       _acciones(
                         editar: 'Cambiar cantidad',
@@ -746,14 +752,16 @@ class _Lineas extends StatelessWidget {
                   ],
                 ),
               ),
-          const Divider(height: AppSpacing.xl),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text('Total  ', style: texto.titleSmall),
-              Text(formatMoney(orden.total), style: texto.titleMedium),
-            ],
-          ),
+          if (orden.total != null) ...[
+            const Divider(height: AppSpacing.xl),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text('Total  ', style: texto.titleSmall),
+                Text(formatMoney(orden.total), style: texto.titleMedium),
+              ],
+            ),
+          ],
         ],
       ),
     );
