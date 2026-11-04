@@ -13,8 +13,15 @@ por el agente de IA.
 - El agente DEBE leer `docs/project-context.md` antes de implementar cualquier sprint.
 - NO se permite agregar funcionalidades fuera del alcance sin indicarlo y obtener
   aprobación del equipo.
-- El desarrollo DEBE seguir los sprints en orden (1 → 4); NO se implementa todo el sistema
-  de una sola vez. No se inicia por Mercado Pago, dashboard o tickets.
+- El desarrollo DEBE seguir los sprints en orden: los sprints 1 → 4 del MVP y, después, el
+  Sprint 5 (precios de refacciones y cobro completo, insumo en
+  `docs/sprints/sprint-5-precios-refacciones-cobro.md`) como primer sprint posterior al MVP;
+  NO se implementa todo el sistema de una sola vez. No se inicia por Mercado Pago,
+  dashboard o tickets.
+- Todo sprint posterior al MVP DEBE contar con la aprobación del representante del proyecto,
+  Jorge Francisco Dominguez Ramirez, autoridad declarada por quien lleva el proyecto por ser
+  un proyecto escolar, y esa aprobación DEBE registrarse como enmienda de esta constitución.
+  El Sprint 5 se aprobó el 2026-11-03.
 - El chatbot de WhatsApp está FUERA del MVP; solo puede tratarse como integración externa
   futura.
 - DEBE mantenerse la trazabilidad: requisito de alto nivel → historia de usuario → sprint →
@@ -204,4 +211,4 @@ resueltas la librería de componentes de UI (ninguna, solo Material 3 con tema p
   explícitamente o descartarse.
 - Guía de trabajo complementaria: `docs/guia-spec-kit.md` y `CLAUDE.md`.
 
-**Versión**: 1.0.1 | **Ratificada**: 2026-10-18 | **Última enmienda**: 2026-10-19
+**Versión**: 1.1.0 | **Ratificada**: 2026-10-18 | **Última enmienda**: 2026-11-03
