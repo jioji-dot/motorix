@@ -53,7 +53,7 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 | ID | Puerta | Estado | Evidencia |
 |:--:|---|---|---|
 | G-01 | Insumo del sprint revisado contra el código | Aprobado con observación | `docs/sprints/sprint-5-precios-refacciones-cobro.md` reformulado el 2026-11-03 (H-02, H-04 a H-06). Observación: dos puntos del código quedan por decidir en `/speckit.clarify` (D-06 y D-07 del insumo) |
-| G-02 | Especificación (`/speckit.specify`) | Pendiente | |
+| G-02 | Especificación (`/speckit.specify`) | Aprobado con observación | `specs/005-precios-refacciones-cobro/spec.md`: 5 historias de usuario, 23 requisitos funcionales y 7 criterios de éxito. Cada requisito indica si mantiene lo existente o agrega algo nuevo. Observación: quedan 3 marcadores `[NEEDS CLARIFICATION]` (FR-004, FR-008 y FR-020), que se resuelven en la puerta G-03 |
 | G-03 | Aclaraciones (`/speckit.clarify`) | Pendiente | |
 | G-04 | Lista de calidad de requisitos (`/speckit.checklist`) | Pendiente | |
 | G-05 | Plan (`/speckit.plan`) | Pendiente | |
