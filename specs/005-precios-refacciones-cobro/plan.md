@@ -76,7 +76,7 @@ specs/005-precios-refacciones-cobro/
 ```text
 server/
 ├── services/
-│   ├── serializers.js          # se amplía: pedido, listado, historial y refacción por rol (FR-008)
+│   ├── serializers.js          # se amplía: orden, listado, historial y refacción por rol (FR-008)
 │   ├── orderLimits.js          # nuevo: límite de importes en centavos, función pura (FR-003)
 │   ├── orderService.js         # aplica el serializador y el límite en los cambios de líneas
 │   ├── orderPartService.js     # aplica el límite al agregar o cambiar la cantidad

@@ -10,10 +10,10 @@ No quedaron marcadores `[NEEDS CLARIFICATION]` en el contexto técnico. Esta inv
 
 ## 2. Ocultar precios al mecánico: serializadores por rol
 
-- **Decisión**: ampliar `services/serializers.js` con proyecciones por rol para el pedido (detalle y listado), la línea de refacción, el historial del vehículo y la refacción. Se aplican en la capa de servicio, justo antes de responder, en todas las rutas que hoy devuelven esos datos (ver el punto 8 y [contracts/api.md](contracts/api.md)).
+- **Decisión**: ampliar `services/serializers.js` con proyecciones por rol para la orden (detalle y listado), la línea de refacción, el historial del vehículo y la refacción. Se aplican en la capa de servicio, justo antes de responder, en todas las rutas que hoy devuelven esos datos (ver el punto 8 y [contracts/api.md](contracts/api.md)).
 - **Justificación**: ya existe el patrón (`serializePart`) y el principio IV exige validar en el backend; un solo módulo evita olvidar una ruta y se prueba sin base de datos. Las rutas que escriben líneas devuelven el detalle de la orden, así que también aplican el serializador.
 - **Alternativas descartadas**: filtrar en los controladores (duplica la regla, viola el principio II); consultas SQL distintas por rol (duplica las consultas y complica el mantenimiento); ocultar solo en la interfaz (no es seguridad, principio IV).
-- **Qué se quita al mecánico**: de la refacción, `purchasePrice` y `salePrice`; del pedido, `total`, y de cada línea de refacción, `unitPrice` y `amount`; del historial del vehículo, `total` y los mismos campos de las líneas. Los servicios y la mano de obra conservan sus importes (aclaración del 2026-11-03).
+- **Qué se quita al mecánico**: de la refacción, `purchasePrice` y `salePrice`; de la orden, `total`, y de cada línea de refacción, `unitPrice` y `amount`; del historial del vehículo, `total` y los mismos campos de las líneas. Los servicios y la mano de obra conservan sus importes (aclaración del 2026-11-03).
 - **Riesgo**: el campo `total` desaparece del listado del mecánico; las pruebas y pantallas que lo leen se ajustan y se registran como hallazgo H-07.
 
 ## 3. Límite de importes
@@ -57,7 +57,7 @@ No quedaron marcadores `[NEEDS CLARIFICATION]` en el contexto técnico. Esta inv
 
 ## 9. Pruebas nuevas (resumen; el detalle por historia lo da `/speckit.tasks`)
 
-- **Unitarias**: `serializers` por rol (pedido, listado, historial, refacción), `orderLimits` (límite inclusivo y centavos) y la regla de venta menor al costo.
+- **Unitarias**: `serializers` por rol (orden, listado, historial, refacción), `orderLimits` (límite inclusivo y centavos) y la regla de venta menor al costo.
 - **Integración y contrato**: precio guardado y total tras un cambio de precio (con concurrencia), totales con mano de obra redondeada, límite del total con servicios y mano de obra, orden Cancelada, pago por el total con refacciones y cobros simultáneos, ticket sin cambios tras cambiar precios, compatibilidad con los pagos y tickets sembrados, recorrido de todas las rutas de lectura con cada rol buscando el precio de compra y de venta, atomicidad con fallo forzado y seeds idempotentes.
 - **Frontend**: las pantallas del mecánico no muestran precios ni total; el formulario de refacción pide confirmación ante una venta menor al costo.
 - **Orden de trabajo**: en cada historia, las pruebas se escriben primero y se comprueba que fallan antes de escribir el código.

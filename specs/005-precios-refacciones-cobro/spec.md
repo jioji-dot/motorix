@@ -14,7 +14,7 @@
 
 ### Sesión 2026-11-03
 
-- Q: ¿Qué precios debe ver el mecánico en el inventario y en las líneas de la orden? → A: Ninguno. El mecánico no ve el precio de compra ni el de venta, ni el importe de cada línea de refacción, ni el desglose, ni el total de la orden; solo ve código, nombre, unidad, cantidad y existencia de las refacciones.
+- Q: ¿Qué precios debe ver el mecánico en el inventario y en las líneas de la orden? → A: Ninguno. El mecánico no ve el precio de compra ni el de venta, ni el importe de cada línea de refacción, ni el total de la orden; solo ve, de las refacciones, código, nombre, categoría, marca, existencia y stock mínimo, y en las líneas de la orden código, nombre y cantidad.
 - Q: ¿Qué debe hacer el sistema cuando el administrador guarda un precio de venta menor al de compra? → A: Advertir y pedir confirmación: el servidor rechaza el guardado con un aviso claro hasta que el administrador lo confirme de forma explícita; con la confirmación se guarda.
 - Q: ¿Se permite corregir a mano el precio de una línea de refacción de una orden en curso? → A: No, queda fuera de este sprint. Un precio equivocado se corrige quitando la refacción y agregándola de nuevo mientras la orden siga en curso; la línea nueva toma el precio vigente.
 - Q: ¿Se permite un precio de venta igual a 0? → A: Sí, como hoy, para piezas sin cargo o de garantía.
@@ -50,8 +50,8 @@ Como mecánico, quiero seguir usando las refacciones en una orden sin ver precio
 
 **Escenarios de aceptación**:
 
-1. **Dado** que soy mecánico asignado a una orden, **Cuando** agrego, cambio la cantidad o quito una refacción, **Entonces** puedo hacerlo y veo código, nombre, unidad, cantidad y existencia.
-2. **Dado** que soy mecánico, **Cuando** consulto el inventario, el detalle o el listado de órdenes, el historial de un vehículo o las alertas de stock, **Entonces** no recibo ningún precio de refacciones (ni de compra ni de venta), ni importes de línea, ni desglose, ni el total de la orden.
+1. **Dado** que soy mecánico asignado a una orden, **Cuando** agrego, cambio la cantidad o quito una refacción, **Entonces** puedo hacerlo y veo código, nombre y cantidad de la línea, y la existencia de la refacción.
+2. **Dado** que soy mecánico, **Cuando** consulto el inventario, el detalle o el listado de órdenes, el historial de un vehículo o las alertas de stock, **Entonces** no recibo ningún precio de refacciones (ni de compra ni de venta), ni importes de línea, ni el total de la orden.
 3. **Dado** que soy recepcionista, **Cuando** consulto cualquier información de refacciones, **Entonces** recibo el precio de venta y los importes, pero nunca el precio de compra.
 4. **Dado** que soy administrador, **Cuando** consulto el inventario, **Entonces** veo tanto el precio de compra como el de venta.
 5. **Dado** un intento de saltarse la interfaz (petición directa al servidor), **Cuando** un rol sin permiso pide un precio, **Entonces** el servidor no lo entrega: la restricción no depende de la pantalla.
@@ -144,8 +144,8 @@ Como administrador, quiero datos de ejemplo y documentación al día para demost
 
 - **FR-005** (mantiene): El precio de compra DEBE ser visible solo para el administrador; el sistema NO DEBE entregarlo a recepción ni al mecánico en ninguna consulta (inventario, alertas, movimientos, historial del vehículo, panel de control, órdenes, pagos y tickets).
 - **FR-006** (mantiene): Recepción y administración DEBEN recibir el precio de venta y los importes de las refacciones de las órdenes.
-- **FR-007** (mantiene): El mecánico asignado DEBE poder agregar, cambiar la cantidad y quitar refacciones de una orden en curso y consultar el inventario con código, nombre, unidad y existencia.
-- **FR-008** (agrega): El mecánico NO DEBE recibir ningún precio ni importe de refacciones en ninguna consulta: ni el precio de compra, ni el de venta, ni el importe de una línea, ni el desglose, ni el total de la orden. Aplica a todas las consultas del mecánico: inventario, alertas de stock, movimientos de inventario, detalle y listado de órdenes e historial del vehículo; los pagos y los tickets ya le están vedados. Un mecánico que no está asignado a una orden sigue sin poder consultarla. La interfaz del mecánico DEBE omitir esos precios y totales sin mostrar ceros ni marcadores que parezcan un importe. Hoy recibe el precio de venta, los importes y el total, así que este requisito cambia el contrato actual.
+- **FR-007** (mantiene): El mecánico asignado DEBE poder agregar, cambiar la cantidad y quitar refacciones de una orden en curso y consultar el inventario con código, nombre, categoría, marca, existencia y stock mínimo.
+- **FR-008** (agrega): El mecánico NO DEBE recibir ningún precio ni importe de refacciones en ninguna consulta: ni el precio de compra, ni el de venta, ni el importe de una línea, ni el total de la orden. Aplica a todas las consultas del mecánico: inventario, alertas de stock, movimientos de inventario, detalle y listado de órdenes e historial del vehículo; los pagos y los tickets ya le están vedados. Un mecánico que no está asignado a una orden sigue sin poder consultarla. La interfaz del mecánico DEBE omitir esos precios y totales sin mostrar ceros ni marcadores que parezcan un importe. Hoy recibe el precio de venta, los importes y el total, así que este requisito cambia el contrato actual.
 - **FR-009** (mantiene): Las restricciones de visibilidad DEBEN aplicarse en el servidor, no solo en la interfaz.
 
 **Integridad del dinero**

@@ -32,7 +32,7 @@ Solo cambia la respuesta del **mecánico**; administrador y recepción reciben l
 | `POST`, `PATCH` y `DELETE` de `/orders/:id/services`, `/orders/:id/labor` y `/orders/:id/parts` | los mismos que `GET /orders/:id` (todas devuelven el detalle) |
 | `GET /vehicles/:id/history` | `total` de cada servicio; en `parts[]`, `unitPrice` y `amount` |
 
-Lo que el mecánico **sigue recibiendo**: código, nombre, unidad, cantidad y existencia de las refacciones; el importe de servicios y de mano de obra; estados, diagnóstico y el resto de la orden.
+Lo que el mecánico **sigue recibiendo**: de las refacciones, código, nombre, categoría, marca, existencia y stock mínimo, y en las líneas de la orden código, nombre y cantidad; el importe de servicios y de mano de obra; estados, diagnóstico y el resto de la orden.
 
 **Rutas que no cambian**: `GET /orders/:id/payments`, `POST /orders/:id/payments`, `POST` y `GET /orders/:id/ticket` y `POST /orders/:id/ticket/print-link` ya responden `403` al mecánico; el panel de control es solo del administrador; los movimientos de inventario no contienen precios.
 
