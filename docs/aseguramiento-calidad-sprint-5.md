@@ -57,7 +57,7 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 | G-03 | Aclaraciones (`/speckit.clarify`) | Aprobado | 5 decisiones resueltas en la sesión del 2026-11-03 (sección 4); sin marcadores `[NEEDS CLARIFICATION]`; D-06 y D-07 se respaldan con el código y el Sprint 4 |
 | G-04 | Lista de calidad de requisitos (`/speckit.checklist`) | Aprobado | `specs/005-precios-refacciones-cobro/checklists/cobro.md`: 43 puntos revisados y resueltos (H-08 y H-09); los huecos se corrigieron en `spec.md` |
 | G-05 | Plan (`/speckit.plan`) | Aprobado | `specs/005-precios-refacciones-cobro/plan.md`, `research.md`, `data-model.md`, `contracts/api.md` y `quickstart.md`. Constitución v1.1.0 sin violaciones (8 de 8 principios); sin migración 005 y sin seeds nuevos, porque ningún cambio exige columnas y los datos de ejemplo ya cubren el flujo; sin dependencias nuevas |
-| G-06 | Tareas (`/speckit.tasks`) | Pendiente | |
+| G-06 | Tareas (`/speckit.tasks`) | Aprobado | `specs/005-precios-refacciones-cobro/tasks.md`: 59 tareas (1 de preparación, 2 de fundamentos, 15 en US1, 16 en US2, 7 en US3, 7 en US4, 5 en US5 y 6 de cierre), con las pruebas antes del código en cada historia, una tabla de cobertura de los 24 requisitos y tareas propias para el ajuste de pruebas por H-07 |
 | G-07 | Consistencia (`/speckit.analyze`) | Pendiente | |
 | G-08 | Pruebas planeadas y línea base | Pendiente | Línea base registrada y con capturas (sección 8); faltan las pruebas planeadas por criterio |
 
