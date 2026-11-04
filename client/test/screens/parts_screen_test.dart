@@ -56,7 +56,9 @@ void main() {
         await abrirInventario(tester, rol: rol);
 
         expect(find.text('Filtro de aceite'), findsOneWidget);
-        expect(find.text(r'$690.00'), findsOneWidget);
+        // Recepción ve el precio de venta; el mecánico ya no lo recibe (Sprint 5, FR-008, H-07).
+        expect(find.text(r'$690.00'), rol == 'MECHANIC' ? findsNothing : findsOneWidget);
+        expect(find.text('Precio de venta'), rol == 'MECHANIC' ? findsNothing : findsOneWidget);
         expect(find.text('Precio de compra'), findsNothing);
         expect(find.text(r'$420.00'), findsNothing);
         expect(find.widgetWithText(FilledButton, 'Registrar refacción'), findsNothing);

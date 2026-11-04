@@ -54,8 +54,10 @@ Future<void> abrirSelector(WidgetTester tester) async {
 
 void main() {
   group('Bloque de refacciones de la orden', () {
+    // El mecánico ya no recibe precios ni totales (Sprint 5, FR-008, H-07): estas pruebas de precio, importe y total
+    // se hacen como administrador; la vista del mecánico está en mechanic_prices_test.dart.
     testWidgets('muestra_las_refacciones_usadas_con_precio_importe_y_total', (tester) async {
-      await abrirOrden(tester, refaccionesUsadas: [refaccionDeOrdenJson(1, 1, 'Filtro de aceite', 2, '110.00')]);
+      await abrirOrden(tester, rol: 'ADMIN', refaccionesUsadas: [refaccionDeOrdenJson(1, 1, 'Filtro de aceite', 2, '110.00')]);
 
       expect(find.text('Refacciones utilizadas'), findsOneWidget);
       expect(find.text('Filtro de aceite'), findsOneWidget);
@@ -91,7 +93,7 @@ void main() {
 
   group('Selector de refacción', () {
     testWidgets('busca_y_agrega_la_refaccion_con_la_cantidad_y_actualiza_el_total', (tester) async {
-      final api = await abrirOrden(tester);
+      final api = await abrirOrden(tester, rol: 'ADMIN');
       await abrirSelector(tester);
 
       expect(find.text('Filtro de aceite'), findsOneWidget);
@@ -184,7 +186,7 @@ void main() {
 
   group('Cambiar y quitar refacciones', () {
     testWidgets('cambiar_la_cantidad_envia_la_nueva_y_actualiza_el_total', (tester) async {
-      final api = await abrirOrden(tester, refaccionesUsadas: [refaccionDeOrdenJson(1, 1, 'Filtro de aceite', 2, '110.00')]);
+      final api = await abrirOrden(tester, rol: 'ADMIN', refaccionesUsadas: [refaccionDeOrdenJson(1, 1, 'Filtro de aceite', 2, '110.00')]);
 
       await tocarVisible(tester, find.byTooltip('Cambiar cantidad'));
       await tester.pumpAndSettle();

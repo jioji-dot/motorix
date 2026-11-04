@@ -7,6 +7,8 @@ import 'package:http/testing.dart';
 import 'package:motorix_client/main.dart';
 import 'package:motorix_client/services/api_client.dart';
 
+import 'fake_api_s5.dart';
+
 /// Respuesta simulada de la API para las pruebas.
 http.Response jsonResponse(int status, Object body) => http.Response.bytes(
       utf8.encode(jsonEncode(body)),
@@ -42,7 +44,20 @@ Future<ApiClient> bombearApp(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
 
-  final api = ApiClient(client: MockClient(handler), baseUrl: 'http://prueba/api');
+  // El servidor real no entrega precios ni totales de refacciones al mecánico (Sprint 5, FR-008): el cliente
+  // simulado aplica la misma proyección por rol según el usuario que inició sesión.
+  String? rolActual;
+  Future<http.Response> conProyeccion(http.Request peticion) async {
+    final respuesta = await handler(peticion);
+    if (peticion.url.path == '/api/auth/login' && respuesta.statusCode == 200) {
+      final cuerpo = jsonDecode(utf8.decode(respuesta.bodyBytes)) as Map<String, dynamic>;
+      rolActual = ((cuerpo['data'] as Map<String, dynamic>)['user'] as Map<String, dynamic>)['role'] as String?;
+      return respuesta;
+    }
+    return proyectarRespuesta(rolActual, respuesta);
+  }
+
+  final api = ApiClient(client: MockClient(conProyeccion), baseUrl: 'http://prueba/api');
   await tester.pumpWidget(MotorixApp(api: api, useGoogleFonts: false));
   await tester.pumpAndSettle();
   return api;

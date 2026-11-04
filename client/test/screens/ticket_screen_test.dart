@@ -73,6 +73,17 @@ void main() {
       expect(find.text('Total'), findsOneWidget);
     });
 
+    // Sprint 5, FR-018: cada refacción con cantidad, precio unitario e importe, y el total con refacciones.
+    testWidgets('muestra_cada_refaccion_con_cantidad_precio_unitario_e_importe_y_el_total_con_refacciones', (tester) async {
+      await abrirTicket(tester, pagos: [pagoJson(1, 7, importe: '1425.00')]);
+
+      expect(find.text('Refacciones'), findsOneWidget);
+      expect(find.textContaining('Filtro de aceite'), findsOneWidget);
+      expect(find.textContaining(r'2 × $110.00'), findsOneWidget);
+      expect(find.textContaining(r'$220.00'), findsOneWidget);
+      expect(find.text(r'$1,425.00'), findsWidgets);
+    });
+
     testWidgets('sin_pagos_el_estado_es_Pendiente_y_no_hay_metodo', (tester) async {
       await abrirTicket(tester);
       expect(find.text('Pendiente'), findsOneWidget);
