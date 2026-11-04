@@ -82,11 +82,11 @@ Como recepcionista, quiero que el total, el pago y el ticket de la orden coincid
 
 **Por qué esta prioridad**: Es el flujo principal del cobro; cualquier diferencia entre total, pago y ticket es un error de dinero visible para el cliente.
 
-**Prueba independiente**: Con una orden Terminada con servicios, mano de obra y refacciones, recepción consulta el total, registra el pago por ese total y genera el ticket; los tres coinciden, también con importes que requieren redondeo.
+**Prueba independiente**: Con una orden Terminada con servicios, mano de obra y refacciones, recepción consulta el total, registra el pago por ese total y genera el ticket; los tres coinciden, también con una mano de obra cuyo importe requiere redondeo.
 
 **Escenarios de aceptación**:
 
-1. **Dado** una orden con servicios, mano de obra y refacciones, **Cuando** consulto su total, **Entonces** es la suma de los tres, calculada en centavos, sin errores de redondeo.
+1. **Dado** una orden con servicios, mano de obra (horas decimales por tarifa) y refacciones, **Cuando** consulto su total, **Entonces** es la suma de los tres, calculada en centavos, con la mano de obra redondeada al centavo más cercano (mitades hacia arriba) y sin errores de redondeo acumulados.
 2. **Dado** una orden Terminada con total mayor a cero, **Cuando** registro un pago por el total, **Entonces** queda Pagada; un importe mayor al saldo se rechaza indicando el saldo.
 3. **Dado** una orden cuyo único contenido son refacciones (total mayor a cero), **Cuando** recepción la cobra, **Entonces** el cobro se permite; solo el total cero lo impide.
 4. **Dado** un cobro con Mercado Pago, **Cuando** se crea el enlace de pago, **Entonces** recibe el importe correcto con refacciones.
@@ -115,12 +115,14 @@ Como administrador, quiero datos de ejemplo y documentación al día para demost
 ### Casos límite
 
 - Precio con exactamente dos decimales, con tres, con notación científica, en blanco o con texto; precio igual al máximo y un centavo por encima.
-- Precio de venta igual a 0 (por ejemplo, una pieza sin cargo).
+- Precio de venta igual a 0 (por ejemplo, una pieza sin cargo): la línea tiene importe 0.00, suma 0 al total y aparece en el ticket con importe 0.00; una orden cuyo total es 0 no se cobra.
+- Importe de línea o total exactamente igual a 99,999,999.99 (se acepta) y un centavo más (se rechaza); un servicio o mano de obra que haría pasar el total del máximo.
+- Orden Cancelada: conserva sus líneas, sus precios guardados y su total, y no admite pagos.
 - Cantidad grande por precio grande: el importe de la línea o el total superan el máximo permitido.
 - Importe de línea que requiere redondeo a centavos (cantidad por precio con muchos decimales intermedios).
 - Una orden con una sola refacción y sin servicios ni mano de obra.
 - Cambio de precio justo mientras otra persona agrega la refacción a una orden.
-- Refacción desactivada con líneas ya registradas: las líneas conservan su precio.
+- Refacción desactivada con líneas ya registradas: las líneas conservan su precio y la refacción ya no se puede agregar a órdenes nuevas.
 - Pagos y tickets creados antes del sprint: siguen mostrándose con su importe y contenido originales.
 - Mecánico que intenta pedir directamente al servidor un precio que no debe ver.
 - Orden Terminada o Entregada: no admite cambios en sus líneas, así que su total y su ticket no cambian.
@@ -132,10 +134,10 @@ Como administrador, quiero datos de ejemplo y documentación al día para demost
 
 **Precios de la refacción**
 
-- **FR-001** (mantiene): El sistema DEBE guardar, para cada refacción, categoría, marca, precio de compra y precio de venta, y DEBE devolverlos al consultarla, de modo que el administrador pueda crearla y editarla con esos datos.
+- **FR-001** (mantiene): El sistema DEBE guardar, para cada refacción, categoría, marca, precio de compra y precio de venta, y DEBE devolverlos al consultarla, de modo que el administrador pueda crearla y editarla con esos datos. Solo el administrador crea refacciones o cambia sus precios; la categoría y la marca son obligatorias, de texto libre y de hasta 60 caracteres cada una.
 - **FR-002** (mantiene): Los precios de compra y de venta DEBEN ser numéricos, no negativos, con hasta dos decimales y no mayores a 99,999,999.99; cualquier otro valor DEBE rechazarse con un mensaje en español que indique qué precio falla.
-- **FR-003** (agrega): El sistema NO DEBE permitir que el importe de una línea de refacción (cantidad por precio guardado) ni el total de una orden superen 99,999,999.99; ante un intento, DEBE rechazarlo con un mensaje claro y sin modificar la orden ni el inventario.
-- **FR-004** (agrega): Cuando el administrador crea una refacción o cambia sus precios y el precio de venta resulta menor al de compra, el sistema NO DEBE guardar hasta recibir una confirmación explícita; sin ella DEBE rechazar con un aviso claro de que la venta es menor al costo. Editar otros datos sin cambiar los precios no exige confirmación.
+- **FR-003** (agrega): El sistema NO DEBE permitir que el importe de una línea de refacción (cantidad por precio guardado) ni el total de una orden superen 99,999,999.99; el límite es inclusivo (99,999,999.99 se acepta y un centavo más se rechaza). Aplica a cualquier cambio que aumente el total, sea una refacción, un servicio o mano de obra, o el cambio de una cantidad. Ante un intento, el sistema DEBE rechazarlo con un mensaje claro y sin modificar la orden ni el inventario. La cantidad de una línea sigue siendo un entero de 1 a 1,000,000.
+- **FR-004** (agrega): Cuando el administrador crea una refacción o cambia sus precios y el precio de venta resulta menor al de compra, el sistema NO DEBE guardar hasta recibir una confirmación explícita; sin ella DEBE rechazar con un aviso claro de que la venta es menor al costo. La confirmación es una indicación explícita que acompaña la solicitud de guardado, tanto desde la interfaz como desde una petición directa al servidor. Editar otros datos sin cambiar los precios no exige confirmación, aunque la venta ya sea menor al costo.
 - **FR-004-b** (mantiene): Un precio de venta igual a 0 DEBE permitirse (piezas sin cargo o de garantía).
 
 **Visibilidad por rol**
@@ -143,24 +145,25 @@ Como administrador, quiero datos de ejemplo y documentación al día para demost
 - **FR-005** (mantiene): El precio de compra DEBE ser visible solo para el administrador; el sistema NO DEBE entregarlo a recepción ni al mecánico en ninguna consulta (inventario, alertas, movimientos, historial del vehículo, panel de control, órdenes, pagos y tickets).
 - **FR-006** (mantiene): Recepción y administración DEBEN recibir el precio de venta y los importes de las refacciones de las órdenes.
 - **FR-007** (mantiene): El mecánico asignado DEBE poder agregar, cambiar la cantidad y quitar refacciones de una orden en curso y consultar el inventario con código, nombre, unidad y existencia.
-- **FR-008** (agrega): El mecánico NO DEBE recibir ningún precio ni importe de refacciones en ninguna consulta: ni el precio de compra, ni el de venta, ni el importe de una línea, ni el desglose, ni el total de la orden (en el detalle ni en el listado de órdenes). Hoy recibe el precio de venta, los importes y el total, así que este requisito cambia el contrato actual.
+- **FR-008** (agrega): El mecánico NO DEBE recibir ningún precio ni importe de refacciones en ninguna consulta: ni el precio de compra, ni el de venta, ni el importe de una línea, ni el desglose, ni el total de la orden. Aplica a todas las consultas del mecánico: inventario, alertas de stock, movimientos de inventario, detalle y listado de órdenes e historial del vehículo; los pagos y los tickets ya le están vedados. Un mecánico que no está asignado a una orden sigue sin poder consultarla. La interfaz del mecánico DEBE omitir esos precios y totales sin mostrar ceros ni marcadores que parezcan un importe. Hoy recibe el precio de venta, los importes y el total, así que este requisito cambia el contrato actual.
 - **FR-009** (mantiene): Las restricciones de visibilidad DEBEN aplicarse en el servidor, no solo en la interfaz.
 
 **Integridad del dinero**
 
-- **FR-010** (mantiene): Al agregar una refacción a una orden, el sistema DEBE guardar en esa línea el precio de venta vigente en ese momento; los cambios posteriores del precio de la refacción NO DEBEN modificar la línea, su importe ni el total de la orden. Si el precio cambia al mismo tiempo, la línea DEBE tomar el precio anterior o el nuevo, nunca otro valor.
+- **FR-010** (mantiene): Al agregar una refacción a una orden, el sistema DEBE guardar en esa línea el precio de venta vigente en ese momento (no al confirmar la orden ni al cambiar su estado); los cambios posteriores del precio de la refacción NO DEBEN modificar la línea, su importe ni el total de la orden. Si el precio cambia al mismo tiempo, o a la vez que otra edición o la desactivación de la refacción, la línea DEBE tomar un precio que la refacción tuvo realmente (el anterior o el nuevo), nunca otro valor.
 - **FR-011** (mantiene): El total de una orden DEBE ser servicios más mano de obra más refacciones (cantidad por precio guardado), calculado en centavos enteros y recalculado en la misma operación que cambia cualquiera de sus líneas.
 - **FR-012** (mantiene): Una orden Terminada o Entregada NO DEBE admitir cambios en sus líneas; por tanto, su total, su pago y su ticket no cambian después de cobrarse.
+- **FR-012-b** (mantiene): Una orden Cancelada DEBE conservar sus líneas de refacción con el precio guardado y su total tal como estaban al cancelarse; las piezas regresan al inventario, y la orden no admite pagos ni cambios.
 - **FR-013** (mantiene): Los pagos y los tickets existentes y los generados antes y después de un cambio de precio DEBEN conservar su importe y su contenido; los datos de ejemplo del Sprint 4 DEBEN seguir intactos.
 - **FR-014** (agrega): Una refacción agregada a una orden DESPUÉS de un cambio de precio DEBE tomar el precio nuevo.
 
 **Cobro y ticket**
 
-- **FR-015** (mantiene): El pago DEBE validarse contra el saldo de la orden calculado con su total con refacciones: un importe mayor al saldo se rechaza indicando el saldo, y los cobros simultáneos no pueden exceder el total.
-- **FR-016** (mantiene): Una orden con total mayor a cero DEBE poder cobrarse aunque solo tenga refacciones; solo el total cero impide el cobro.
+- **FR-015** (mantiene): El pago DEBE validarse contra el saldo disponible de la orden, calculado con su total con refacciones: el total menos los pagos Pagados y menos los pagos Pendientes de Mercado Pago. Un importe mayor al saldo disponible se rechaza indicando ese saldo, y los cobros simultáneos no pueden exceder el total.
+- **FR-016** (mantiene): Una orden Terminada o Entregada con total mayor a cero DEBE poder cobrarse aunque solo tenga refacciones; dentro de esos estados, solo el total cero impide el cobro.
 - **FR-017** (mantiene): El cobro con Mercado Pago DEBE solicitar el importe correcto de la orden con refacciones, y el sistema NO DEBE almacenar datos de tarjeta ni credenciales de pago.
 - **FR-018** (mantiene): El ticket DEBE mostrar, por cada refacción, cantidad, precio unitario e importe, y su subtotal DEBE coincidir con el total de la orden.
-- **FR-019** (mantiene): El panel de control y los listados de órdenes y pagos DEBEN funcionar con el total que incluye refacciones.
+- **FR-019** (mantiene): El panel de control y los listados de órdenes y pagos DEBEN mostrar, para recepción y administración, el total de cada orden con refacciones y los importes cobrados y pendientes, y sus cifras DEBEN coincidir con las de las órdenes y pagos de origen.
 
 **Corrección de precios en una orden abierta**
 
@@ -169,7 +172,8 @@ Como administrador, quiero datos de ejemplo y documentación al día para demost
 **Datos de ejemplo, pruebas y documentación**
 
 - **FR-021** (mantiene): Los datos de ejemplo DEBEN incluir refacciones con precios y una orden Terminada cobrable con refacciones, y DEBEN poder cargarse de nuevo sin duplicar registros.
-- **FR-022** (agrega): El sprint DEBE contar con pruebas automáticas del cálculo del total, el precio guardado en la línea, el redondeo, los límites de importe, la visibilidad por rol (con búsqueda del precio en todas las rutas de lectura), la concurrencia del pago y la compatibilidad con pagos y tickets anteriores.
+- **FR-022** (agrega): El sprint DEBE contar con pruebas automáticas del cálculo del total, el precio guardado en la línea, el redondeo, los límites de importe, la visibilidad por rol (con búsqueda del precio en todas las rutas de lectura), la concurrencia del pago y la compatibilidad con pagos y tickets anteriores. Estas pruebas materializan los criterios SC-001, SC-002, SC-003 y SC-005.
+- **FR-024** (agrega): Agregar, cambiar la cantidad o quitar una refacción de una orden DEBE aplicarse completo o no aplicarse: el movimiento de inventario, la línea y el total de la orden cambian juntos, y ante un fallo no queda ninguno a medias.
 - **FR-023** (agrega): `docs/project-context.md`, `docs/design-system.md` y los comentarios del código sobre el cobro de refacciones DEBEN actualizarse en este sprint para no contradecir el comportamiento real.
 
 ### Entidades clave *(incluir si la funcionalidad involucra datos)*
@@ -186,12 +190,12 @@ Relaciones: una orden tiene muchas líneas de refacción, cada una apunta a una 
 
 ### Resultados medibles
 
-- **SC-001**: En el 100 % de los casos de prueba, cambiar el precio de una refacción no altera ninguna línea, total, pago ni ticket ya registrados, incluso con el cambio y el alta de la línea al mismo tiempo.
-- **SC-002**: En el 100 % de las rutas de lectura probadas, el precio de compra no aparece para recepción ni mecánico, y ningún precio ni importe de refacciones ni el total de la orden aparece en las respuestas que recibe el mecánico.
-- **SC-003**: En el 100 % de los casos de prueba, el total de la orden, el pago y el subtotal y total del ticket coinciden, incluso con importes que requieren redondeo.
-- **SC-004**: Recepción cobra una orden con refacciones y genera su ticket en menos de 2 minutos.
-- **SC-005**: Todo precio o importe fuera de las reglas se rechaza con un mensaje claro en el 100 % de los casos de prueba, y ninguno deja datos a medias.
-- **SC-006**: Las pruebas de los Sprints 1 a 4 siguen pasando al cerrar el sprint, salvo las que cambien por un contrato declarado en esta especificación, que se registran como hallazgo.
+- **SC-001**: En el 100 % de los casos de prueba (cambio de precio con línea ya agregada, con pago emitido, con ticket emitido y con el alta de la línea al mismo tiempo), cambiar el precio de una refacción no altera ninguna línea, total, pago ni ticket ya registrados, incluso con el cambio y el alta de la línea al mismo tiempo.
+- **SC-002**: En el 100 % de las rutas de lectura que devuelven refacciones o precios (inventario, alertas, movimientos, órdenes, historial del vehículo, pagos, tickets y panel), el precio de compra no aparece para recepción ni mecánico, y ningún precio ni importe de refacciones ni el total de la orden aparece en las respuestas que recibe el mecánico.
+- **SC-003**: En el 100 % de los casos de prueba, el total de la orden, el pago y el subtotal y total del ticket coinciden, incluso con una mano de obra cuyo importe requiere redondeo.
+- **SC-004**: Una persona de recepción, con los datos de ejemplo, cobra una orden Terminada con refacciones y genera su ticket en menos de 2 minutos, medidos con cronómetro desde que abre el detalle de la orden hasta que ve el ticket.
+- **SC-005**: Todo precio o importe fuera de las reglas se rechaza en el 100 % de los casos de prueba con un mensaje en español que indica qué dato falla y el valor permitido, y ninguno deja datos a medias.
+- **SC-006**: Las pruebas de los Sprints 1 a 4 siguen pasando al cerrar el sprint, salvo las que cambien por un contrato declarado en esta especificación (FR-008 y FR-003), cuya aserción se actualiza y se registra como hallazgo con su razón; ninguna prueba se borra ni se debilita sin ese registro.
 - **SC-007**: Recién instalado el entorno, el inventario y las órdenes muestran refacciones con precios y una orden cobrable con refacciones, y cargar los datos de ejemplo dos veces no duplica nada.
 
 ## Supuestos
@@ -204,4 +208,11 @@ Relaciones: una orden tiene muchas líneas de refacción, cada una apunta a una 
 - Los pagos parciales ya existen desde el Sprint 4 y no se tocan; no hay reembolsos, impuestos ni descuentos.
 - El precio de compra nunca llega a recepción ni al mecánico, y esto ya se cumple; el sprint lo protege con pruebas.
 - Los importes se calculan en centavos enteros y se guardan con dos decimales, igual que en el Sprint 4.
+- Glosario: **precio de venta** y **precio de compra** son los del catálogo; **precio unitario** es la copia del precio de venta guardada en la línea de la orden; **importe** de una línea es cantidad por precio unitario; **total** es el de la orden; **saldo disponible** es el total menos los pagos Pagados y los Pendientes de Mercado Pago.
+- Redondeo: el importe de una línea de refacción es exacto (cantidad entera por un precio de dos decimales) y no se redondea; solo la mano de obra (horas decimales por tarifa) se redondea, al centavo más cercano con las mitades hacia arriba.
+- El mecánico no puede deducir las refacciones del total oculto, porque ve los servicios y la mano de obra pero no recibe el total ni ningún importe de refacciones; se acepta ese riesgo mínimo.
+- No se registra un historial de cambios de precio ni quién confirmó una venta menor al costo; cada línea ya conserva el precio con que se usó, y ese registro queda fuera de este sprint.
+- Los datos de ejemplo ya cumplen que el total de cada orden coincide con la suma de sus líneas (7 de 7 órdenes en la base de desarrollo, revisadas el 2026-11-03), y ninguna refacción ni línea carece de precio, porque las columnas lo exigen.
+- Las pruebas de Mercado Pago usan un proveedor simulado; el modo de pruebas real (sandbox) es opcional y no bloquea el sprint.
+- Si el plan requiere una migración, es aditiva, numerada y no destructiva, y no modifica las anteriores.
 - Los precios de la refacción no se corrigen en las líneas ya agregadas; esa corrección manual queda fuera del sprint (aclaración del 2026-11-03).

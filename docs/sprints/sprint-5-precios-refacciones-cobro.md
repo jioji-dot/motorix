@@ -100,7 +100,9 @@ Que el precio de las refacciones y el cobro de la orden sean confiables y estén
 
 Los pagos parciales ya existen desde el Sprint 4 y no se tocan.
 
-## 9. Decisiones pendientes que deben resolverse en /speckit.clarify
+## 9. Decisiones que se resolvieron en /speckit.clarify
+
+> Resueltas el 2026-11-03. La resolución vigente está en `specs/005-precios-refacciones-cobro/spec.md` (sección «Aclaraciones» y «Supuestos»): D-01 el mecánico no ve ningún precio ni el total; D-02 venta menor al costo con confirmación; D-03 precio 0 permitido; D-04 máximo 99,999,999.99; D-05 sin corrección manual del precio de una línea; D-06 y D-07 respaldadas por el código y el Sprint 4. El texto de abajo conserva las preguntas originales.
 
 - **D-01**: Visibilidad del precio de venta para el mecánico. Hoy lo recibe en el inventario y en las líneas de la orden. ¿Se le oculta por completo (con el total de la orden incluido) o solo el de compra?
 - **D-02**: Precio de venta menor al de compra: ¿se permite, se advierte o se rechaza?
