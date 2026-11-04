@@ -294,6 +294,21 @@ Cuando una refacción sea utilizada en una orden, el sistema debe
 reflejar la salida correspondiente del inventario. La implementación
 debe evitar que el stock quede en valores inválidos.
 
+### Precios y visibilidad (Sprint 5)
+
+-   Cada línea de refacción de una orden guarda el **precio de venta
+    vigente al agregarla**; un cambio posterior del catálogo no la
+    modifica, ni tampoco a los pagos y tickets ya emitidos.
+-   El **precio de compra** solo lo ve el administrador. El **mecánico no
+    ve ningún precio ni importe de refacciones ni el total de la orden**
+    (sí ve los importes de servicios y mano de obra); recepción ve el
+    precio de venta y los importes, nunca el de compra. El servidor
+    aplica esta regla en todas las consultas.
+-   Los precios van de 0 a 99,999,999.99 con dos decimales; el importe de
+    una línea y el total de una orden tampoco pueden superar ese máximo.
+-   Guardar una venta menor al precio de compra exige una confirmación
+    explícita del administrador.
+
 ------------------------------------------------------------------------
 
 ## 6.8 Pagos
@@ -996,6 +1011,12 @@ Orden terminada
 
 ------------------------------------------------------------------------
 
+## 14.2 Sprint posterior al MVP
+
+El **Sprint 5** (precios de refacciones y cobro completo) es el primer sprint posterior al MVP y fue aprobado en la enmienda 1.1.0 de la
+constitución (2026-11-03). Su alcance está en `docs/sprints/sprint-5-precios-refacciones-cobro.md` y su especificación en
+`specs/005-precios-refacciones-cobro/`.
+
 # 15. Definición funcional del MVP
 
 El MVP se considera demostrable cuando el siguiente flujo puede
@@ -1373,6 +1394,20 @@ Antes de asumirlas como definitivas, el equipo debe decidir:
   administrador y calculado al abrirlo reutilizando los módulos de origen, sin copias.
 - **IVA**: no se maneja; el subtotal del ticket es igual al total de la orden.
 - **Datos de ejemplo**: el seed agrega pagos en distintos métodos y estados y el ticket de la orden entregada.
+
+### Decisiones resueltas con Spec Kit para el Sprint 5 (2026-11-03)
+
+- **Alcance** (hallazgo H-02 del aseguramiento de la calidad): los Sprints 3 y 4 ya dejaron los precios de las refacciones, el precio
+  guardado en la línea, el total con refacciones, el cobro y el ticket. El Sprint 5 los endurece y los demuestra con pruebas; no agrega
+  tablas, migraciones ni seeds.
+- **Visibilidad por rol** (`/speckit-clarify`): el mecánico no recibe ningún precio ni importe de refacciones ni el total de la orden
+  (inventario, órdenes e historial del vehículo); recepción no recibe el precio de compra. Se aplica en `server/services/serializers.js`.
+- **Venta menor al costo** (`/speckit-clarify`): se avisa y se pide confirmación explícita (`confirmBelowCost`); un precio de venta 0 se
+  permite.
+- **Límite de importes** (`/speckit-clarify`): 99,999,999.99 para el precio, la línea y el total (`409 AMOUNT_LIMIT_EXCEEDED`).
+- **Corrección de precios** (`/speckit-clarify`): no se corrige a mano el precio de una línea; se quita la refacción y se agrega de nuevo.
+- **Ticket**: se sigue armando al consultarlo; una orden Terminada solo pasa a Entregada y no cambia sus líneas, así que el ticket emitido
+  no varía.
 
 CLAUDE puede proponer opciones para estas decisiones, pero no debe
 introducir dependencias grandes sin justificar su necesidad.

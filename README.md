@@ -3,7 +3,7 @@
 Sistema de Gestión para Taller Mecánico. Proyecto académico de Ingeniería en Sistemas Computacionales,
 desarrollado con **Desarrollo Guiado por Especificaciones (SDD)** usando Spec Kit.
 
-Este repositorio contiene los **cuatro sprints** del MVP:
+Este repositorio contiene los **cuatro sprints** del MVP y el **Sprint 5**, el primero posterior al MVP:
 
 - **Sprint 1**: autenticación con roles, gestión de usuarios, clientes y vehículos.
 - **Sprint 2**: agenda de citas y órdenes de servicio (asignación de mecánico, diagnóstico, servicios, mano de obra,
@@ -12,6 +12,8 @@ Este repositorio contiene los **cuatro sprints** del MVP:
   refacciones con movimientos, uso en las órdenes y alertas de stock bajo.
 - **Sprint 4**: pagos de las órdenes (parciales, con cuatro métodos y cobro con enlace de Mercado Pago en sandbox), ticket de
   servicio imprimible y panel de control del administrador.
+- **Sprint 5** (posterior al MVP): precios de refacciones y cobro completo, con límites de importes, confirmación de la venta menor al
+  costo y precios ocultos al mecánico.
 
 El alcance completo y las reglas de negocio están en [`docs/project-context.md`](docs/project-context.md)
 y las reglas del proyecto en la [constitución](.specify/memory/constitution.md).
@@ -34,6 +36,7 @@ La documentación de cada funcionalidad está en `specs/`:
 - [`specs/002-citas-ordenes-servicio/`](specs/002-citas-ordenes-servicio/) (Sprint 2)
 - [`specs/003-historial-mantenimiento-inventario/`](specs/003-historial-mantenimiento-inventario/) (Sprint 3)
 - [`specs/004-pagos-tickets-dashboard/`](specs/004-pagos-tickets-dashboard/) (Sprint 4)
+- [`specs/005-precios-refacciones-cobro/`](specs/005-precios-refacciones-cobro/) (Sprint 5)
 
 Cada carpeta incluye `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/api.md`, `quickstart.md`,
 `tasks.md` y `validacion-quickstart.md`.
@@ -103,7 +106,7 @@ desde En reparación; una orden en curso puede cancelarse con motivo). Una orden
 |-----|------------------------|----------------|------------|-------------------------|
 | Administrador | Consulta | Programa y edita | Gestiona (catálogo, movimientos, precio de compra) | Agrega, cambia y quita |
 | Recepcionista | Consulta | Consulta | Consulta (sin precio de compra) | — |
-| Mecánico | Consulta | Programa y edita | Consulta (sin precio de compra) | Solo en sus órdenes en curso |
+| Mecánico | Consulta | Programa y edita | Consulta (sin precios, desde el Sprint 5) | Solo en sus órdenes en curso, sin ver precios |
 
 - El **historial** es una vista calculada: las órdenes Terminadas y Entregadas del vehículo, de la más reciente a la más
   antigua, con el kilometraje del servicio (o el de entrada si falta).
@@ -113,6 +116,15 @@ desde En reparación; una orden en curso puede cancelarse con motivo). Una orden
 - El **stock** de cada refacción solo cambia con movimientos inmutables (entrada, salida o ajuste) dentro de una
   transacción que impide dejarlo negativo; siempre es igual a la suma de sus movimientos. Cada uso en una orden genera una
   salida ligada a ella (con el precio de venta vigente, que se conserva) y cancelar la orden regresa las piezas.
+
+### Precios y cobro de refacciones (Sprint 5)
+
+- La línea de refacción de una orden **guarda el precio de venta vigente al agregarla**: un cambio posterior del catálogo no altera la
+  línea, el total, el pago ni el ticket ya emitidos.
+- El **precio de compra** solo lo ve el administrador. El **mecánico no ve ningún precio ni importe de refacciones ni el total de la
+  orden**; recepción ve el precio de venta y los importes.
+- Los precios, el importe de una línea y el total de la orden van de 0 a **99,999,999.99**. Guardar una venta menor al precio de compra
+  exige que el administrador lo confirme.
 
 ### Pagos, ticket y panel de control (Sprint 4)
 
