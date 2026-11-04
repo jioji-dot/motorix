@@ -30,13 +30,13 @@ Los criterios se marcan `[x]` solo cuando se cumplen de verdad. Hoy el sprint es
 
 **Criterios de entrada (para comenzar la implementación):**
 
-- [ ] Las 8 puertas de la sección 3 están Aprobadas o Aprobadas con observación.
+- [x] Las 8 puertas de la sección 3 están Aprobadas o Aprobadas con observación.
 - [x] La enmienda de la constitución (hallazgo H-03) está aprobada y registrada.
-- [ ] Las decisiones de la sección 4 están resueltas y registradas.
+- [x] Las decisiones de la sección 4 están resueltas y registradas.
 - [x] No hay hallazgos críticos ni altos abiertos en el análisis de consistencia.
-- [ ] Cada criterio de aceptación tiene al menos una prueba planeada (sección 6).
+- [x] Cada criterio de aceptación tiene al menos una prueba planeada (sección 6).
 - [x] La línea base de regresión está registrada (sección 8), con sus capturas.
-- [ ] La documentación desfasada de los sprints anteriores está identificada.
+- [x] La documentación desfasada de los sprints anteriores está identificada (`docs/project-context.md`, `docs/design-system.md` y los textos que digan que el mecánico ve precios: CA-13, T004, T051 y T052).
 
 **Criterios de salida (para cerrar el sprint):**
 
@@ -59,7 +59,7 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 | G-05 | Plan (`/speckit.plan`) | Aprobado | `specs/005-precios-refacciones-cobro/plan.md`, `research.md`, `data-model.md`, `contracts/api.md` y `quickstart.md`. Constitución v1.1.0 sin violaciones (8 de 8 principios); sin migración 005 y sin seeds nuevos, porque ningún cambio exige columnas y los datos de ejemplo ya cubren el flujo; sin dependencias nuevas |
 | G-06 | Tareas (`/speckit.tasks`) | Aprobado | `specs/005-precios-refacciones-cobro/tasks.md`: 59 tareas (1 de preparación, 3 de fundamentos, 15 en US1, 16 en US2, 7 en US3, 7 en US4, 4 en US5 y 6 de cierre), con las pruebas antes del código en cada historia, una tabla de cobertura de los 24 requisitos y tareas propias para el ajuste de pruebas por H-07 |
 | G-07 | Consistencia (`/speckit.analyze`) | Aprobado | 2 pasadas el 2026-11-03. Pasada 1: 1 crítico, 0 altos, 1 medio y 5 bajos (H-10). Pasada 2, tras corregir: 0 críticos, 0 altos, 0 medios; queda 1 observación baja sin acción (seeds, constitución III). 26 de 26 requisitos con tarea (100 %) y 0 tareas sin requisito |
-| G-08 | Pruebas planeadas y línea base | Pendiente | Línea base registrada y con capturas (sección 8); faltan las pruebas planeadas por criterio |
+| G-08 | Pruebas planeadas y línea base | Aprobado | Los 13 criterios de aceptación tienen al menos una prueba planeada (sección 6) y los 11 riesgos tienen la prueba que los cubre (sección 5); línea base de 75 suites y 1240 pruebas de backend y 242 de frontend, con capturas (sección 8) |
 
 ## 4. Decisiones de aclaración
 
@@ -77,11 +77,43 @@ Las 7 decisiones abiertas del insumo (D-01 a D-07) se resolvieron el 2026-11-03:
 
 ## 5. Riesgos y mitigaciones
 
-Pendiente: se llena antes de `/speckit.implement`, con la prueba concreta que cubre cada riesgo.
+Los riesgos se evaluaron antes de implementar, por eso su estado es Abierto; pasan a Mitigado cuando la prueba que los cubre exista y pase.
+
+| ID | Riesgo | Impacto | Mitigación | Prueba que lo cubre | Estado |
+|:--:|---|---|---|---|---|
+| R-01 | Un cambio de precio altera una línea, el total, un pago o un ticket ya registrados | Alto: importes incorrectos en el historial de dinero | El precio se guarda en la línea al agregarla (ya existe) y las órdenes Terminadas o Entregadas no admiten cambios; se demuestra con pruebas y una prueba de mutación | `orderParts.prices.test.js`, `orderParts.prices.concurrency.test.js`, `emitted.compat.test.js` (T036 a T038, T041) | Abierto |
+| R-02 | El precio de compra llega a recepción o al mecánico, o el precio de venta, los importes o el total llegan al mecánico, por alguna ruta | Alto: fuga de información financiera del taller | Serializadores por rol en el servidor y recorrido de todas las rutas de lectura con cada rol, con prueba de mutación | `serializers.test.js`, `prices.leak.test.js`, `orders.mechanicView.test.js` (T020 a T022, T034) | Abierto |
+| R-03 | Una ruta nueva o una ruta de escritura que devuelve el detalle de la orden se olvida en la restricción del mecánico | Alto | El serializador se aplica en `conPermisos` y en el listado, y el recorrido incluye las rutas de escritura de servicios, mano de obra y refacciones | `orders.mechanicView.test.js`, `prices.leak.test.js` (T021, T022) | Abierto |
+| R-04 | Ajustar las pruebas anteriores por el cambio de contrato del mecánico debilita las pruebas sin que quede registro | Medio: se pierde cobertura de los Sprints 1 a 4 | Solo cambian las aserciones del rol mecánico, cada ajuste se registra en H-07 y la regresión completa compara contra la línea base (1240 y 242 pruebas) | Revisión del diff de `server/tests/` y `client/test/` y regresión completa (T031 a T033, T054, T055) | Abierto |
+| R-05 | Un importe de línea o un total superior a 99,999,999.99 termina en un error de la base y deja la operación a medias | Alto: inventario y orden inconsistentes | Validar en centavos antes de escribir, dentro de la transacción que bloquea la orden, y probar la atomicidad con un fallo forzado | `orderLimits.test.js`, `orders.limits.test.js`, `orderParts.atomic.test.js` (T005, T009, T040) | Abierto |
+| R-06 | El total de la orden, el pago y el ticket no coinciden por un error de redondeo de la mano de obra | Alto: comprobante incorrecto para el cliente | Cálculo en centavos y pruebas de valores límite de la mano de obra (horas decimales por tarifa) | `orderTotals.test.js`, `billing.parts.test.js`, `tickets.parts.test.js` (T043 a T045) | Abierto |
+| R-07 | Cobros simultáneos superan el total de la orden con refacciones | Alto | Se conserva el bloqueo de la orden del Sprint 4 y se vuelve a probar con refacciones | `billing.parts.test.js` y las pruebas de concurrencia de pagos del Sprint 4, que deben seguir en verde (T044, T054) | Abierto |
+| R-08 | Se guarda por error una venta menor al costo | Medio: pérdida económica por captura | Rechazo en el servidor salvo confirmación explícita, y diálogo de confirmación en el formulario | `partService.test.js`, `parts.prices.test.js`, `part_form_test.dart` (T006, T008, T011) | Abierto |
+| R-09 | Las pantallas del mecánico muestran ceros o marcadores donde antes iba un precio, o fallan al no recibir el campo | Medio: interfaz confusa o con errores | Campos opcionales en los modelos del cliente y pantallas que los omiten; pruebas de Flutter con la sesión del mecánico | `mechanic_prices_test.dart` y las pruebas de Flutter ajustadas (T023, T029, T030, T032) | Abierto |
+| R-10 | La documentación vuelve a desfasarse del código (entidad `Part`, visibilidad de precios, confirmaciones) | Bajo: contradicciones entre documentos y código | Actualizar `project-context.md` y `design-system.md` dentro del sprint, esta última antes de cambiar pantallas (principio VIII) | Revisión documental (T004, T051, T052, T059) | Abierto |
+| R-11 | Los seeds actuales no bastan para demostrar el flujo o se duplican al cargarse de nuevo | Bajo | Verificar con una prueba que los seeds son idempotentes y que hay una orden Terminada con refacciones y saldo pendiente | `seeds.sprint5.test.js` (T050, T053) | Abierto |
 
 ## 6. Trazabilidad
 
-Pendiente: se llena antes de `/speckit.implement`, con una fila por cada uno de los 14 criterios de aceptación del insumo.
+Cada criterio de aceptación (CA) del insumo se enlaza con su requisito, su tarea, su prueba y el resultado. Antes de implementar, el resultado es Pendiente en todos; se actualiza al cierre con la evidencia real.
+
+| CA | Criterio de aceptación (resumen) | Requisito (FR) | Tarea | Prueba | Resultado | Evidencia |
+|:--:|---|---|---|---|---|---|
+| CA-1 | Precios con dos decimales, no negativos y con límites máximos de precio, línea y total | FR-001, FR-002, FR-003 | T013, T014, T016, T017 | T005, T007, T008, T009, T010 | Pendiente | `orderLimits.test.js`, `partValidator.test.js`, `parts.prices.test.js`, `orders.limits.test.js` |
+| CA-2 | Venta menor al costo: advertencia y confirmación explícita; precio 0 permitido | FR-004, FR-004-b | T004, T014, T015, T018 | T006, T008, T011 | Pendiente | `partService.test.js`, `parts.prices.test.js`, `part_form_test.dart` |
+| CA-3 | La línea conserva el precio vigente al agregarla; un cambio posterior no la modifica, también con solicitudes simultáneas | FR-010, FR-014, FR-020 | T036 a T042 (demostración del comportamiento existente) | T036, T037, T041 | Pendiente | `orderParts.prices.test.js`, `orderParts.prices.concurrency.test.js` |
+| CA-4 | Total = servicios + mano de obra + refacciones, en centavos, con redondeo definido | FR-011 | T043, T048, T049 | T043, T048 | Pendiente | `orderTotals.test.js` |
+| CA-5 | El pago se valida contra el saldo disponible; una orden con solo refacciones se cobra; Mercado Pago recibe el importe correcto | FR-015, FR-016, FR-017 | T044, T048, T049 | T044 | Pendiente | `billing.parts.test.js` |
+| CA-6 | Pagos y tickets emitidos conservan su importe y contenido; una orden Cancelada conserva líneas, precios y total | FR-012, FR-012-b, FR-013 | T038, T039, T041 | T038, T039 | Pendiente | `emitted.compat.test.js`, `orderParts.cancel.test.js` |
+| CA-7 | El ticket incluye cantidad, precio unitario e importe de cada refacción y su subtotal coincide con el total | FR-018 | T045, T047, T049 | T045, T047 | Pendiente | `tickets.parts.test.js`, `ticket_screen_test.dart` |
+| CA-8 | El mecánico no recibe ningún precio ni importe de refacciones ni el total, validado en el servidor, y sigue usando las refacciones | FR-007, FR-008, FR-009 | T025 a T030, T034 | T020, T021, T022, T023 | Pendiente | `serializers.test.js`, `prices.leak.test.js`, `orders.mechanicView.test.js`, `mechanic_prices_test.dart` |
+| CA-9 | Recepción recibe el precio de venta y los importes, pero nunca el precio de compra; solo el administrador lo recibe | FR-005, FR-006 | T025, T027 | T020, T021 | Pendiente | `serializers.test.js`, `prices.leak.test.js` |
+| CA-10 | El panel de control y los listados de órdenes y pagos funcionan con el nuevo total | FR-019 | T046, T049 | T046, T047 | Pendiente | `dashboard.listings.regression.test.js` |
+| CA-11 | Hay refacciones con precios y una orden Terminada cobrable con refacciones; los seeds son idempotentes y no se agregan seeds ni migración | FR-021 | T050, T053 | T050 | Pendiente | `seeds.sprint5.test.js` |
+| CA-12 | Se mantienen las reglas del Sprint 4: sin datos de tarjeta, permisos en el servidor y operaciones de refacciones todo o nada | FR-009, FR-017, FR-024 | T040, T044 | T040, T044 | Pendiente | `orderParts.atomic.test.js`, `billing.parts.test.js` |
+| CA-13 | La documentación y los comentarios del código se actualizan en el mismo sprint | FR-023 | T004, T051, T052, T059 | Revisión documental (sin prueba automática) | Pendiente | `project-context.md`, `design-system.md`, `README.md` |
+
+Las pruebas de regresión de los Sprints 1 a 4 y las del propio sprint (FR-022) se miden en la sección 8 con la línea base de 75 suites y 1240 pruebas de backend y 242 de frontend.
 
 ## 7. Hallazgos y defectos
 
