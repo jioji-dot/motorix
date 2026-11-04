@@ -154,6 +154,59 @@ describe('Servicio de refacciones', () => {
     await expect(servicio.get(5, ADMIN)).resolves.toBeDefined();
   });
 
+  describe('venta_menor_al_costo', () => {
+    const PARTE = { id: 5, code: 'FIL-001', active: true, stock: 0, purchasePrice: '100.00', salePrice: '150.00' };
+
+    test('crear_con_venta_menor_a_la_compra_sin_confirmar_responde_409_PRICE_BELOW_COST_y_no_guarda', async () => {
+      const { servicio, partModel } = crearEntorno();
+      await expect(servicio.create({ ...valida, purchasePrice: 100, salePrice: 80 }, ADMIN)).rejects.toMatchObject({
+        status: 409,
+        code: 'PRICE_BELOW_COST',
+        details: [{ field: 'salePrice', message: expect.any(String) }],
+      });
+      expect(partModel.create).not.toHaveBeenCalled();
+    });
+
+    test('con_confirmBelowCost_true_guarda_y_la_confirmacion_no_se_envia_al_modelo', async () => {
+      const { servicio, partModel } = crearEntorno();
+      await servicio.create({ ...valida, purchasePrice: 100, salePrice: 80, confirmBelowCost: true }, ADMIN);
+      expect(partModel.create).toHaveBeenCalledTimes(1);
+      expect(partModel.create.mock.calls[0][1]).not.toHaveProperty('confirmBelowCost');
+    });
+
+    test('venta_igual_a_la_compra_o_precio_de_venta_0_con_compra_0_se_guardan_sin_confirmar', async () => {
+      const { servicio, partModel } = crearEntorno();
+      await servicio.create({ ...valida, purchasePrice: 100, salePrice: 100 }, ADMIN);
+      await servicio.create({ ...valida, purchasePrice: 0, salePrice: 0 }, ADMIN);
+      expect(partModel.create).toHaveBeenCalledTimes(2);
+    });
+
+    test('un_precio_de_venta_0_con_compra_mayor_a_0_es_menor_al_costo_y_pide_confirmacion', async () => {
+      const { servicio } = crearEntorno();
+      await expect(servicio.create({ ...valida, purchasePrice: 50, salePrice: 0 }, ADMIN)).rejects.toMatchObject({ code: 'PRICE_BELOW_COST' });
+      await expect(servicio.create({ ...valida, purchasePrice: 50, salePrice: 0, confirmBelowCost: true }, ADMIN)).resolves.toBeDefined();
+    });
+
+    test('editar_el_precio_de_venta_por_debajo_de_la_compra_vigente_pide_confirmacion', async () => {
+      const { servicio, partModel } = crearEntorno({ parte: PARTE });
+      await expect(servicio.update(5, { salePrice: 90 }, ADMIN)).rejects.toMatchObject({ status: 409, code: 'PRICE_BELOW_COST' });
+      expect(partModel.update).not.toHaveBeenCalled();
+      await servicio.update(5, { salePrice: 90, confirmBelowCost: true }, ADMIN);
+      expect(partModel.update).toHaveBeenCalledWith(5, { salePrice: 90 });
+    });
+
+    test('subir_el_precio_de_compra_por_encima_de_la_venta_vigente_tambien_pide_confirmacion', async () => {
+      const { servicio } = crearEntorno({ parte: PARTE });
+      await expect(servicio.update(5, { purchasePrice: 200 }, ADMIN)).rejects.toMatchObject({ code: 'PRICE_BELOW_COST' });
+    });
+
+    test('editar_otros_datos_sin_cambiar_precios_no_pide_confirmacion_aunque_la_venta_ya_sea_menor_al_costo', async () => {
+      const { servicio, partModel } = crearEntorno({ parte: { ...PARTE, purchasePrice: '100.00', salePrice: '80.00' } });
+      await servicio.update(5, { name: 'Nuevo nombre' }, ADMIN);
+      expect(partModel.update).toHaveBeenCalledWith(5, { name: 'Nuevo nombre' });
+    });
+  });
+
   test('registrar_movimiento_traduce_la_cantidad_a_delta_con_signo', async () => {
     const { servicio, inventoryService } = crearEntorno();
     await servicio.registerMovement(5, { type: 'OUT', quantity: 2, reason: 'Merma' }, ADMIN);

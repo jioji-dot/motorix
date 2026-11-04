@@ -6,6 +6,9 @@ import { cerrarConexiones, crearClienteConVehiculo, crearOrden, crearUsuariosDeP
 let usuarios;
 let ordenId;
 const mecanico = () => ({ Authorization: `Bearer ${usuarios.MECHANIC.token}` });
+// Sprint 5 (FR-008, H-07): el mecánico no recibe el total; se lee con recepción, que sí lo recibe.
+const totalDe = async (orden) =>
+  (await request(app).get(`/api/orders/${orden}`).set({ Authorization: `Bearer ${usuarios.RECEPTIONIST.token}` })).body.data.total;
 
 beforeAll(async () => {
   await limpiarBase();
@@ -51,7 +54,8 @@ describe('Servicios', () => {
       .send({ description: 'Cambio de aceite', amount: 450 });
     expect(respuesta.status).toBe(201);
     expect(respuesta.body.data.services).toEqual([{ id: expect.any(Number), description: 'Cambio de aceite', amount: '450.00' }]);
-    expect(respuesta.body.data.total).toBe('450.00');
+    expect(respuesta.body.data).not.toHaveProperty('total');
+    expect(await totalDe(ordenId)).toBe('450.00');
   });
 
   test('PATCH y DELETE responden_200_con_la_orden_completa', async () => {
@@ -61,12 +65,14 @@ describe('Servicios', () => {
     const editada = await request(app).patch(`/api/orders/${ordenId}/services/${lineaId}`).set(mecanico()).send({ amount: 500, description: 'Aceite sintético' });
     expect(editada.status).toBe(200);
     expect(editada.body.data.services[0]).toEqual({ id: lineaId, description: 'Aceite sintético', amount: '500.00' });
-    expect(editada.body.data.total).toBe('500.00');
+    expect(editada.body.data).not.toHaveProperty('total');
+    expect(await totalDe(ordenId)).toBe('500.00');
 
     const quitada = await request(app).delete(`/api/orders/${ordenId}/services/${lineaId}`).set(mecanico());
     expect(quitada.status).toBe(200);
     expect(quitada.body.data.services).toEqual([]);
-    expect(quitada.body.data.total).toBe('0.00');
+    expect(quitada.body.data).not.toHaveProperty('total');
+    expect(await totalDe(ordenId)).toBe('0.00');
   });
 
   test('responde_400_con_detalles_por_campo_y_404_si_la_linea_no_existe', async () => {
@@ -89,7 +95,8 @@ describe('Mano de obra', () => {
     expect(alta.body.data.labor).toEqual([
       { id: expect.any(Number), description: 'Desmontaje', hours: '2.50', hourlyRate: '300.00', amount: '750.00' },
     ]);
-    expect(alta.body.data.total).toBe('750.00');
+    expect(alta.body.data).not.toHaveProperty('total');
+    expect(await totalDe(ordenId)).toBe('750.00');
 
     const laborId = alta.body.data.labor[0].id;
     const editada = await request(app).patch(`/api/orders/${ordenId}/labor/${laborId}`).set(mecanico()).send({ hourlyRate: 400 });
@@ -97,7 +104,8 @@ describe('Mano de obra', () => {
 
     const quitada = await request(app).delete(`/api/orders/${ordenId}/labor/${laborId}`).set(mecanico());
     expect(quitada.body.data.labor).toEqual([]);
-    expect(quitada.body.data.total).toBe('0.00');
+    expect(quitada.body.data).not.toHaveProperty('total');
+    expect(await totalDe(ordenId)).toBe('0.00');
   });
 
   test('responde_409_ORDER_NOT_EDITABLE_cuando_la_orden_ya_no_esta_en_curso', async () => {

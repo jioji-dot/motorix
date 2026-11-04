@@ -67,3 +67,34 @@ describe('Cancelar una orden con refacciones (integración)', () => {
     for (const fila of filas) expect(Number(fila.suma)).toBe(fila.stock);
   });
 });
+
+describe('Orden cancelada: precios, total y pagos (integración, Sprint 5)', () => {
+  test('cancelar_conserva_las_lineas_con_su_precio_guardado_y_el_total_y_la_orden_no_admite_pagos', async () => {
+    const orden = await crearOrden({ ...datos, mechanicId: usuarios.MECHANIC.id, createdBy: usuarios.RECEPTIONIST.id, status: 'EN_REPARACION' });
+    const { id } = await crearRefaccion({ stock: 8, purchasePrice: 20, salePrice: 75 });
+    await request(app).post(`/api/orders/${orden}/parts`).set(como('ADMIN')).send({ partId: id, quantity: 3 });
+    const antes = (await request(app).get(`/api/orders/${orden}`).set(como('ADMIN'))).body.data;
+    expect(antes.total).toBe('225.00');
+
+    // Un cambio de precio posterior tampoco afecta la línea de una orden cancelada.
+    await request(app).patch(`/api/parts/${id}`).set(como('ADMIN')).send({ salePrice: 500 });
+    const cancelada = await request(app)
+      .post(`/api/orders/${orden}/status`)
+      .set(como('RECEPTIONIST'))
+      .send({ status: 'CANCELADA', reason: 'El cliente ya no autorizó la reparación' });
+    expect(cancelada.status).toBe(200);
+
+    const despues = (await request(app).get(`/api/orders/${orden}`).set(como('ADMIN'))).body.data;
+    expect(despues.status).toBe('CANCELADA');
+    expect(despues.total).toBe('225.00');
+    expect(despues.parts).toHaveLength(1);
+    expect(despues.parts[0]).toMatchObject({ quantity: 3, unitPrice: '75.00', amount: '225.00' });
+    expect((await sumaDeMovimientos(id)).stock).toBe(8);
+
+    const pago = await request(app).post(`/api/orders/${orden}/payments`).set(como('RECEPTIONIST')).send({ method: 'EFECTIVO', amount: 225 });
+    expect(pago.status).toBe(409);
+    expect(pago.body.error.code).toBe('ORDER_NOT_PAYABLE');
+    const pagos = await request(app).get(`/api/orders/${orden}/payments`).set(como('ADMIN'));
+    expect(pagos.body.data.payments).toEqual([]);
+  });
+});

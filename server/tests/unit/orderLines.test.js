@@ -25,6 +25,7 @@ function crearEntorno({ orden = { id: 9, status: 'DIAGNOSTICO', mechanicId: 3 },
     updateLabor: jest.fn(async () => filas),
     removeLabor: jest.fn(async () => filas),
     recalculateTotal: jest.fn(async () => {}),
+    computeTotal: jest.fn(async () => '100.00'),
     findDetail: jest.fn(async (id) => ({ id, status: orden?.status, mechanicId: orden?.mechanicId, total: '100.00' })),
   };
   const userModel = { findById: jest.fn(async () => mecanico) };

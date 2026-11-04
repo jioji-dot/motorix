@@ -1,9 +1,13 @@
 // Ayudantes para las pruebas de integración y de contrato.
 // Siempre trabajan contra la base de pruebas (el nombre debe terminar en "_test").
 import bcrypt from 'bcryptjs';
+import { execFileSync } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import jwt from 'jsonwebtoken';
 import { pool } from '../config/db.js';
 import { env } from '../config/env.js';
+import { recalculateTotal } from '../models/orderModel.js';
 
 export const CONTRASENA_PRUEBA = 'Prueba2026!';
 
@@ -227,6 +231,27 @@ export async function crearOrdenCobrable({ clientId, vehicleId, mechanicId, crea
   await pool.execute('INSERT INTO order_services (orderId, description, amount) VALUES (?, ?, ?)', [id, 'Servicio de prueba', total]);
   await pool.execute('UPDATE service_orders SET total = ? WHERE id = ?', [total, id]);
   return id;
+}
+
+// Inserta directamente una línea de refacción con su precio (por defecto, el de venta de la refacción) y recalcula
+// el total de la orden con la fórmula del sistema (no una copia). No toca el stock ni los movimientos.
+export async function crearLineaDeRefaccion({ orderId, partId, quantity = 1, unitPrice }) {
+  asegurarBaseDePruebas();
+  const [[parte]] = await pool.execute('SELECT code, name, salePrice FROM parts WHERE id = ?', [partId]);
+  const [resultado] = await pool.execute(
+    'INSERT INTO order_parts (orderId, partId, partCode, partName, quantity, unitPrice) VALUES (?, ?, ?, ?, ?, ?)',
+    [orderId, partId, parte.code, parte.name, quantity, unitPrice ?? parte.salePrice],
+  );
+  await recalculateTotal(pool, orderId);
+  return resultado.insertId;
+}
+
+// Carga los datos de ejemplo (usuarios y scripts SQL de database/seeds/) con el mismo script que `npm run seed`.
+// Siempre sobre la base de pruebas: el proceso hijo hereda DB_NAME, que tests/env.js fija en una base "_test".
+export function aplicarSeeds() {
+  asegurarBaseDePruebas();
+  const servidor = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+  return execFileSync(process.execPath, ['scripts/seed.js'], { cwd: servidor, env: process.env, encoding: 'utf8' });
 }
 
 export async function cerrarConexiones() {

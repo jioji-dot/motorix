@@ -49,13 +49,17 @@ describe('Documentar el trabajo (integración)', () => {
   test('el_total_siempre_coincide_con_la_suma_de_servicios_y_mano_de_obra', async () => {
     const id = await nuevaOrden();
     const mecanico = como('MECHANIC');
+    // Sprint 5 (FR-008, H-07): el mecánico no recibe el total; se lee con recepción, que sí lo recibe.
+    const totalDe = async (orden) => (await request(app).get(`/api/orders/${orden}`).set(como('RECEPTIONIST'))).body.data.total;
 
     const s1 = await request(app).post(`/api/orders/${id}/services`).set(mecanico).send({ description: 'Cambio de aceite', amount: 450 });
     expect(s1.status).toBe(201);
-    expect(s1.body.data.total).toBe('450.00');
+    expect(s1.body.data).not.toHaveProperty('total');
+    expect(await totalDe(id)).toBe('450.00');
 
     const s2 = await request(app).post(`/api/orders/${id}/services`).set(mecanico).send({ description: 'Filtro de aire', amount: '120.50' });
-    expect(s2.body.data.total).toBe('570.50');
+    expect(s2.body.data).not.toHaveProperty('total');
+    expect(await totalDe(id)).toBe('570.50');
 
     const l1 = await request(app)
       .post(`/api/orders/${id}/labor`)
@@ -64,22 +68,27 @@ describe('Documentar el trabajo (integración)', () => {
     expect(l1.status).toBe(201);
     // 1.25 × 333.33 = 416.6625 → 416.66
     expect(l1.body.data.labor[0]).toMatchObject({ hours: '1.25', hourlyRate: '333.33', amount: '416.66' });
-    expect(l1.body.data.total).toBe('987.16');
+    expect(l1.body.data).not.toHaveProperty('total');
+    expect(await totalDe(id)).toBe('987.16');
 
     const servicioId = s1.body.data.services[0].id;
     const laborId = l1.body.data.labor[0].id;
 
     const editado = await request(app).patch(`/api/orders/${id}/services/${servicioId}`).set(mecanico).send({ amount: 500 });
-    expect(editado.body.data.total).toBe('1037.16');
+    expect(editado.body.data).not.toHaveProperty('total');
+    expect(await totalDe(id)).toBe('1037.16');
 
     const laborEditada = await request(app).patch(`/api/orders/${id}/labor/${laborId}`).set(mecanico).send({ hours: 2 });
     expect(laborEditada.body.data.labor[0].amount).toBe('666.66');
-    expect(laborEditada.body.data.total).toBe('1287.16');
+    expect(laborEditada.body.data).not.toHaveProperty('total');
+    expect(await totalDe(id)).toBe('1287.16');
 
     const sinServicio = await request(app).delete(`/api/orders/${id}/services/${servicioId}`).set(mecanico);
-    expect(sinServicio.body.data.total).toBe('787.16');
+    expect(sinServicio.body.data).not.toHaveProperty('total');
+    expect(await totalDe(id)).toBe('787.16');
     const sinLabor = await request(app).delete(`/api/orders/${id}/labor/${laborId}`).set(mecanico);
-    expect(sinLabor.body.data.total).toBe('120.50');
+    expect(sinLabor.body.data).not.toHaveProperty('total');
+    expect(await totalDe(id)).toBe('120.50');
 
     // El total guardado coincide con la suma real de las líneas.
     const [[suma]] = await pool.query(

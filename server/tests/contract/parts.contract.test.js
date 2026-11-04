@@ -141,3 +141,31 @@ describe('Movimientos: POST y GET /api/parts/:id/movements', () => {
     expect(respuesta.body.data[0]).toMatchObject({ type: 'IN', quantity: 4, stockAfter: 5 });
   });
 });
+
+describe('Venta menor al costo y confirmBelowCost (Sprint 5)', () => {
+  test('sin_confirmar_responde_409_con_el_error_estandar_y_con_confirmBelowCost_true_responde_201', async () => {
+    const cuerpo = nueva({ code: 'CTR-BAJO', purchasePrice: 100, salePrice: 80 });
+    const sin = await request(app).post('/api/parts').set(como('ADMIN')).send(cuerpo);
+    expect(sin.status).toBe(409);
+    expect(sin.body).toEqual({
+      error: {
+        code: 'PRICE_BELOW_COST',
+        message: expect.any(String),
+        details: [{ field: 'salePrice', message: expect.any(String) }],
+      },
+    });
+    const con = await request(app).post('/api/parts').set(como('ADMIN')).send({ ...cuerpo, confirmBelowCost: true });
+    expect(con.status).toBe(201);
+    expect(con.body.data).toMatchObject({ code: 'CTR-BAJO', purchasePrice: '100.00', salePrice: '80.00' });
+  });
+
+  test('PATCH_acepta_confirmBelowCost_y_rechaza_un_valor_que_no_es_booleano_con_400', async () => {
+    const { id } = await crearRefaccion({ purchasePrice: 100, salePrice: 150 });
+    const mala = await request(app).patch(`/api/parts/${id}`).set(como('ADMIN')).send({ salePrice: 50, confirmBelowCost: 'si' });
+    expect(mala.status).toBe(400);
+    expect(mala.body.error.details[0].field).toBe('confirmBelowCost');
+    const ok = await request(app).patch(`/api/parts/${id}`).set(como('ADMIN')).send({ salePrice: 50, confirmBelowCost: true });
+    expect(ok.status).toBe(200);
+    expect(ok.body.data.salePrice).toBe('50.00');
+  });
+});

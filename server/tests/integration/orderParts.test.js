@@ -16,6 +16,8 @@ let usuarios;
 let mecanico2;
 let datos;
 const como = (rol) => ({ Authorization: `Bearer ${usuarios[rol].token}` });
+// Sprint 5 (FR-008, H-07): el mecánico no recibe el total; se lee con recepción, que sí lo recibe.
+const totalDe = async (orden) => (await request(app).get(`/api/orders/${orden}`).set(como('RECEPTIONIST'))).body.data.total;
 const nuevaOrden = (status = 'EN_REPARACION', mechanicId) =>
   crearOrden({ ...datos, mechanicId: mechanicId ?? usuarios.MECHANIC.id, createdBy: usuarios.RECEPTIONIST.id, status });
 const agregar = (orden, partId, quantity, auth = como('MECHANIC')) =>
@@ -36,7 +38,8 @@ describe('Refacciones en órdenes (integración)', () => {
     const { id } = await crearRefaccion({ stock: 5, salePrice: 100 });
     const respuesta = await agregar(orden, id, 2);
     expect(respuesta.status).toBe(201);
-    expect(respuesta.body.data.total).toBe('200.00');
+    expect(respuesta.body.data).not.toHaveProperty('total');
+    expect(await totalDe(orden)).toBe('200.00');
     const detalle = await request(app).get(`/api/parts/${id}`).set(como('ADMIN'));
     expect(detalle.body.data.stock).toBe(3);
     expect(detalle.body.data.movements[0]).toMatchObject({ type: 'OUT', quantity: -2, stockAfter: 3, orderId: orden });
@@ -49,9 +52,11 @@ describe('Refacciones en órdenes (integración)', () => {
     await request(app).post(`/api/orders/${orden}/services`).set(como('MECHANIC')).send({ description: 'Servicio', amount: 100 });
     await request(app).post(`/api/orders/${orden}/labor`).set(como('MECHANIC')).send({ description: 'Mano', hours: 2, hourlyRate: 30 });
     const respuesta = await agregar(orden, id, 3);
-    expect(respuesta.body.data.total).toBe('310.00');
+    expect(respuesta.body.data).not.toHaveProperty('total');
+    expect(await totalDe(orden)).toBe('310.00');
     const quitada = await request(app).delete(`/api/orders/${orden}/parts/${respuesta.body.data.parts[0].id}`).set(como('MECHANIC'));
-    expect(quitada.body.data.total).toBe('160.00');
+    expect(quitada.body.data).not.toHaveProperty('total');
+    expect(await totalDe(orden)).toBe('160.00');
   });
 
   test('una_cantidad_mayor_a_la_disponible_se_rechaza_sin_cambiar_nada', async () => {
@@ -91,11 +96,12 @@ describe('Refacciones en órdenes (integración)', () => {
     const { id } = await crearRefaccion({ stock: 5, salePrice: 100, name: 'Pieza congelada' });
     await agregar(orden, id, 2);
     await request(app).patch(`/api/parts/${id}`).set(como('ADMIN')).send({ salePrice: 999, name: 'Renombrada' });
-    const detalle = await request(app).get(`/api/orders/${orden}`).set(como('MECHANIC'));
+    // El precio guardado y el total los lee el administrador: el mecánico ya no los recibe (Sprint 5, H-07).
+    const detalle = await request(app).get(`/api/orders/${orden}`).set(como('ADMIN'));
     expect(detalle.body.data.total).toBe('200.00');
     expect(detalle.body.data.parts[0]).toMatchObject({ unitPrice: '100.00', name: 'Pieza congelada' });
     const otra = await nuevaOrden();
-    const nueva = await agregar(otra, id, 1);
+    const nueva = await agregar(otra, id, 1, como('ADMIN'));
     expect(nueva.body.data.parts[0].unitPrice).toBe('999.00');
   });
 

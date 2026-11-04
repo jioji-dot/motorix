@@ -6,6 +6,8 @@ import { cerrarConexiones, crearClienteConVehiculo, crearOrden, crearRefaccion, 
 let usuarios;
 let datos;
 const como = (rol) => ({ Authorization: `Bearer ${usuarios[rol].token}` });
+// Sprint 5 (FR-008, H-07): el mecánico no recibe el total; se lee con recepción, que sí lo recibe.
+const totalDe = async (orden) => (await request(app).get(`/api/orders/${orden}`).set(como('RECEPTIONIST'))).body.data.total;
 const nuevaOrden = (status = 'EN_REPARACION') =>
   crearOrden({ ...datos, mechanicId: usuarios.MECHANIC.id, createdBy: usuarios.RECEPTIONIST.id, status });
 
@@ -25,10 +27,13 @@ describe('POST /api/orders/:id/parts', () => {
     expect(respuesta.status).toBe(201);
     expect(respuesta.body.data).toMatchObject({
       id: orden,
-      total: '300.00',
-      parts: [{ id: expect.any(Number), partId, code, name: expect.any(String), quantity: 2, unitPrice: '150.00', amount: '300.00' }],
+      parts: [{ id: expect.any(Number), partId, code, name: expect.any(String), quantity: 2 }],
       allowedTransitions: expect.any(Array),
     });
+    expect(respuesta.body.data).not.toHaveProperty('total');
+    expect(respuesta.body.data.parts[0]).not.toHaveProperty('unitPrice');
+    expect(respuesta.body.data.parts[0]).not.toHaveProperty('amount');
+    expect(await totalDe(orden)).toBe('300.00');
   });
 
   test('responde_400_404_y_403_con_error_estandar', async () => {
@@ -80,7 +85,9 @@ describe('PATCH y DELETE /api/orders/:id/parts/:lineId', () => {
     const lineId = alta.body.data.parts[0].id;
     const ok = await request(app).patch(`/api/orders/${orden}/parts/${lineId}`).set(como('MECHANIC')).send({ quantity: 4 });
     expect(ok.status).toBe(200);
-    expect(ok.body.data).toMatchObject({ total: '40.00', parts: [{ quantity: 4, amount: '40.00' }] });
+    expect(ok.body.data).toMatchObject({ parts: [{ quantity: 4 }] });
+    expect(ok.body.data).not.toHaveProperty('total');
+    expect(await totalDe(orden)).toBe('40.00');
     const ajena = await request(app).patch(`/api/orders/${otra}/parts/${lineId}`).set(como('MECHANIC')).send({ quantity: 1 });
     expect(ajena.status).toBe(404);
     const mala = await request(app).patch(`/api/orders/${orden}/parts/${lineId}`).set(como('MECHANIC')).send({ quantity: -1 });
@@ -93,6 +100,24 @@ describe('PATCH y DELETE /api/orders/:id/parts/:lineId', () => {
     const alta = await request(app).post(`/api/orders/${orden}/parts`).set(como('MECHANIC')).send({ partId, quantity: 1 });
     const respuesta = await request(app).delete(`/api/orders/${orden}/parts/${alta.body.data.parts[0].id}`).set(como('MECHANIC'));
     expect(respuesta.status).toBe(200);
-    expect(respuesta.body.data).toMatchObject({ parts: [], total: '0.00' });
+    expect(respuesta.body.data).toMatchObject({ parts: [] });
+    expect(respuesta.body.data).not.toHaveProperty('total');
+    expect(await totalDe(orden)).toBe('0.00');
+  });
+});
+
+describe('Límite de importes en las refacciones de una orden (Sprint 5)', () => {
+  test('un_importe_mayor_al_maximo_responde_409_AMOUNT_LIMIT_EXCEEDED_con_el_error_estandar', async () => {
+    const orden = await nuevaOrden();
+    const { id: partId } = await crearRefaccion({ stock: 5, purchasePrice: 1, salePrice: 99999999.99 });
+    const respuesta = await request(app).post(`/api/orders/${orden}/parts`).set(como('ADMIN')).send({ partId, quantity: 2 });
+    expect(respuesta.status).toBe(409);
+    expect(respuesta.body).toEqual({
+      error: {
+        code: 'AMOUNT_LIMIT_EXCEEDED',
+        message: expect.stringContaining('99,999,999.99'),
+        details: [{ field: 'quantity', message: expect.any(String) }],
+      },
+    });
   });
 });
