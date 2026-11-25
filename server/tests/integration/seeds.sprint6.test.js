@@ -2,7 +2,7 @@
 import request from 'supertest';
 import { app } from '../../app.js';
 import { pool } from '../../config/db.js';
-import { aplicarSeeds, cerrarConexiones, emitirToken, limpiarBase } from '../helpers.js';
+import { aceptarTerminosDeTodos, aplicarSeeds, cerrarConexiones, emitirToken, limpiarBase } from '../helpers.js';
 
 const TABLAS = [
   'users', 'clients', 'vehicles', 'appointments', 'service_orders', 'order_status_history', 'order_services', 'order_labor',
@@ -26,6 +26,7 @@ const tokenDe = async (username) => {
 beforeAll(async () => {
   await limpiarBase();
   aplicarSeeds();
+  await aceptarTerminosDeTodos(); // los seeds publican los términos (Sprint 7)
 }, 120000);
 afterAll(cerrarConexiones);
 

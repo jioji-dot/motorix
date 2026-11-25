@@ -4,7 +4,7 @@
 import request from 'supertest';
 import { app } from '../../app.js';
 import { pool } from '../../config/db.js';
-import { aplicarSeeds, cerrarConexiones, emitirToken, limpiarBase } from '../helpers.js';
+import { aceptarTerminosDeTodos, aplicarSeeds, cerrarConexiones, emitirToken, limpiarBase } from '../helpers.js';
 
 const TABLAS = [
   'users', 'clients', 'vehicles', 'appointments', 'service_orders', 'order_services', 'order_labor', 'order_parts',
@@ -36,6 +36,7 @@ describe('Datos de ejemplo del cobro con refacciones (integración, Sprint 5)', 
     expect(primeraCarga.order_parts).toBeGreaterThan(0);
     aplicarSeeds();
     expect(await conteos()).toEqual(primeraCarga);
+    await aceptarTerminosDeTodos(); // los seeds publican los términos (Sprint 7): las pruebas siguientes usan la API
   }, 120000);
 
   test('todas_las_refacciones_de_ejemplo_tienen_categoria_marca_y_precios', async () => {

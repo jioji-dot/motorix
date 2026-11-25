@@ -2,7 +2,7 @@
 import request from 'supertest';
 import { app } from '../../app.js';
 import { pool } from '../../config/db.js';
-import { aplicarSeeds, cerrarConexiones, crearClienteConVehiculo, crearUsuariosDePrueba, emitirToken, limpiarBase } from '../helpers.js';
+import { aceptarTerminosDeTodos, aplicarSeeds, cerrarConexiones, crearClienteConVehiculo, crearUsuariosDePrueba, emitirToken, limpiarBase } from '../helpers.js';
 
 const consultar = async (token) => {
   const inicio = process.hrtime.bigint();
@@ -15,6 +15,7 @@ afterAll(cerrarConexiones);
 test('con_los_datos_de_ejemplo_responde_en_menos_de_1_segundo', async () => {
   await limpiarBase();
   aplicarSeeds();
+  await aceptarTerminosDeTodos(); // los seeds publican los términos (Sprint 7)
   const [[{ id }]] = await pool.query("SELECT id FROM users WHERE username = 'admin'");
   const token = emitirToken(id);
   await consultar(token); // calentamiento de la conexión

@@ -265,6 +265,12 @@ export async function aceptarTerminos(...usuarios) {
   }
 }
 
+// Hace que todos los usuarios existentes hayan aceptado la versión vigente (para las pruebas que cargan seeds).
+export async function aceptarTerminosDeTodos() {
+  asegurarBaseDePruebas();
+  await pool.query('INSERT IGNORE INTO terms_acceptances (userId, version) SELECT u.id, v.version FROM users u CROSS JOIN (SELECT MAX(version) AS version FROM terms_versions) v WHERE v.version IS NOT NULL');
+}
+
 // Marca como vigente la actividad de un usuario hace `minutos` minutos (para probar el cierre por inactividad).
 export async function fijarActividad(userId, minutos) {
   asegurarBaseDePruebas();
