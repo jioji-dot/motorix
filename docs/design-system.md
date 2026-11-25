@@ -231,6 +231,7 @@ Citas
 Órdenes de servicio
 Mantenimientos
 Inventario
+Clientes por avisar
 Pagos
 Tickets
 Usuarios
@@ -246,7 +247,7 @@ Cerrar sesión
 
 ### Header
 
-Nombre de sección, buscador cuando sea útil, notificaciones, usuario actual y rol.
+Nombre de sección, buscador cuando sea útil, notificaciones (la campana, ver [8.8](#88-centro-de-notificaciones-y-clientes-por-avisar)), usuario actual y rol.
 
 ---
 
@@ -312,6 +313,32 @@ Las pantallas **NO DEBEN mostrar** datos que el servidor no entrega al rol de la
 - El **precio de compra** solo se muestra al administrador.
 - El **mecánico** no ve ningún precio ni importe de refacciones ni el total de la orden: la pantalla omite esas columnas, etiquetas y totales **sin dejar marcadores de posición** (nada de ceros, guiones ni textos como "No disponible" que parezcan un importe). Sí ve los importes de servicios y de mano de obra.
 - Los modelos del cliente tratan esos campos como opcionales: si no llegan, no se dibujan.
+
+### 8.8 Centro de notificaciones y clientes por avisar
+
+**Campana** (encabezado, a la izquierda del usuario):
+
+- Ícono de campana del set `lucide_icons_flutter` con `Badge` que muestra el número de avisos **no leídos**; sin avisos no muestra número y con más de 99 muestra «99+».
+- `Tooltip` «Notificaciones» (botón solo con ícono), operable con el teclado, foco visible y cierre del panel con la tecla Escape.
+- El contador se actualiza al iniciar sesión, al cambiar de módulo y cada 60 segundos; un fallo de la consulta periódica no muestra mensajes emergentes y conserva el último número.
+
+**Panel de avisos** (se abre bajo la campana):
+
+- Avisos agrupados por tipo, con el título del grupo y su total; hasta 10 avisos por grupo y, si hay más, el texto «y N más en el módulo» sin perder el conteo.
+- Cada aviso muestra título, detalle corto, un chip de estado y las acciones «Abrir» y «Marcar como leído»; un aviso leído se atenúa (`textSecondary`) y no cuenta en la campana.
+- Colores de estado: `warning` para mantenimiento próximo y stock bajo, `danger` para mantenimiento vencido, stock agotado y orden detenida, y gris para la cita del día.
+- Estados: **cargando** con un indicador discreto, **vacío** con «No tienes avisos pendientes» y sin ilustraciones, y **error** con un mensaje en español, sin trazas, y el botón «Reintentar».
+- Los avisos del panel no muestran teléfonos.
+
+**Insignias del menú:** el ícono de Inventario muestra una insignia con las alertas de stock (bajo y agotado) solo para el administrador, y la sección «Clientes por avisar» muestra una insignia con los clientes pendientes. Sin pendientes, no se muestran. Ambas salen de la misma consulta de la campana.
+
+**Sección «Clientes por avisar»** (administración y recepción):
+
+- Tabla densa con cliente, **teléfono**, vehículo (placa), motivo (chip: vehículo listo, cita de mañana, mantenimiento próximo o vencido), fecha del hecho y la acción «Marcar como avisado».
+- Marcar como avisado abre un diálogo con una nota opcional de hasta 255 caracteres y los botones «Confirmar» y «Cancelar»; al confirmar, el cliente sale de la lista y se muestra un aviso de éxito. Si el hecho ya no aplica, se muestra el mensaje del servidor y la lista se actualiza.
+- La aplicación no envía mensajes al cliente: la tabla indica que la persona debe llamar o avisar en persona.
+- Estados: cargando, vacío («No hay clientes por avisar») y error con «Reintentar».
+- La sección no aparece en el menú del mecánico.
 
 ---
 
