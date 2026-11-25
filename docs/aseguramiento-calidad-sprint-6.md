@@ -57,7 +57,7 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 | G-03 | Aclaraciones (`/speckit.clarify`) | Aprobado | 5 decisiones resueltas en la sesión del 2026-11-24 (sección 4), todas con la opción recomendada; sin marcadores `[NEEDS CLARIFICATION]`; las 8 decisiones del insumo quedaron resueltas en la especificación (FR-004, FR-005, FR-006, FR-009, FR-011, FR-017) |
 | G-04 | Lista de calidad de requisitos (`/speckit.checklist`) | Aprobado | `specs/006-notificaciones-internas/checklists/notificaciones.md`: 40 puntos revisados y resueltos (H-06); los huecos se corrigieron en `spec.md` |
 | G-05 | Plan (`/speckit.plan`) | Aprobado | `specs/006-notificaciones-internas/plan.md`, `research.md`, `data-model.md`, `contracts/api.md` y `quickstart.md`. Constitución v1.2.0 sin violaciones (8 de 8 principios); migración `005` aditiva y consecutiva con dos tablas (`notification_reads` y `client_notices`); 4 rutas nuevas; sin dependencias nuevas |
-| G-06 | Tareas (`/speckit.tasks`) | Pendiente | |
+| G-06 | Tareas (`/speckit.tasks`) | Aprobado | `specs/006-notificaciones-internas/tasks.md`: 72 tareas (1 de preparación, 16 de fundamentos, 10 en US1, 3 en US2, 5 en US3, 3 en US4, 5 en US5, 7 en US6, 8 en US7, 6 de datos y rendimiento y 8 de cierre), con las pruebas antes del código en cada historia, el ajuste de `design-system.md` antes de cualquier pantalla y una tabla de cobertura de los 23 requisitos |
 | G-07 | Consistencia (`/speckit.analyze`) | Pendiente | |
 | G-08 | Pruebas planeadas y línea base | Pendiente | Línea base registrada en la sección 8 |
 
