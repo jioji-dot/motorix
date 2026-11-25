@@ -166,3 +166,13 @@ export async function listActiveMechanics() {
   );
   return filas;
 }
+
+// Segundos desde la última actividad del usuario según la hora de MySQL (nulo si nunca se marcó).
+export async function secondsSinceActivity(id) {
+  const [filas] = await pool.execute('SELECT TIMESTAMPDIFF(SECOND, lastActivityAt, NOW()) AS segundos FROM users WHERE id = ?', [id]);
+  return filas[0]?.segundos ?? null;
+}
+
+export async function markActivity(id) {
+  await pool.execute('UPDATE users SET lastActivityAt = NOW() WHERE id = ?', [id]);
+}

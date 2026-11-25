@@ -1,8 +1,10 @@
 // Aplicación Express: rutas bajo /api y manejo centralizado de errores.
 import express from 'express';
+import { securityHeaders } from './middlewares/securityHeaders.js';
 import cors from 'cors';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
+import auditRoutes from './routes/auditRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import clientNoticeRoutes from './routes/clientNoticeRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
@@ -22,6 +24,8 @@ import vehicleRoutes from './routes/vehicleRoutes.js';
 
 export function createApp() {
   const app = express();
+  app.disable('x-powered-by');
+  app.use(securityHeaders);
   app.use(cors());
   app.use(express.json());
 
@@ -41,6 +45,7 @@ export function createApp() {
   app.use('/api/tickets', ticketRoutes);
   app.use('/api/notifications', notificationRoutes);
   app.use('/api/settings', settingsRoutes);
+  app.use('/api/audit-log', auditRoutes);
   app.use('/api/terms', termsRoutes);
   app.use('/api/service-types', serviceTypeRoutes);
   app.use('/api/client-notices', clientNoticeRoutes);

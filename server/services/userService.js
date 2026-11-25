@@ -2,7 +2,9 @@
 import bcrypt from 'bcryptjs';
 import { withTransaction } from '../config/db.js';
 import * as modeloUsuarios from '../models/userModel.js';
+import { AUDIT_ACTION } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
+import { auditService as bitacora } from './auditService.js';
 
 const MENSAJE_USUARIO = 'Ya existe un usuario con ese nombre de usuario.';
 const MENSAJE_CORREO = 'Ya existe un usuario con ese correo.';
@@ -23,6 +25,7 @@ export function createUserService({
   userModel = modeloUsuarios,
   transaction = withTransaction,
   bcryptCost = 10,
+  auditService = bitacora,
 } = {}) {
   async function list(filtros) {
     const { items, total } = await userModel.list(filtros);
@@ -35,19 +38,21 @@ export function createUserService({
     return usuario;
   }
 
-  async function create({ password, ...datos }) {
+  async function create({ password, ...datos }, actor = null) {
     if (await userModel.findAuthByUsername(datos.username)) throw duplicado('username', MENSAJE_USUARIO);
     if (await userModel.findAuthByEmail(datos.email)) throw duplicado('email', MENSAJE_CORREO);
 
     const passwordHash = await bcrypt.hash(password, bcryptCost);
     try {
-      return await userModel.create({ ...datos, passwordHash });
+      const creado = await userModel.create({ ...datos, passwordHash });
+      await auditService.record(AUDIT_ACTION.USER_CREATED, { userId: actor?.id ?? null, entityId: creado.id, detail: { role: datos.role } });
+      return creado;
     } catch (error) {
       throw traducirDuplicadoDeBase(error);
     }
   }
 
-  async function update(id, { password, ...datos }) {
+  async function update(id, { password, ...datos }, actor = null) {
     const actual = await userModel.findById(id);
     if (!actual) throw HttpError.notFound('No se encontró el usuario solicitado.');
 
@@ -59,8 +64,9 @@ export function createUserService({
     const nuevoHash = password ? await bcrypt.hash(password, bcryptCost) : null;
 
     // La verificación del último administrador y el cambio van en una transacción (FR-013).
+    let resultado;
     try {
-      return await transaction(async (conexion) => {
+      resultado = await transaction(async (conexion) => {
         const dejaDeSerAdminActivo =
           actual.role === 'ADMIN' &&
           Boolean(actual.active) &&
@@ -83,6 +89,15 @@ export function createUserService({
     } catch (error) {
       throw traducirDuplicadoDeBase(error);
     }
+
+    // Bitácora de las acciones sensibles sobre usuarios (Sprint 7, FR-024).
+    const quien = { userId: actor?.id ?? null, entityId: id };
+    if (datos.role !== undefined && datos.role !== actual.role) {
+      await auditService.record(AUDIT_ACTION.USER_ROLE_CHANGED, { ...quien, detail: { from: actual.role, to: datos.role } });
+    }
+    if (datos.active === false && actual.active) await auditService.record(AUDIT_ACTION.USER_DEACTIVATED, quien);
+    if (datos.active === true && !actual.active) await auditService.record(AUDIT_ACTION.USER_REACTIVATED, quien);
+    return resultado;
   }
 
   return { list, get, create, update };

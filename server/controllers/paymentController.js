@@ -17,7 +17,7 @@ export async function sync(req, res) {
 }
 
 export async function cancel(req, res) {
-  res.json({ data: await mercadoPagoService.cancel(req.valid.params.id) });
+  res.json({ data: await mercadoPagoService.cancel(req.valid.params.id, req.user) });
 }
 
 // Notificación pública de Mercado Pago: no usa sesión; el servidor verifica el pago real contra Mercado Pago.

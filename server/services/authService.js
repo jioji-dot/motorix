@@ -3,7 +3,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
 import * as modeloUsuarios from '../models/userModel.js';
+import { AUDIT_ACTION } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
+import { auditService as bitacora } from './auditService.js';
 
 const MAX_INTENTOS = 5;
 const MINUTOS_BLOQUEO = 15;
@@ -27,7 +29,11 @@ export function createAuthService({
   jwtSecret = env.jwt.secret,
   jwtExpiresIn = env.jwt.expiresIn,
   bcryptCost = 10,
+  auditService = bitacora,
 } = {}) {
+  // El registro de la bitácora nunca debe impedir responder al inicio de sesión.
+  const registrar = (accion, datos) => auditService.record(accion, datos).catch(() => {});
+
   async function buscarUsuario(identificador) {
     const valor = identificador.trim().toLowerCase();
     // Si contiene "@" se busca por correo; si no, por nombre de usuario.
@@ -39,6 +45,7 @@ export function createAuthService({
 
     if (!usuario) {
       await bcrypt.compare(contrasena, HASH_RELLENO);
+      await registrar(AUDIT_ACTION.LOGIN_FAILED, { actorLabel: identificador.trim() });
       throw HttpError.invalidCredentials();
     }
 
@@ -51,8 +58,10 @@ export function createAuthService({
 
     const coincide = await bcrypt.compare(contrasena, usuario.passwordHash);
     if (!coincide) {
+      await registrar(AUDIT_ACTION.LOGIN_FAILED, { userId: usuario.id, actorLabel: identificador.trim(), entityId: usuario.id });
       if ((usuario.failedAttempts ?? 0) + 1 >= MAX_INTENTOS) {
         await userModel.lockAccount(usuario.id, new Date(ahora.getTime() + MINUTOS_BLOQUEO * 60 * 1000));
+        await registrar(AUDIT_ACTION.ACCOUNT_LOCKED, { userId: usuario.id, actorLabel: identificador.trim(), entityId: usuario.id });
       } else {
         await userModel.registerFailedAttempt(usuario.id);
       }
@@ -64,6 +73,7 @@ export function createAuthService({
 
     if (usuario.failedAttempts > 0 || usuario.lockedUntil) await userModel.resetAttempts(usuario.id);
 
+    await userModel.markActivity?.(usuario.id); // la sesión nueva empieza con actividad reciente
     const token = jwt.sign({ sub: usuario.id }, jwtSecret, { expiresIn: jwtExpiresIn });
     const { exp, iat } = jwt.decode(token);
     return { token, expiresIn: exp - iat, user: datosPublicos(usuario) };

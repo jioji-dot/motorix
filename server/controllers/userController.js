@@ -10,9 +10,9 @@ export async function get(req, res) {
 }
 
 export async function create(req, res) {
-  res.status(201).json({ data: await userService.create(req.valid.body) });
+  res.status(201).json({ data: await userService.create(req.valid.body, req.user) });
 }
 
 export async function update(req, res) {
-  res.json({ data: await userService.update(req.valid.params.id, req.valid.body) });
+  res.json({ data: await userService.update(req.valid.params.id, req.valid.body, req.user) });
 }

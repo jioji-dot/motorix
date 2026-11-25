@@ -2,9 +2,10 @@
 import { withTransaction } from '../config/db.js';
 import * as modeloInventario from '../models/inventoryModel.js';
 import * as modeloRefacciones from '../models/partModel.js';
-import { MOVEMENT_TYPE } from '../utils/constants.js';
+import { AUDIT_ACTION, MOVEMENT_TYPE } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
 import { aCentavos, deCentavos } from '../utils/money.js';
+import { auditService as bitacora } from './auditService.js';
 import { inventoryService as servicioInventario } from './inventoryService.js';
 import { serializePart } from './serializers.js';
 
@@ -13,6 +14,7 @@ export function createPartService({
   inventoryModel = modeloInventario,
   inventoryService = servicioInventario,
   transaction = withTransaction,
+  auditService = bitacora,
 } = {}) {
   async function exigirRefaccion(id) {
     const parte = await partModel.findById(id);
@@ -85,6 +87,15 @@ export function createPartService({
       );
     }
     await partModel.update(id, datos);
+    for (const campo of ['purchasePrice', 'salePrice']) {
+      if (datos[campo] !== undefined && aCentavos(datos[campo]) !== aCentavos(parte[campo])) {
+        await auditService.record(AUDIT_ACTION.PART_PRICE_CHANGED, {
+          userId: usuario.id,
+          entityId: id,
+          detail: { field: campo, from: deCentavos(aCentavos(parte[campo])), to: deCentavos(aCentavos(datos[campo])) },
+        });
+      }
+    }
     return serializePart(await partModel.findById(id), usuario);
   }
 

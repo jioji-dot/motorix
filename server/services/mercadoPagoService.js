@@ -3,9 +3,10 @@
 import { withTransaction } from '../config/db.js';
 import { mercadoPagoGateway } from '../integrations/mercadoPagoGateway.js';
 import * as modeloPagos from '../models/paymentModel.js';
-import { PAYMENT_METHOD, PAYMENT_STATUS } from '../utils/constants.js';
+import { AUDIT_ACTION, PAYMENT_METHOD, PAYMENT_STATUS } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
 import { aCentavos } from '../utils/money.js';
+import { auditService as bitacora } from './auditService.js';
 import { buildSummary } from './paymentSummary.js';
 
 // Estado de Mercado Pago → estado local; los estados intermedios no cambian nada.
@@ -22,6 +23,7 @@ export function createMercadoPagoService({
   gateway = mercadoPagoGateway,
   transaction = withTransaction,
   logger = console,
+  auditService = bitacora,
 } = {}) {
   async function respuestaDe(paymentId) {
     const payment = await paymentModel.findById(paymentId);
@@ -83,14 +85,19 @@ export function createMercadoPagoService({
     return respuestaDe(paymentId);
   }
 
-  async function cancel(paymentId) {
-    await exigirPendiente(paymentId);
+  async function cancel(paymentId, actor = null) {
+    const pago = await exigirPendiente(paymentId);
     const filas = await transaction((conexion) =>
       paymentModel.transitionFromPending(conexion, paymentId, { status: PAYMENT_STATUS.CANCELLED }),
     );
     if (filas === 0) {
       throw new HttpError(409, 'PAYMENT_NOT_PENDING', 'El pago ya no está Pendiente, por lo que no se puede cancelar.');
     }
+    await auditService.record(AUDIT_ACTION.PAYMENT_CANCELLED, {
+      userId: actor?.id ?? null,
+      entityId: paymentId,
+      detail: { orderId: pago.orderId, amount: pago.amount },
+    });
     return respuestaDe(paymentId);
   }
 

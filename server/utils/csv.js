@@ -17,5 +17,5 @@ function celda(valor) {
 
 export function toCsv(columnas, filas) {
   const lineas = [columnas, ...filas].map((fila) => fila.map(celda).join(','));
-  return `﻿${lineas.join('\r\n')}\r\n`;
+  return `\uFEFF${lineas.join('\r\n')}\r\n`;
 }
