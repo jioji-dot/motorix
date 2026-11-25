@@ -58,3 +58,17 @@ npm run seed
 ```
 
 `-Reiniciar` elimina y vuelve a crear **solo** las bases indicadas en `-Base` y `-BasePrueba`.
+
+## Migraciones y datos de ejemplo por sprint
+
+| Sprint | Migración | Datos de ejemplo |
+|--------|-----------|------------------|
+| 1 | `001_sprint1_users_clients_vehicles.sql` | `001_clients.sql`, `002_vehicles.sql` (y los usuarios de `npm run seed`) |
+| 2 | `002_sprint2_appointments_orders.sql` | `003_appointments.sql`, `004_service_orders.sql` |
+| 3 | `003_sprint3_maintenance_inventory.sql` | `005_parts.sql`, `006_order_parts.sql`, `007_maintenance.sql` |
+| 4 | `004_sprint4_payments_tickets.sql` | `008_payments_tickets.sql` |
+| 5 | (sin migración: endurece lo anterior) | (sin seeds nuevos) |
+| 6 | `005_sprint6_notificaciones.sql`: tablas `notification_reads` (lecturas de avisos por usuario) y `client_notices` (clientes ya avisados, único por tipo de hecho y hecho) | `009_notificaciones.sql`: una cita de hoy, una orden detenida del mecánico y un cliente ya avisado, con fechas relativas a la carga |
+
+Los avisos **no se guardan**: se calculan al consultar; solo se guarda su lectura y los avisos hechos a clientes. Los seeds de cada sprint son
+idempotentes (cargarlos dos veces no cambia ningún conteo).

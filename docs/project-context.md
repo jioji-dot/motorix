@@ -371,9 +371,24 @@ duplicar datos solo para estadísticas.
 
 ## 6.12 Notificaciones internas
 
-Debe contemplar avisos relacionados con: - Mantenimientos próximos. -
-Mantenimientos vencidos. - Citas. - Stock bajo. - Órdenes que requieran
-atención.
+Implementado en el **Sprint 6** (`specs/006-notificaciones-internas/`). Los avisos **se calculan al consultar** a partir de los módulos
+de origen (no se guardan); solo se guarda qué avisos leyó cada usuario (`notification_reads`) y a qué clientes ya se les avisó
+(`client_notices`).
+
+- **Tipos de aviso**: mantenimientos vencidos y próximos (mismos márgenes y clasificación que Mantenimientos), citas de hoy
+  (Pendientes y Confirmadas, igual que el panel de control), refacciones agotadas y con stock bajo (solo activas) y órdenes detenidas
+  (abiertas con **72 horas o más sin cambio de estado**, medido con el último registro del historial de estados).
+- **Quién ve qué**: el administrador ve todos los tipos y la insignia de alertas en Inventario; recepción ve todos menos stock; el
+  mecánico solo ve las órdenes detenidas asignadas a él. El filtro se aplica en el servidor.
+- **Identidad y lectura**: un aviso se identifica por tipo, objeto y estado (`MANT:12:VENCIDO`, `STOCK:5:AGOTADO`, `CITA:8`, `ORDEN:7`);
+  si el estado cambia (próximo a vencido, bajo a agotado) reaparece como no leído, y la lectura de un aviso que ya no existe se descarta.
+- **Campana**: contador de no leídos («99+» desde 100), panel agrupado por tipo con tope de 10 avisos por tipo y conteo total, actualización
+  al iniciar sesión, al cambiar de sección y cada 60 segundos; los avisos del panel no muestran teléfonos.
+- **Clientes por avisar** (administrador y recepción): lista de vehículos listos (orden Terminada sin entregar), citas de mañana y
+  mantenimientos próximos o vencidos, con teléfono. Marcar a un cliente como avisado guarda quién y cuándo, con una nota opcional de
+  255 caracteres, **una sola vez por hecho**. La aplicación **no envía mensajes** (la mensajería al cliente quedó fuera del alcance).
+- **API**: `GET /api/notifications`, `POST /api/notifications/read`, `GET /api/client-notices` y `POST /api/client-notices`; código de error
+  nuevo `NOTICE_NOT_APPLICABLE` (409).
 
 ------------------------------------------------------------------------
 
@@ -1017,6 +1032,11 @@ El **Sprint 5** (precios de refacciones y cobro completo) es el primer sprint po
 constitución (2026-11-03). Su alcance está en `docs/sprints/sprint-5-precios-refacciones-cobro.md` y su especificación en
 `specs/005-precios-refacciones-cobro/`.
 
+El **Sprint 6** (notificaciones internas y clientes por avisar) fue aprobado en la enmienda 1.2.0 de la constitución (2026-11-24). Su
+alcance está en `docs/sprints/sprint-6-notificaciones-internas.md` y su especificación en `specs/006-notificaciones-internas/`; **está
+implementado** (migración `005_sprint6_notificaciones.sql` y seeds `009_notificaciones.sql`). El **Sprint 7** (reportes y configuración)
+es el último del proyecto.
+
 # 15. Definición funcional del MVP
 
 El MVP se considera demostrable cuando el siguiente flujo puede
@@ -1408,6 +1428,22 @@ Antes de asumirlas como definitivas, el equipo debe decidir:
 - **Corrección de precios** (`/speckit-clarify`): no se corrige a mano el precio de una línea; se quita la refacción y se agrega de nuevo.
 - **Ticket**: se sigue armando al consultarlo; una orden Terminada solo pasa a Entregada y no cambia sus líneas, así que el ticket emitido
   no varía.
+
+### Decisiones resueltas con Spec Kit para el Sprint 6 (2026-11-24)
+
+- **Calidad de los requisitos** (`/speckit-checklist`, 40 puntos): se corrigieron huecos de la especificación (identidad del aviso, qué ve
+  cada rol, qué cuenta como mismo hecho y qué abre cada aviso) antes de planear.
+- **Orden detenida** (`/speckit-clarify`): 72 horas o más sin cambio de estado, medido con el historial de estados y la hora de MySQL (no
+  con `updatedAt`, que cambia al editar líneas). Los valores de este sprint (72 horas, 60 segundos y 10 avisos por tipo) son fijos.
+- **Identidad del aviso** (`/speckit-clarify`): tipo, objeto y estado; un aviso que empeora reaparece como no leído y la lectura de un aviso
+  inexistente se descarta al consultar.
+- **Marcar como leído** (`/speckit-clarify`): `404` si el tipo no corresponde al rol; `200` sin efecto si el aviso ya no existe o es de una
+  orden ajena (no revela si existe).
+- **Clientes por avisar** (`/speckit-clarify`): registro único por (tipo de hecho, hecho); un hecho nuevo (otra orden, otra cita o el mismo
+  mantenimiento con otra clasificación) vuelve a aparecer; `409 NOTICE_NOT_APPLICABLE` si el hecho ya no aplica. Los clientes desactivados
+  no generan avisos.
+- **Hallazgos de la revisión del código** (documento de aseguramiento de calidad): no existía `StockAlertsProvider` (se creó la insignia de
+  Inventario desde el centro de avisos), el insumo hablaba de otra numeración de migración y del seguimiento por `updatedAt`.
 
 CLAUDE puede proponer opciones para estas decisiones, pero no debe
 introducir dependencias grandes sin justificar su necesidad.
