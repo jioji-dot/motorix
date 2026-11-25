@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
+import '../models/notification.dart';
 import '../models/user.dart';
 import '../providers/sidebar_provider.dart';
 import '../utils/app_theme.dart';
+import 'notification_bell.dart';
 
 /// Sección de la barra lateral.
 class ShellSection {
@@ -28,6 +30,8 @@ class AppShell extends StatelessWidget {
     required this.onChangePassword,
     required this.onLogout,
     required this.child,
+    this.badges = const {},
+    this.onOpenNotice,
   });
 
   final User user;
@@ -39,6 +43,12 @@ class AppShell extends StatelessWidget {
   final VoidCallback onChangePassword;
   final VoidCallback onLogout;
   final Widget child;
+
+  /// Número de pendientes por sección (etiqueta → cantidad); con cero no se muestra insignia (Sprint 6, FR-012).
+  final Map<String, int> badges;
+
+  /// Si se indica, el encabezado muestra la campana de avisos y este callback abre la pantalla del aviso.
+  final ValueChanged<NoticeTarget>? onOpenNotice;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +91,15 @@ class AppShell extends StatelessWidget {
             destinations: [
               for (final seccion in sections)
                 NavigationRailDestination(
-                  icon: Tooltip(message: seccion.label, child: Icon(seccion.icon)),
+                  icon: Tooltip(
+                    message: seccion.label,
+                    child: Badge(
+                      key: Key('insignia-${seccion.label}'),
+                      isLabelVisible: (badges[seccion.label] ?? 0) > 0,
+                      label: Text('${badges[seccion.label] ?? 0}'),
+                      child: Icon(seccion.icon),
+                    ),
+                  ),
                   label: Text(seccion.label),
                 ),
             ],
@@ -103,7 +121,7 @@ class AppShell extends StatelessWidget {
           Expanded(
             child: Column(
               children: [
-                _Header(title: sections[selectedIndex].label, user: user),
+                _Header(title: sections[selectedIndex].label, user: user, onOpenNotice: onOpenNotice),
                 const Divider(),
                 Expanded(child: child),
               ],
@@ -116,10 +134,11 @@ class AppShell extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.title, required this.user});
+  const _Header({required this.title, required this.user, this.onOpenNotice});
 
   final String title;
   final User user;
+  final ValueChanged<NoticeTarget>? onOpenNotice;
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +149,10 @@ class _Header extends StatelessWidget {
       child: Row(
         children: [
           Expanded(child: Text(title, style: texto.titleLarge)),
+          if (onOpenNotice != null) ...[
+            NotificationBell(onOpenNotice: onOpenNotice!),
+            const SizedBox(width: AppSpacing.lg),
+          ],
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [

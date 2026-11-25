@@ -52,10 +52,12 @@ class MaintenanceScreen extends StatefulWidget {
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
   Timer? _debounce;
+  late final TextEditingController _busqueda;
 
   @override
   void initState() {
     super.initState();
+    _busqueda = TextEditingController(text: context.read<MaintenanceProvider>().search);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) context.read<MaintenanceProvider>().load(page: 1);
     });
@@ -64,6 +66,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   @override
   void dispose() {
     _debounce?.cancel();
+    _busqueda.dispose();
     super.dispose();
   }
 
@@ -96,6 +99,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
           ListToolbar(
             search: TextField(
               key: const Key('campo-busqueda'),
+              controller: _busqueda,
               onChanged: _onSearchChanged,
               decoration: const InputDecoration(
                 hintText: 'Buscar por cliente, placas o tipo de servicio',
