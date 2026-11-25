@@ -234,6 +234,7 @@ Inventario
 Clientes por avisar
 Pagos
 Tickets
+Reportes
 Usuarios
 Configuración
 Cerrar sesión
@@ -339,6 +340,44 @@ Las pantallas **NO DEBEN mostrar** datos que el servidor no entrega al rol de la
 - La aplicación no envía mensajes al cliente: la tabla indica que la persona debe llamar o avisar en persona.
 - Estados: cargando, vacío («No hay clientes por avisar») y error con «Reintentar».
 - La sección no aparece en el menú del mecánico.
+
+---
+
+### 8.9 Configuración (solo administrador)
+
+Sección del menú «Configuración» con **pestañas** (`TabBar`): **Taller**, **Tipos de servicio**, **Términos** y **Bitácora**.
+
+- **Taller**: formulario con nombre (obligatorio), dirección y teléfono del taller, y los dos márgenes de «Próximo» (días y kilómetros) con su explicación en una línea («Un mantenimiento es Próximo cuando faltan estos días o estos kilómetros»). Botón «Guardar» deshabilitado mientras no haya cambios; al guardar, aviso de éxito; los errores del servidor se muestran junto al campo. Debajo, una nota con los valores predeterminados.
+- **Tipos de servicio**: tabla con nombre, intervalo en días, intervalo en kilómetros y estado (chip Activo o Inactivo), y la acción «Nuevo tipo». El diálogo de alta y edición pide el nombre y al menos un intervalo; desactivar pide confirmación y explica que las órdenes que ya lo usan conservan el tipo.
+- **Términos**: muestra la versión vigente con su fecha, el texto con desplazamiento, quién la aceptó y quién falta, y el formulario «Publicar versión nueva» (dos campos de texto largos: términos y aviso de privacidad) con confirmación.
+- **Bitácora**: tabla de solo lectura con fecha y hora, usuario, acción en español y entidad, con filtros por fecha, usuario y acción y paginación; sin botones de editar, borrar ni exportar.
+- Estados de cada pestaña: **cargando**, **vacío** («Todavía no hay registros») y **error** con «Reintentar». La sección no aparece en el menú de recepción ni del mecánico.
+
+### 8.10 Reportes (solo administrador)
+
+Sección «Reportes» con un selector de reporte (chips o pestañas): **Ingresos**, **Servicios frecuentes**, **Productividad**, **Refacciones** y **Rotación**.
+
+- **Filtros**: rango de fechas (desde y hasta) con atajos «Este mes», «Mes pasado» y «Últimos 12 meses»; en Ingresos, además, agrupar por día o por mes. Un rango inválido (más de 366 días o con la fecha inicial posterior) muestra el mensaje del servidor junto al filtro.
+- **Contenido**: tarjeta de totales arriba y tabla densa abajo con los importes alineados a la derecha en moneda; «sin costo» se muestra como chip gris en el reporte de refacciones; la rotación sin existencia muestra «Sin existencia».
+- **Exportar**: botón «Exportar CSV» en la barra del reporte; abre el enlace de descarga y avisa si falla.
+- Estados: **cargando**, **vacío** («No hay información en este periodo») y **error** con «Reintentar».
+
+### 8.11 Términos y condiciones al ingresar
+
+Pantalla a pantalla completa que aparece después de iniciar sesión cuando el usuario no ha aceptado la versión vigente:
+
+- Título «Términos y condiciones y aviso de privacidad», la versión y su fecha, y el texto con desplazamiento.
+- Dos botones: «Aceptar y continuar» (primario) y «Rechazar y salir» (secundario, cierra la sesión). No hay otra salida de la pantalla.
+- Si el servidor responde `TERMS_NOT_ACCEPTED` con la sesión abierta, la misma pantalla cubre la aplicación.
+- Estados: cargando el texto y error con «Reintentar».
+
+### 8.12 Cierre de sesión por inactividad
+
+Tras 30 minutos sin tocar, escribir ni desplazarse, la sesión se cierra y la pantalla de inicio de sesión muestra, sobre el formulario, el mensaje «Tu sesión se cerró por inactividad. Inicia sesión de nuevo.» No hay cuenta regresiva ni ventanas emergentes. La consulta automática de avisos no cuenta como actividad.
+
+### 8.13 Ticket con próximo servicio
+
+Bajo los totales, una línea «Próximo servicio» con el nombre del servicio, la fecha y el kilometraje (por ejemplo, «Cambio de aceite · 24/05/2027 · 45,000 km»); si la orden no tiene un tipo de servicio con intervalo, la línea no aparece. Los datos del taller del encabezado salen de la instantánea del ticket.
 
 ---
 
