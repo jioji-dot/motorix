@@ -97,7 +97,9 @@ Que cada usuario vea en el encabezado un centro de notificaciones con los avisos
 - Historial o bitácora de avisos pasados.
 - Reportes y configuración del taller (Sprint 7).
 
-## 9. Decisiones pendientes que deben resolverse en /speckit.clarify
+## 9. Decisiones que se resolvieron en /speckit.clarify
+
+> Resueltas el 2026-11-24. La resolución vigente está en `specs/006-notificaciones-internas/spec.md` (secciones «Aclaraciones», «Requisitos» y «Supuestos»). El texto de abajo conserva las preguntas originales.
 
 - Criterio de "orden detenida": ¿más de N días sin cambio de estado, o solo `ESPERANDO_REFACCION` por más de N días? ¿Cuánto vale N y es configurable?
 - Qué considera "cita del día": ¿solo hoy o también mañana? ¿Incluye citas pendientes sin confirmar?

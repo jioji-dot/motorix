@@ -155,6 +155,8 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 - Mantenimiento con fecha y kilometraje: rige el más urgente, igual que en la lista de Mantenimientos.
 - Orden que cambia de estado y vuelve a detenerse: la antigüedad cuenta desde el último cambio.
 - Cliente desactivado, vehículo sin cliente activo o refacción desactivada: no generan avisos.
+- Marcar como avisado un hecho que ya dejó de aplicar (la orden se entregó o la cita se canceló mientras tanto): el servidor lo rechaza con un mensaje claro y la lista se actualiza sin duplicar registros.
+- Marcar como leído un aviso que ya desapareció: no produce error ni efecto.
 - Marcar dos veces como avisado el mismo hecho (doble clic o dos personas a la vez): se conserva un solo registro y la segunda solicitud no falla.
 - Usuario desactivado o con rol cambiado: sus lecturas se conservan, pero el servidor responde según su rol vigente.
 - Una cita de hoy cuya hora ya pasó pero sigue Pendiente o Confirmada: sigue siendo aviso hasta el fin del día o hasta que cambie de estado.
@@ -166,32 +168,32 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 
 **Centro de notificaciones**
 
-- **FR-001** (agrega): El encabezado DEBE mostrar una campana con el número de avisos **no leídos** del usuario y, al abrirla, un panel con los avisos agrupados por tipo. Sin avisos, la campana no muestra número y el panel muestra un estado vacío.
-- **FR-002** (agrega): Los tipos de aviso DEBEN ser: mantenimiento próximo, mantenimiento vencido, cita del día, stock bajo, stock agotado y orden detenida.
+- **FR-001** (agrega): El encabezado DEBE mostrar una campana con el número de avisos **no leídos** del usuario y, al abrirla, un panel con los avisos agrupados por tipo. Sin avisos, la campana no muestra número y el panel muestra un estado vacío. Si hay más de 99 avisos no leídos, la campana muestra «99+».
+- **FR-002** (agrega): Los tipos de aviso DEBEN ser: mantenimiento próximo, mantenimiento vencido, cita del día, stock bajo, stock agotado y orden detenida. Cada aviso DEBE mostrar al menos: en los mantenimientos, el tipo de servicio, el cliente, la placa y el vehículo, y cuánto falta o cuánto se pasó (días o kilómetros); en las citas, la hora, el cliente y la placa; en el stock, el nombre, el código y la existencia frente al mínimo; en las órdenes detenidas, el folio, la placa, el estado y los días detenida. Los avisos del panel NO incluyen teléfonos. Dentro de cada tipo, los avisos se ordenan por urgencia: los vencidos antes que los próximos y los más pasados primero; los agotados antes que los bajos; las citas por hora; y las órdenes detenidas de más a menos días.
 - **FR-003** (agrega): Los avisos DEBEN calcularse al consultarlos con los datos reales del sistema; NO se copian a otra tabla. Lo único que se guarda es la lectura de cada usuario.
 - **FR-004** (mantiene): Los avisos DEBEN usar los mismos criterios que ya existen, de modo que las cifras coincidan entre pantallas: mantenimiento Próximo a 15 días o menos o a 500 km o menos y Vencido si la fecha pasó o el kilometraje alcanzó el próximo (solo pendientes); stock bajo si la existencia es menor o igual al mínimo y agotado si es cero (solo refacciones activas); cita del día Pendiente o Confirmada con fecha de hoy, aunque su hora ya haya pasado.
-- **FR-005** (agrega): Una orden DEBE considerarse **detenida** cuando está abierta (Recibido, Diagnóstico, En reparación o Esperando refacción) y han pasado 3 o más días desde su último cambio de estado, medido con la fecha del último registro del historial de estados. Una orden Terminada se atiende con la lista de clientes por avisar y una Entregada o Cancelada no genera aviso.
+- **FR-005** (agrega): Una orden DEBE considerarse **detenida** cuando está abierta (Recibido, Diagnóstico, En reparación o Esperando refacción) y han pasado 72 horas (3 días de 24 horas) o más desde su último cambio de estado, medido con la fecha del último registro del historial de estados (si la orden no tiene registros, con su fecha de creación). Una orden Terminada se atiende con la lista de clientes por avisar y una Entregada o Cancelada no genera aviso.
 
 **Visibilidad por rol**
 
-- **FR-006** (agrega): El servidor DEBE devolver a cada rol únicamente sus avisos: el administrador todos; recepción mantenimientos, citas y órdenes detenidas, nunca stock; el mecánico solo los avisos de órdenes detenidas asignadas a él, y ningún aviso de mantenimientos, citas ni stock.
+- **FR-006** (agrega): El servidor DEBE devolver a cada rol únicamente sus avisos: el administrador todos; recepción mantenimientos, citas y órdenes detenidas de todas las órdenes, nunca stock; el mecánico solo los avisos de órdenes detenidas asignadas a él, y ningún aviso de mantenimientos, citas ni stock.
 - **FR-007** (mantiene): Los permisos DEBEN validarse en el servidor y no solo en la interfaz; una petición directa de un rol sin permiso DEBE rechazarse o devolver una lista vacía de ese tipo, nunca los datos.
 
 **Lectura y navegación**
 
-- **FR-008** (agrega): Marcar un aviso como leído DEBE persistir por usuario: el contador baja, se conserva al cerrar sesión y volver a entrar, y no afecta a otros usuarios.
-- **FR-009** (agrega): La identidad de un aviso DEBE ser su tipo, su objeto y su estado. Si la condición deja de cumplirse, el aviso desaparece y su lectura se descarta, de modo que si la condición vuelve a cumplirse el aviso aparece como nuevo (no leído); si el estado cambia (de Próximo a Vencido, de stock bajo a agotado), el aviso también vuelve a mostrarse como no leído.
+- **FR-008** (agrega): Marcar un aviso como leído DEBE persistir por usuario: el contador baja, se conserva al cerrar sesión y volver a entrar, y no afecta a otros usuarios. El servidor solo guarda la lectura de avisos que existen y son visibles para ese usuario: marcar como leído un aviso que ya desapareció no produce error ni efecto, y marcar uno que no es visible para su rol se rechaza como no encontrado.
+- **FR-009** (agrega): La identidad de un aviso DEBE ser su tipo, su objeto y su estado. Si la condición deja de cumplirse, el aviso desaparece y su lectura se descarta, de modo que si la condición vuelve a cumplirse el aviso aparece como nuevo (no leído); si el estado cambia (de Próximo a Vencido, de stock bajo a agotado), el aviso también vuelve a mostrarse como no leído. El estado que distingue un aviso es la clasificación en los mantenimientos (próximo o vencido) y el nivel en el stock (bajo o agotado); las citas del día y las órdenes detenidas no tienen estado adicional, de modo que una cita que pasa de Pendiente a Confirmada sigue siendo el mismo aviso.
 - **FR-010** (agrega): Cada aviso DEBE abrir su pantalla relacionada y, al abrirlo, quedar marcado como leído: la orden detenida abre el detalle de la orden; la cita del día, el detalle de la cita; el stock bajo o agotado, el detalle de la refacción; y el mantenimiento próximo o vencido, la sección Mantenimientos con el buscador ya llenado con la placa del vehículo.
-- **FR-011** (agrega): El contador DEBE actualizarse al iniciar sesión, al cambiar de módulo y cada 60 segundos mientras la sesión esté abierta, y dejar de consultarse al cerrar sesión.
+- **FR-011** (agrega): El contador DEBE actualizarse al iniciar sesión, al cambiar de módulo y cada 60 segundos mientras la sesión esté abierta, y dejar de consultarse al cerrar sesión. Los fallos de la consulta periódica no muestran mensajes emergentes ni cierran la sesión, y una lectura hecha en otra sesión del mismo usuario se refleja en la siguiente actualización.
 - **FR-012** (agrega): El ícono de Inventario DEBE mostrar una insignia con el número de alertas de stock (bajo y agotado) solo para el administrador, calculada con el mismo criterio del centro de notificaciones; sin alertas, no se muestra.
 - **FR-013** (mantiene): El resumen de stock de la pantalla de Inventario y la tarjeta de stock del panel de control DEBEN seguir funcionando y mostrar las mismas cifras que el centro de notificaciones.
-- **FR-014** (agrega): El centro DEBE manejar los estados de carga, vacío y error en español, según `docs/design-system.md`, y mostrar los avisos con los colores de estado del sistema de diseño (advertencia para próximo, peligro para vencido o agotado).
+- **FR-014** (agrega): El centro DEBE manejar los estados de carga, vacío y error en español, según `docs/design-system.md`, y mostrar los avisos con los colores de estado del sistema de diseño (advertencia para próximo, peligro para vencido o agotado). La campana DEBE tener una descripción emergente («Notificaciones»), poder operarse con el teclado y su panel cerrarse con la tecla Escape, y todos los textos DEBEN estar en español.
 
 **Clientes por avisar**
 
-- **FR-015** (agrega): Administración y recepción DEBEN tener una sección propia del menú, «Clientes por avisar», con una insignia con el número de clientes pendientes, y una lista con cliente, teléfono, vehículo, motivo y fecha del hecho, con estos motivos: orden Terminada sin entregar (vehículo listo, sin importar si está pagada o con saldo), cita de mañana Pendiente o Confirmada, y mantenimiento próximo o vencido.
+- **FR-015** (agrega): Administración y recepción DEBEN tener una sección propia del menú, «Clientes por avisar», con una insignia con el número de clientes pendientes, y una lista, ordenada por fecha del hecho con la más antigua primero, con cliente, teléfono, vehículo, motivo y fecha del hecho, con estos motivos: orden Terminada sin entregar (vehículo listo, sin importar si está pagada o con saldo), cita de mañana Pendiente o Confirmada, y mantenimiento próximo o vencido.
 - **FR-016** (agrega): El mecánico NO DEBE poder consultar la lista ni marcar clientes como avisados; el servidor DEBE responder que no tiene permiso y la sección no aparece en su menú.
-- **FR-017** (agrega): Marcar a un cliente como avisado DEBE guardar quién lo avisó, cuándo y una nota opcional de hasta 255 caracteres, y sacarlo de la lista por ese hecho. El mismo hecho NO DEBE volver a aparecer; un hecho nuevo (otra orden, otra cita, o el mismo mantenimiento con otra clasificación) SÍ DEBE aparecer. Un mantenimiento avisado como próximo y que luego vence es un hecho nuevo.
+- **FR-017** (agrega): Marcar a un cliente como avisado DEBE guardar quién lo avisó, cuándo y una nota opcional de hasta 255 caracteres, y sacarlo de la lista por ese hecho. El mismo hecho NO DEBE volver a aparecer; un hecho nuevo (otra orden, otra cita, o el mismo mantenimiento con otra clasificación) SÍ DEBE aparecer. Un mantenimiento avisado como próximo y que luego vence es un hecho nuevo. Si el hecho ya no aplica al momento de marcarlo (por ejemplo, la orden se entregó mientras tanto), el servidor DEBE rechazarlo con un mensaje claro y la lista DEBE actualizarse.
 - **FR-018** (agrega): Marcar como avisado NO DEBE enviar ningún mensaje por ningún canal (WhatsApp, correo o SMS): solo registra que una persona avisó al cliente.
 - **FR-019** (agrega): Marcar dos veces el mismo hecho DEBE conservar un solo registro y no producir error.
 
@@ -217,7 +219,7 @@ Relaciones: un usuario tiene muchas lecturas; un cliente tiene muchos avisos, un
 
 - **SC-001**: En el 100 % de los casos de prueba, cada tipo de aviso llega solo al rol que le corresponde: recepción y mecánico nunca reciben stock, y el mecánico nunca recibe avisos de órdenes ajenas, ni siquiera con una petición directa al servidor.
 - **SC-002**: En el 100 % de los casos de prueba, los números del centro de notificaciones coinciden con los del panel de control, la lista de Mantenimientos y las alertas de Inventario para los mismos datos.
-- **SC-003**: La consulta de avisos responde en menos de 1 segundo con los datos de ejemplo y en menos de 3 segundos con 500 mantenimientos pendientes, 500 refacciones y 500 órdenes abiertas.
+- **SC-003**: La consulta de avisos responde en menos de 1 segundo con los datos de ejemplo y en menos de 3 segundos con 500 mantenimientos pendientes, 500 refacciones y 500 órdenes abiertas, medido en el equipo de desarrollo del proyecto.
 - **SC-004**: Una persona de recepción, con los datos de ejemplo, abre "Clientes por avisar", ubica a un cliente de una orden terminada con su teléfono y lo marca como avisado en menos de 1 minuto, medido con cronómetro.
 - **SC-005**: Marcar un aviso como leído actualiza el contador en menos de 2 segundos y el aviso sigue leído después de cerrar sesión y volver a entrar.
 - **SC-006**: Las pruebas de los Sprints 1 a 5 siguen pasando al cerrar el sprint; ninguna prueba se borra ni se debilita sin quedar registrada como hallazgo con su razón.
@@ -226,7 +228,7 @@ Relaciones: un usuario tiene muchas lecturas; un cliente tiene muchos avisos, un
 ## Supuestos
 
 - Se apoya en las citas y órdenes (Sprint 2), los mantenimientos y el inventario (Sprint 3) y el panel de control (Sprint 4); no cambia su comportamiento, solo los consulta. La única estructura nueva son las dos tablas de la migración 005.
-- Los 3 días de una orden detenida son un valor fijo en este sprint; no hay pantalla para cambiarlo.
+- Los valores de este sprint (72 horas para una orden detenida, 60 segundos de actualización y 10 avisos por tipo en el panel) son fijos; no hay pantalla para cambiarlos.
 - La cita del día es la de hoy; la cita de mañana solo se usa en la lista de clientes por avisar.
 - El mecánico no recibe avisos de mantenimiento aunque atienda el vehículo; solo avisos de órdenes detenidas asignadas a él.
 - El panel muestra hasta 10 avisos por tipo; el total y el resto se consultan en el módulo correspondiente.
@@ -236,4 +238,5 @@ Relaciones: un usuario tiene muchas lecturas; un cliente tiene muchos avisos, un
 - El aviso al cliente lo hace siempre una persona (por teléfono o en persona); el chatbot de WhatsApp y la mensajería automática por cualquier canal están fuera del alcance del proyecto.
 - Un cliente desactivado no aparece en la lista de clientes por avisar, pero su historial de avisos se conserva.
 - Cada hecho se avisa una sola vez; si no contestó, la nota lo deja registrado y la persona decide si lo intenta de nuevo por otra vía, sin que el sistema lo vuelva a poner en la lista.
+- Glosario: **aviso** es la notificación interna que se calcula y se muestra en la campana; **lectura** es la marca de que un usuario ya vio un aviso; **hecho** es la situación que motiva avisar a un cliente; **aviso a cliente** es el registro de que una persona contactó a un cliente por un hecho.
 - Si el plan requiere una migración, es aditiva, numerada y no destructiva.
