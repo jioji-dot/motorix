@@ -62,7 +62,7 @@ fuentes que se consultan sin cambios:
 | Hecho `CITA_MANANA` | Cita Pendiente o Confirmada con fecha de mañana |
 | Hecho `MANTENIMIENTO_*` | Mantenimiento pendiente con esa clasificación |
 
-La lista de clientes por avisar excluye los hechos que ya tienen fila en `client_notices` y a los clientes desactivados.
+La lista de clientes por avisar excluye los hechos que ya tienen fila en `client_notices` y a los clientes desactivados. La fecha del hecho (`factDate`) es la fecha en que la orden quedó Terminada (último registro del historial), la fecha y hora de la cita, o la próxima fecha del mantenimiento y, si solo tiene kilometraje, su fecha de registro. Los avisos de la campana también excluyen a los clientes desactivados y a sus vehículos.
 
 ## Proyección por rol (qué recibe cada rol)
 

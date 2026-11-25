@@ -101,6 +101,7 @@ Solo ADMIN y RECEPTIONIST (el mecánico recibe `403`). Parámetros opcionales `p
 
 - **`kind`**: `ORDEN_LISTA`, `CITA_MANANA`, `MANTENIMIENTO_PROXIMO` o `MANTENIMIENTO_VENCIDO`.
 - **`factId`**: la orden, la cita o el mantenimiento que motiva el aviso.
+- **`factDate`**: la fecha en que la orden quedó Terminada, la fecha y hora de la cita, o la próxima fecha del mantenimiento (si solo tiene kilometraje, su fecha de registro).
 
 ## `POST /client-notices`
 

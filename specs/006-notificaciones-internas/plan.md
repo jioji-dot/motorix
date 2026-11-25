@@ -34,7 +34,7 @@ No se agregan dependencias. Las decisiones técnicas están en [research.md](res
 
 **Restricciones**: el servidor entrega a cada rol solo sus avisos (el stock solo al administrador; el mecánico solo órdenes detenidas suyas) y nunca el teléfono en los avisos del panel; la lista de clientes por avisar es solo de administración y recepción; los avisos se calculan al consultar y no se copian; ningún mensaje se envía al cliente por ningún canal; permisos validados en el backend; toda pantalla sigue `docs/design-system.md`; sin secretos en el repositorio
 
-**Escala/Alcance**: un taller; 2 tablas nuevas; 4 rutas nuevas; alrededor de 8 archivos nuevos en el backend, 8 en el frontend y 5 pantallas o widgets existentes modificados
+**Escala/Alcance**: un taller; 2 tablas nuevas; 4 rutas nuevas; alrededor de 10 archivos nuevos en el backend, 7 en el frontend y 4 pantallas o widgets existentes modificados
 
 ## Verificación de la constitución
 

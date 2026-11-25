@@ -32,9 +32,9 @@ Los criterios se marcan `[x]` solo cuando se cumplen de verdad. Hoy el sprint es
 
 - [ ] Las 8 puertas de la sección 3 están Aprobadas o Aprobadas con observación.
 - [x] La enmienda de la constitución (hallazgo H-01) está aprobada y registrada.
-- [ ] Las decisiones de la sección 4 están resueltas y registradas.
-- [ ] No hay hallazgos críticos ni altos abiertos en el análisis de consistencia.
-- [ ] Cada criterio de aceptación tiene al menos una prueba planeada (sección 6).
+- [x] Las decisiones de la sección 4 están resueltas y registradas.
+- [x] No hay hallazgos críticos ni altos abiertos en el análisis de consistencia.
+- [x] Cada criterio de aceptación tiene al menos una prueba planeada (sección 6).
 - [x] La línea base de regresión está registrada (sección 8).
 - [x] La documentación desfasada de los sprints anteriores está identificada (`docs/sprints/propuesta-sprints-post-mvp.md`, el insumo del sprint, `docs/project-context.md` sección 6.12 y `docs/design-system.md`).
 
@@ -58,7 +58,7 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 | G-04 | Lista de calidad de requisitos (`/speckit.checklist`) | Aprobado | `specs/006-notificaciones-internas/checklists/notificaciones.md`: 40 puntos revisados y resueltos (H-06); los huecos se corrigieron en `spec.md` |
 | G-05 | Plan (`/speckit.plan`) | Aprobado | `specs/006-notificaciones-internas/plan.md`, `research.md`, `data-model.md`, `contracts/api.md` y `quickstart.md`. Constitución v1.2.0 sin violaciones (8 de 8 principios); migración `005` aditiva y consecutiva con dos tablas (`notification_reads` y `client_notices`); 4 rutas nuevas; sin dependencias nuevas |
 | G-06 | Tareas (`/speckit.tasks`) | Aprobado | `specs/006-notificaciones-internas/tasks.md`: 72 tareas (1 de preparación, 16 de fundamentos, 10 en US1, 3 en US2, 5 en US3, 3 en US4, 5 en US5, 7 en US6, 8 en US7, 6 de datos y rendimiento y 8 de cierre), con las pruebas antes del código en cada historia, el ajuste de `design-system.md` antes de cualquier pantalla y una tabla de cobertura de los 23 requisitos |
-| G-07 | Consistencia (`/speckit.analyze`) | Pendiente | |
+| G-07 | Consistencia (`/speckit.analyze`) | Aprobado | 2 pasadas el 2026-11-24. Pasada 1: 0 críticos, 1 alto, 4 medios y 5 bajos (H-07). Pasada 2, tras corregir: 0 críticos, 0 altos, 0 medios y 0 bajos. 23 de 23 requisitos y 7 de 7 criterios de éxito con tarea (100 %); 72 tareas consecutivas, todas con requisito o criterio de éxito |
 | G-08 | Pruebas planeadas y línea base | Pendiente | Línea base registrada en la sección 8 |
 
 ## 4. Decisiones de aclaración
@@ -82,36 +82,36 @@ Las 8 decisiones abiertas del insumo (sección 9) se resolvieron el 2026-11-24, 
 
 | ID | Riesgo | Impacto | Mitigación | Prueba que lo cubre | Estado |
 |:--:|---|---|---|---|---|
-| R-01 | Un rol recibe avisos que no le corresponden (stock para recepción o mecánico, órdenes ajenas para un mecánico) | Alto: fuga de información por rol | Filtrar por rol en el servidor y recorrer todas las rutas nuevas con cada rol | Por definir en `/speckit.tasks` | Abierto |
-| R-02 | Las cifras del centro no coinciden con el panel de control, Mantenimientos o Inventario | Alto: el usuario deja de confiar en los avisos | Reutilizar los mismos cálculos (clasificador de mantenimientos, alertas de stock, consulta de citas) y probar la coincidencia | Por definir | Abierto |
-| R-03 | La consulta periódica (cada 60 segundos) es lenta con muchos datos porque la clasificación de mantenimientos se hace en memoria | Medio: la aplicación se siente lenta | Medir con volumen realista y limitar la consulta | Por definir (prueba de rendimiento) | Abierto |
-| R-04 | Una orden se marca como detenida usando una fecha equivocada (la de actualización cambia al editar líneas) | Medio: avisos falsos o ausentes | Medir con el último cambio del historial de estados | Por definir | Abierto |
-| R-05 | Un cliente se avisa dos veces por el mismo hecho, o desaparece de la lista un hecho nuevo | Medio: avisos repetidos u olvidados | Registro único por hecho y prueba de hechos nuevos | Por definir | Abierto |
-| R-06 | Desajuste de zona horaria entre el servidor y la base al decidir "hoy" y "mañana" | Medio: citas contadas en el día equivocado | Calcular las fechas con la misma hora local que el panel de control | Por definir | Abierto |
-| R-07 | Las tablas nuevas contaminan las pruebas de los sprints anteriores | Medio: regresión silenciosa | Agregar las tablas a la limpieza de las pruebas y a la lista de tablas de la prueba de seeds | Por definir | Abierto |
-| R-08 | Los seeds con fechas fijas dejan de mostrar avisos con el paso del tiempo | Bajo | Fechas relativas al día de la carga e idempotencia verificada | Por definir | Abierto |
+| R-01 | Un rol recibe avisos que no le corresponden (stock para recepción o mecánico, órdenes ajenas para un mecánico) | Alto: fuga de información por rol | Filtrar por rol en el servidor y recorrer todas las rutas nuevas con cada rol | `notifications.reception.test.js`, `notifications.stock.test.js`, `notifications.mechanic.test.js`, `notifications_mechanic_test.dart` (T028, T031, T039, T040) | Abierto |
+| R-02 | Las cifras del centro no coinciden con el panel de control, Mantenimientos o Inventario | Alto: el usuario deja de confiar en los avisos | Reutilizar los mismos cálculos (clasificador de mantenimientos, alertas de stock, consulta de citas) y probar la coincidencia | `notifications.consistency.test.js` (T061) | Abierto |
+| R-03 | La consulta periódica (cada 60 segundos) es lenta con muchos datos porque la clasificación de mantenimientos se hace en memoria | Medio: la aplicación se siente lenta | Medir con volumen realista y limitar la consulta | `notifications.performance.test.js` (T060, T063) | Abierto |
+| R-04 | Una orden se marca como detenida usando una fecha equivocada (la de actualización cambia al editar líneas) | Medio: avisos falsos o ausentes | Medir con el último cambio del historial de estados | `notifications.stalled.test.js` (T036) | Abierto |
+| R-05 | Un cliente se avisa dos veces por el mismo hecho, o desaparece de la lista un hecho nuevo | Medio: avisos repetidos u olvidados | Registro único por hecho y prueba de hechos nuevos y de solicitudes simultáneas | `clientNotices.mark.test.js` (T052) | Abierto |
+| R-06 | Desajuste de zona horaria entre el servidor y la base al decidir "hoy" y "mañana" | Medio: citas contadas en el día equivocado | Calcular las fechas con la misma hora local que el panel de control y la antigüedad de las órdenes con la hora de MySQL | `notifications.reception.test.js` y `notifications.stalled.test.js` (T028, T036) | Abierto |
+| R-07 | Las tablas nuevas contaminan las pruebas de los sprints anteriores | Medio: regresión silenciosa | Agregar las tablas a la limpieza de las pruebas y a la lista de tablas de la prueba de seeds | Ajuste de `helpers.js` y de `seeds.sprint5.test.js` (T005) y `seeds.sprint6.test.js` (T059) | Abierto |
+| R-08 | Los seeds con fechas fijas dejan de mostrar avisos con el paso del tiempo | Bajo | Fechas relativas al día de la carga e idempotencia verificada | `seeds.sprint6.test.js` (T059, T062) | Abierto |
 | R-09 | El Sprint 6 consume más tiempo del previsto y retrasa el Sprint 7 | Alto: el cierre es el 30 de noviembre | Cerrar el Sprint 6 el 25 de noviembre y proteger el orden 7A antes de 7B | Seguimiento del calendario | Abierto |
 
 ## 6. Trazabilidad
 
-Cada criterio de aceptación (CA) del insumo se enlaza con su requisito, su tarea, su prueba y el resultado. Las columnas de tarea y prueba se llenan en `/speckit.tasks`.
+Cada criterio de aceptación (CA) del insumo se enlaza con su requisito, su tarea, su prueba y el resultado. Los resultados se llenan al implementar.
 
 | CA | Criterio de aceptación (resumen) | Requisito (FR) | Tarea | Prueba | Resultado | Evidencia |
 |:--:|---|---|---|---|---|---|
-| CA-1 | La campana muestra el total de avisos no leídos y abre un panel agrupado por tipo | FR-001 | Por definir | Por definir | Pendiente | |
-| CA-2 | Los avisos se calculan al consultar; solo se guarda la lectura | FR-003 | Por definir | Por definir | Pendiente | |
-| CA-3 | Tipos: mantenimientos próximos y vencidos, citas del día, stock bajo o agotado y órdenes detenidas | FR-002, FR-005 | Por definir | Por definir | Pendiente | |
-| CA-4 | Cada rol recibe solo sus avisos, validado en el servidor | FR-006, FR-007 | Por definir | Por definir | Pendiente | |
-| CA-5 | Los avisos usan el mismo cálculo que el panel, Mantenimientos y el stock | FR-004, FR-013 | Por definir | Por definir | Pendiente | |
-| CA-6 | La lectura persiste por usuario; el aviso desaparece o reaparece según su estado | FR-008, FR-009 | Por definir | Por definir | Pendiente | |
-| CA-7 | Cada aviso abre la pantalla relacionada | FR-010 | Por definir | Por definir | Pendiente | |
-| CA-8 | El resumen de stock y la tarjeta del panel siguen funcionando; insignia de Inventario para el administrador | FR-012, FR-013 | Por definir | Por definir | Pendiente | |
-| CA-9 | Estados de carga, vacío y error según el sistema de diseño | FR-014 | Por definir | Por definir | Pendiente | |
-| CA-10 | Clientes por avisar para administración y recepción; el mecánico no accede | FR-015, FR-016 | Por definir | Por definir | Pendiente | |
-| CA-11 | Marcar avisado guarda quién y cuándo, no reaparece por el mismo hecho y sí por uno nuevo | FR-017 a FR-019 | Por definir | Por definir | Pendiente | |
-| CA-12 | Los seeds incluyen un caso de cada tipo y son idempotentes | FR-021 | Por definir | Por definir | Pendiente | |
-| CA-13 | Pruebas de cálculo, permisos, lectura por usuario y rendimiento | FR-022 | Por definir | Por definir | Pendiente | |
-| CA-14 | Se actualizan `project-context.md` (6.12), `design-system.md` y el README | FR-023 | Por definir | Revisión documental | Pendiente | |
+| CA-1 | La campana muestra el total de avisos no leídos y abre un panel agrupado por tipo | FR-001 | T022, T023, T025, T026 | T018 a T021 | Pendiente | |
+| CA-2 | Los avisos se calculan al consultar; solo se guarda la lectura | FR-003 | T022 | T018, T019 | Pendiente | |
+| CA-3 | Tipos: mantenimientos próximos y vencidos, citas del día, stock bajo o agotado y órdenes detenidas | FR-002, FR-005 | T029, T033, T037 | T028, T031, T036 | Pendiente | |
+| CA-4 | Cada rol recibe solo sus avisos, validado en el servidor | FR-006, FR-007 | T041 | T028, T031, T039, T040 | Pendiente | |
+| CA-5 | Los avisos usan el mismo cálculo que el panel, Mantenimientos y el stock | FR-004, FR-013 | T029, T033 | T061 | Pendiente | |
+| CA-6 | La lectura persiste por usuario; el aviso desaparece o reaparece según su estado | FR-008, FR-009 | T047, T048 | T044, T045 | Pendiente | |
+| CA-7 | Cada aviso abre la pantalla relacionada | FR-010 | T048, T049 | T046 | Pendiente | |
+| CA-8 | El resumen de stock y la tarjeta del panel siguen funcionando; insignia de Inventario para el administrador | FR-012, FR-013 | T034 | T032, T061 | Pendiente | |
+| CA-9 | Estados de carga, vacío y error según el sistema de diseño | FR-014 | T002, T025, T056 | T021, T054 | Pendiente | |
+| CA-10 | Clientes por avisar para administración y recepción; el mecánico no accede | FR-015, FR-016 | T055, T056, T057 | T040, T051, T054 | Pendiente | |
+| CA-11 | Marcar avisado guarda quién y cuándo, no reaparece por el mismo hecho y sí por uno nuevo | FR-017 a FR-019 | T055 | T052, T053 | Pendiente | |
+| CA-12 | Los seeds incluyen un caso de cada tipo y son idempotentes | FR-021 | T062 | T059 | Pendiente | |
+| CA-13 | Pruebas de cálculo, permisos, lectura por usuario y rendimiento | FR-022 | T060, T063 | T060 y las pruebas de las fases 2 a 9 | Pendiente | |
+| CA-14 | Se actualizan `project-context.md` (6.12), `design-system.md` y el README | FR-023 | T002, T065, T066 | Revisión documental | Pendiente | |
 
 ## 7. Hallazgos y defectos
 
@@ -125,6 +125,7 @@ Se registra todo lo que se encuentre, sea en los documentos, en el análisis o e
 | H-04 | El insumo asumía la migración 006, pero la última migración existente es la 004 | Baja | G-01 | Resuelto | La migración del sprint será `005_sprint6_notificaciones.sql` (consecutiva); el insumo y la especificación lo reflejan | `database/migrations/`; `specs/006-notificaciones-internas/spec.md` (FR-020) |
 | H-05 | `service_orders.updatedAt` no sirve para medir una orden detenida porque cambia al editar líneas o notas | Media | G-01 | Resuelto | La especificación mide la antigüedad con el último registro de `order_status_history` (FR-005) | `database/migrations/002_sprint2_appointments_orders.sql`; `specs/006-notificaciones-internas/spec.md` |
 | H-06 | La revisión de la lista `notificaciones.md` (40 puntos) encontró huecos y ambigüedades: no estaba definido qué datos lleva cada aviso ni su orden; «3 días» de una orden detenida no distinguía días de calendario de horas ni qué pasa sin historial de estados; el estado que distingue un aviso no estaba definido por tipo; faltaban las reglas de lectura de avisos que ya no existen o no son visibles, de marcar avisado un hecho que ya no aplica, de fallos de la consulta periódica, del tope «99+», de la privacidad del teléfono y de accesibilidad | Media | G-04 (notificaciones.md) | Resuelto | Se corrigió `spec.md`: FR-001, FR-002, FR-005, FR-006, FR-008, FR-009, FR-011, FR-014, FR-015, FR-017, SC-003, casos límite y supuestos (glosario y valores fijos); se actualizó la sección 9 del insumo | `specs/006-notificaciones-internas/checklists/notificaciones.md` |
+| H-07 | El análisis de consistencia (pasada 1) encontró: las pruebas de la historia 1 exigían un grupo de cada tipo y los campos `stockAlerts` y `clientsToNotify`, que se implementan en las historias 2, 3, 4 y 7, por lo que el punto de control T027 no podía cumplirse (alta); los clientes desactivados no se excluían en `maintenanceModel` ni había tarea ni prueba (media); `factDate` no estaba definida para un mantenimiento solo por kilometraje ni para una orden Terminada (media); FR-008 decía «se rechaza como no encontrado» mientras el contrato distingue `404` por tipo y `200` sin efecto (media); la trazabilidad y los riesgos seguían en «Por definir» (media); T005 marcada como paralela, dependencias de T055, «3 días» frente a «72 horas», cifras del plan, puntos de control sin archivo y carpeta de pruebas de providers inexistente (bajas) | Alta | G-07 (pasada 1) | Resuelto | Se corrigieron `spec.md` (FR-008, FR-015, casos límite y escenario 1 de US4), `contracts/api.md` y `data-model.md` (`factDate`), `plan.md` (cifras) y `tasks.md` (T005, T011, T013, T017, T018 a T021, T027, T030, T031, T035, T038, T043, T050, T053, T058, T064, T070 y las dependencias); se llenaron las secciones 5 y 6 de este documento. La pasada 2 no encontró hallazgos | Informe de `/speckit.analyze` del 2026-11-24; `specs/006-notificaciones-internas/tasks.md` |
 
 ## 8. Línea base de regresión
 

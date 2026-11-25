@@ -83,7 +83,7 @@ Como administrador o recepcionista, quiero ver las órdenes detenidas para destr
 
 **Escenarios de aceptación**:
 
-1. **Dado** una orden abierta (Recibido, Diagnóstico, En reparación o Esperando refacción) sin cambio de estado desde hace 3 días o más, **Cuando** un administrador o recepcionista abre el panel, **Entonces** ve el aviso de orden detenida con su folio, el vehículo, el estado y los días detenida.
+1. **Dado** una orden abierta (Recibido, Diagnóstico, En reparación o Esperando refacción) sin cambio de estado desde hace 72 horas (3 días de 24 horas) o más, **Cuando** un administrador o recepcionista abre el panel, **Entonces** ve el aviso de orden detenida con su folio, el vehículo, el estado y los días detenida.
 2. **Dado** una orden abierta con un cambio de estado reciente, **Cuando** abre el panel, **Entonces** no aparece.
 3. **Dado** que a una orden detenida solo se le editó un servicio o una nota sin cambiar de estado, **Cuando** abre el panel, **Entonces** sigue apareciendo, porque la antigüedad se mide por el último cambio de estado.
 4. **Dado** una orden Entregada o Cancelada, **Cuando** abre el panel, **Entonces** no genera aviso.
@@ -154,7 +154,7 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 - Un aviso que se resuelve mientras el panel está abierto: desaparece en la siguiente actualización.
 - Mantenimiento con fecha y kilometraje: rige el más urgente, igual que en la lista de Mantenimientos.
 - Orden que cambia de estado y vuelve a detenerse: la antigüedad cuenta desde el último cambio.
-- Cliente desactivado, vehículo sin cliente activo o refacción desactivada: no generan avisos.
+- Cliente desactivado, vehículo de un cliente desactivado o refacción desactivada: no generan avisos ni en la campana ni en la lista de clientes por avisar.
 - Marcar como avisado un hecho que ya dejó de aplicar (la orden se entregó o la cita se canceló mientras tanto): el servidor lo rechaza con un mensaje claro y la lista se actualiza sin duplicar registros.
 - Marcar como leído un aviso que ya desapareció: no produce error ni efecto.
 - Marcar dos veces como avisado el mismo hecho (doble clic o dos personas a la vez): se conserva un solo registro y la segunda solicitud no falla.
@@ -181,7 +181,7 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 
 **Lectura y navegación**
 
-- **FR-008** (agrega): Marcar un aviso como leído DEBE persistir por usuario: el contador baja, se conserva al cerrar sesión y volver a entrar, y no afecta a otros usuarios. El servidor solo guarda la lectura de avisos que existen y son visibles para ese usuario: marcar como leído un aviso que ya desapareció no produce error ni efecto, y marcar uno que no es visible para su rol se rechaza como no encontrado.
+- **FR-008** (agrega): Marcar un aviso como leído DEBE persistir por usuario: el contador baja, se conserva al cerrar sesión y volver a entrar, y no afecta a otros usuarios. El servidor solo guarda la lectura de avisos que existen y son visibles para ese usuario: marcar como leído un aviso que ya desapareció no produce error ni efecto, y marcar uno cuyo tipo no corresponde a su rol (por ejemplo, un mecánico que marca un aviso de stock) se rechaza como no encontrado, y marcar uno de un tipo permitido que ya no existe o que es de una orden ajena no produce error ni efecto y no revela si existe.
 - **FR-009** (agrega): La identidad de un aviso DEBE ser su tipo, su objeto y su estado. Si la condición deja de cumplirse, el aviso desaparece y su lectura se descarta, de modo que si la condición vuelve a cumplirse el aviso aparece como nuevo (no leído); si el estado cambia (de Próximo a Vencido, de stock bajo a agotado), el aviso también vuelve a mostrarse como no leído. El estado que distingue un aviso es la clasificación en los mantenimientos (próximo o vencido) y el nivel en el stock (bajo o agotado); las citas del día y las órdenes detenidas no tienen estado adicional, de modo que una cita que pasa de Pendiente a Confirmada sigue siendo el mismo aviso.
 - **FR-010** (agrega): Cada aviso DEBE abrir su pantalla relacionada y, al abrirlo, quedar marcado como leído: la orden detenida abre el detalle de la orden; la cita del día, el detalle de la cita; el stock bajo o agotado, el detalle de la refacción; y el mantenimiento próximo o vencido, la sección Mantenimientos con el buscador ya llenado con la placa del vehículo.
 - **FR-011** (agrega): El contador DEBE actualizarse al iniciar sesión, al cambiar de módulo y cada 60 segundos mientras la sesión esté abierta, y dejar de consultarse al cerrar sesión. Los fallos de la consulta periódica no muestran mensajes emergentes ni cierran la sesión, y una lectura hecha en otra sesión del mismo usuario se refleja en la siguiente actualización.
@@ -191,7 +191,7 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 
 **Clientes por avisar**
 
-- **FR-015** (agrega): Administración y recepción DEBEN tener una sección propia del menú, «Clientes por avisar», con una insignia con el número de clientes pendientes, y una lista, ordenada por fecha del hecho con la más antigua primero, con cliente, teléfono, vehículo, motivo y fecha del hecho, con estos motivos: orden Terminada sin entregar (vehículo listo, sin importar si está pagada o con saldo), cita de mañana Pendiente o Confirmada, y mantenimiento próximo o vencido.
+- **FR-015** (agrega): Administración y recepción DEBEN tener una sección propia del menú, «Clientes por avisar», con una insignia con el número de clientes pendientes, y una lista, ordenada por fecha del hecho con la más antigua primero (la fecha del hecho es la fecha en que la orden quedó Terminada, la fecha y hora de la cita, o la próxima fecha del mantenimiento y, si solo tiene kilometraje, su fecha de registro), con cliente, teléfono, vehículo, motivo y fecha del hecho, con estos motivos: orden Terminada sin entregar (vehículo listo, sin importar si está pagada o con saldo), cita de mañana Pendiente o Confirmada, y mantenimiento próximo o vencido.
 - **FR-016** (agrega): El mecánico NO DEBE poder consultar la lista ni marcar clientes como avisados; el servidor DEBE responder que no tiene permiso y la sección no aparece en su menú.
 - **FR-017** (agrega): Marcar a un cliente como avisado DEBE guardar quién lo avisó, cuándo y una nota opcional de hasta 255 caracteres, y sacarlo de la lista por ese hecho. El mismo hecho NO DEBE volver a aparecer; un hecho nuevo (otra orden, otra cita, o el mismo mantenimiento con otra clasificación) SÍ DEBE aparecer. Un mantenimiento avisado como próximo y que luego vence es un hecho nuevo. Si el hecho ya no aplica al momento de marcarlo (por ejemplo, la orden se entregó mientras tanto), el servidor DEBE rechazarlo con un mensaje claro y la lista DEBE actualizarse.
 - **FR-018** (agrega): Marcar como avisado NO DEBE enviar ningún mensaje por ningún canal (WhatsApp, correo o SMS): solo registra que una persona avisó al cliente.
