@@ -26,11 +26,11 @@ Resultado general: **en curso** (se completa al cierre del sprint).
 
 ## 2. Criterios de entrada y de salida
 
-Los criterios se marcan `[x]` solo cuando se cumplen de verdad. Hoy el sprint está después de `/speckit.specify`.
+Los criterios se marcan `[x]` solo cuando se cumplen de verdad. Los de entrada se cumplieron el 2026-11-24; los de salida se marcan al cierre.
 
 **Criterios de entrada (para comenzar la implementación):**
 
-- [ ] Las 8 puertas de la sección 3 están Aprobadas o Aprobadas con observación.
+- [x] Las 8 puertas de la sección 3 están Aprobadas o Aprobadas con observación.
 - [x] La enmienda de la constitución (hallazgo H-01) está aprobada y registrada.
 - [x] Las decisiones de la sección 4 están resueltas y registradas.
 - [x] No hay hallazgos críticos ni altos abiertos en el análisis de consistencia.
@@ -59,7 +59,7 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 | G-05 | Plan (`/speckit.plan`) | Aprobado | `specs/006-notificaciones-internas/plan.md`, `research.md`, `data-model.md`, `contracts/api.md` y `quickstart.md`. Constitución v1.2.0 sin violaciones (8 de 8 principios); migración `005` aditiva y consecutiva con dos tablas (`notification_reads` y `client_notices`); 4 rutas nuevas; sin dependencias nuevas |
 | G-06 | Tareas (`/speckit.tasks`) | Aprobado | `specs/006-notificaciones-internas/tasks.md`: 72 tareas (1 de preparación, 16 de fundamentos, 10 en US1, 3 en US2, 5 en US3, 3 en US4, 5 en US5, 7 en US6, 8 en US7, 6 de datos y rendimiento y 8 de cierre), con las pruebas antes del código en cada historia, el ajuste de `design-system.md` antes de cualquier pantalla y una tabla de cobertura de los 23 requisitos |
 | G-07 | Consistencia (`/speckit.analyze`) | Aprobado | 2 pasadas el 2026-11-24. Pasada 1: 0 críticos, 1 alto, 4 medios y 5 bajos (H-07). Pasada 2, tras corregir: 0 críticos, 0 altos, 0 medios y 0 bajos. 23 de 23 requisitos y 7 de 7 criterios de éxito con tarea (100 %); 72 tareas consecutivas, todas con requisito o criterio de éxito |
-| G-08 | Pruebas planeadas y línea base | Pendiente | Línea base registrada en la sección 8 |
+| G-08 | Pruebas planeadas y línea base | Aprobado | Los 14 criterios de aceptación tienen al menos una prueba planeada (sección 6) y los 9 riesgos tienen la prueba o el seguimiento que los cubre (sección 5); línea base de 90 suites y 1332 pruebas de backend y 256 de frontend, con la salida completa en `docs/evidencias/sprint-6/` (sección 8) |
 
 ## 4. Decisiones de aclaración
 
