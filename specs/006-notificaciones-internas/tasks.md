@@ -65,15 +65,15 @@ description: "Lista de tareas para implementar el Sprint 6: notificaciones inter
 
 ### Pruebas de la historia 1 (escribir primero)
 
-- [ ] T018 [P] [US1] Crear `server/tests/unit/notificationService.test.js` con modelos simulados de una sola fuente (órdenes detenidas): agrupa por tipo, cuenta `unread` y `total` de todos los avisos aunque el panel muestre 10, ordena por urgencia, no incluye teléfonos, descarta las lecturas de avisos que ya no existen y devuelve una respuesta vacía sin avisos (FR-001, FR-002, FR-003, FR-009); deben fallar antes de T022
-- [ ] T019 [P] [US1] Crear `server/tests/integration/notifications.admin.test.js` con una orden detenida (la única fuente que entrega esta historia): `GET /api/notifications` del administrador devuelve su grupo, `unread` igual al total, `limitPerType: 10` y ningún campo `phone`; los avisos no se guardan en ninguna tabla, solo la lectura; los grupos de mantenimientos, citas y stock se prueban en US2 y US3 (FR-001 a FR-003); debe fallar antes de T022 y T023
-- [ ] T020 [P] [US1] Crear `server/tests/contract/notifications.contract.test.js`: forma exacta de `GET /api/notifications` (`unread`, `total`, `groups[].items[]` con `key`, `type`, `read`, `title`, `detail`, `data` y `target`) y `401` sin sesión; `stockAlerts` y `clientsToNotify` se agregan a esta prueba en US3 y US7 (FR-001)
+- [X] T018 [P] [US1] Crear `server/tests/unit/notificationService.test.js` con modelos simulados de una sola fuente (órdenes detenidas): agrupa por tipo, cuenta `unread` y `total` de todos los avisos aunque el panel muestre 10, ordena por urgencia, no incluye teléfonos, descarta las lecturas de avisos que ya no existen y devuelve una respuesta vacía sin avisos (FR-001, FR-002, FR-003, FR-009); deben fallar antes de T022
+- [X] T019 [P] [US1] Crear `server/tests/integration/notifications.admin.test.js` con una orden detenida (la única fuente que entrega esta historia): `GET /api/notifications` del administrador devuelve su grupo, `unread` igual al total, `limitPerType: 10` y ningún campo `phone`; los avisos no se guardan en ninguna tabla, solo la lectura; los grupos de mantenimientos, citas y stock se prueban en US2 y US3 (FR-001 a FR-003); debe fallar antes de T022 y T023
+- [X] T020 [P] [US1] Crear `server/tests/contract/notifications.contract.test.js`: forma exacta de `GET /api/notifications` (`unread`, `total`, `groups[].items[]` con `key`, `type`, `read`, `title`, `detail`, `data` y `target`) y `401` sin sesión; `stockAlerts` y `clientsToNotify` se agregan a esta prueba en US3 y US7 (FR-001)
 - [ ] T021 [P] [US1] Crear la carpeta `client/test/providers/` con `notifications_provider_test.dart` y crear `client/test/screens/notification_bell_test.dart`: el provider carga, conserva el último número si falla una consulta, se vacía con `reset()` y repite la consulta cada 60 segundos con un temporizador simulado y se detiene al cerrar sesión; la campana muestra el contador, «99+» cuando pasa de 99, la descripción emergente «Notificaciones», se abre con el teclado y el panel se cierra con Escape y muestra los estados de carga, vacío y error (FR-001, FR-011, FR-014); deben fallar antes de T024 a T026
 
 ### Implementación de la historia 1
 
-- [ ] T022 [US1] Crear `server/services/notificationService.js` (fábrica `createNotificationService` con dependencias inyectables): `get(usuario)` arma los grupos con `noticeKeys`, calcula `unread` y `total`, aplica el tope de 10 por tipo, marca como leídos los avisos con lectura y borra las lecturas del usuario que ya no corresponden a un aviso vigente (FR-001 a FR-003, FR-009)
-- [ ] T023 [US1] Crear `server/validators/notificationValidator.js`, `server/controllers/notificationController.js` y `server/routes/notificationRoutes.js` con `GET /api/notifications` (`authenticate` y los tres roles) y registrar la ruta en `server/app.js` (FR-001)
+- [X] T022 [US1] Crear `server/services/notificationService.js` (fábrica `createNotificationService` con dependencias inyectables): `get(usuario)` arma los grupos con `noticeKeys`, calcula `unread` y `total`, aplica el tope de 10 por tipo, marca como leídos los avisos con lectura y borra las lecturas del usuario que ya no corresponden a un aviso vigente (FR-001 a FR-003, FR-009)
+- [X] T023 [US1] Crear `server/validators/notificationValidator.js`, `server/controllers/notificationController.js` y `server/routes/notificationRoutes.js` con `GET /api/notifications` (`authenticate` y los tres roles) y registrar la ruta en `server/app.js` (FR-001)
 - [ ] T024 [P] [US1] Crear `client/lib/providers/notifications_provider.dart`: estado de carga, vacío y error, `refresh()`, `start()` con `Timer.periodic` de 60 segundos (intervalo inyectable para las pruebas) y `reset()` que cancela el temporizador (FR-011)
 - [ ] T025 [P] [US1] Crear `client/lib/widgets/notification_bell.dart` y `client/lib/widgets/notifications_panel.dart`: campana con `Badge` y `Tooltip('Notificaciones')`, panel agrupado por tipo con los colores de estado, estados de carga, vacío y error con `client/lib/widgets/state_views.dart` y cierre con Escape (FR-001, FR-014)
 - [ ] T026 [US1] Modificar `client/lib/widgets/app_shell.dart` (campana en `_Header`, líneas 118-144), `client/lib/screens/home_screen.dart` (iniciar el provider al montar, actualizar al cambiar de sección y pasar el callback `onOpenSection`) y `client/lib/main.dart` (registrar `NotificationsProvider` con `addSessionEndListener(reset)`) (FR-001, FR-011)
@@ -91,12 +91,12 @@ description: "Lista de tareas para implementar el Sprint 6: notificaciones inter
 
 ### Pruebas de la historia 2 (escribir primero)
 
-- [ ] T028 [P] [US2] Crear `server/tests/integration/notifications.reception.test.js`: recepción recibe mantenimientos próximos (15 días o 500 km, límites inclusivos) y vencidos (fecha pasada o kilometraje alcanzado, rige el más urgente) y citas de hoy Pendientes o Confirmadas, incluso con la hora ya pasada; no aparecen mantenimientos Atendidos ni citas Canceladas o Completadas ni los de clientes desactivados; no recibe avisos de stock; cada aviso trae cliente, vehículo y cuánto falta o se pasó, sin teléfono (FR-002, FR-004, FR-006); debe fallar antes de T029
+- [X] T028 [P] [US2] Crear `server/tests/integration/notifications.reception.test.js`: recepción recibe mantenimientos próximos (15 días o 500 km, límites inclusivos) y vencidos (fecha pasada o kilometraje alcanzado, rige el más urgente) y citas de hoy Pendientes o Confirmadas, incluso con la hora ya pasada; no aparecen mantenimientos Atendidos ni citas Canceladas o Completadas ni los de clientes desactivados; no recibe avisos de stock; cada aviso trae cliente, vehículo y cuánto falta o se pasó, sin teléfono (FR-002, FR-004, FR-006); debe fallar antes de T029
 
 ### Implementación de la historia 2
 
-- [ ] T029 [US2] Completar `server/services/notificationService.js` con los avisos de mantenimientos (`maintenanceService.listAllClassified`, claves `MANT:{id}:{PROXIMO|VENCIDO}`) y de citas del día (`appointmentModel.listByDay` con la fecha de `hoyLocal()`, clave `CITA:{id}`), con su título, detalle, datos y destino (FR-002, FR-004)
-- [ ] T030 [US2] Ejecutar `npm test -- tests/integration/notifications.reception.test.js` y comprobar que pasa, y que la suite sigue verde; fin del punto de control (FR-004, FR-006)
+- [X] T029 [US2] Completar `server/services/notificationService.js` con los avisos de mantenimientos (`maintenanceService.listAllClassified`, claves `MANT:{id}:{PROXIMO|VENCIDO}`) y de citas del día (`appointmentModel.listByDay` con la fecha de `hoyLocal()`, clave `CITA:{id}`), con su título, detalle, datos y destino (FR-002, FR-004)
+- [X] T030 [US2] Ejecutar `npm test -- tests/integration/notifications.reception.test.js` y comprobar que pasa, y que la suite sigue verde; fin del punto de control (FR-004, FR-006)
 
 **Punto de control**: recepción recibe los avisos de mantenimientos y citas sin stock; las historias 1 y 2 funcionan.
 
@@ -110,12 +110,12 @@ description: "Lista de tareas para implementar el Sprint 6: notificaciones inter
 
 ### Pruebas de la historia 3 (escribir primero)
 
-- [ ] T031 [P] [US3] Crear `server/tests/integration/notifications.stock.test.js` y ampliar `notifications.contract.test.js` con `stockAlerts`: el administrador recibe `STOCK_LOW` y `STOCK_OUT` con nombre, código y existencia frente al mínimo, y `stockAlerts` con el total; una refacción desactivada no genera aviso; recepción y mecánico no reciben stock ni `stockAlerts` (FR-004, FR-006, FR-012); debe fallar antes de T033
+- [X] T031 [P] [US3] Crear `server/tests/integration/notifications.stock.test.js` y ampliar `notifications.contract.test.js` con `stockAlerts`: el administrador recibe `STOCK_LOW` y `STOCK_OUT` con nombre, código y existencia frente al mínimo, y `stockAlerts` con el total; una refacción desactivada no genera aviso; recepción y mecánico no reciben stock ni `stockAlerts` (FR-004, FR-006, FR-012); debe fallar antes de T033
 - [ ] T032 [P] [US3] Crear `client/test/screens/inventory_badge_test.dart`: el ícono de Inventario muestra una insignia con las alertas de stock solo para el administrador y no se muestra sin alertas ni para recepción o mecánico; el resumen de Inventario y la tarjeta del panel de control siguen funcionando (FR-012, FR-013); debe fallar antes de T034
 
 ### Implementación de la historia 3
 
-- [ ] T033 [US3] Completar `server/services/notificationService.js` con los avisos de stock (`partModel.listAlerts`, claves `STOCK:{id}:{BAJO|AGOTADO}`) y el campo `stockAlerts`, solo para el administrador (FR-004, FR-006, FR-012)
+- [X] T033 [US3] Completar `server/services/notificationService.js` con los avisos de stock (`partModel.listAlerts`, claves `STOCK:{id}:{BAJO|AGOTADO}`) y el campo `stockAlerts`, solo para el administrador (FR-004, FR-006, FR-012)
 - [ ] T034 [US3] Modificar `client/lib/screens/home_screen.dart` y `client/lib/widgets/app_shell.dart` para mostrar un `Badge` en el ícono de Inventario con `NotificationsProvider.stockAlerts` solo para el administrador (agregar el dato de insignia a `ShellSection` o resolverlo por etiqueta) (FR-012)
 - [ ] T035 [US3] Ejecutar `npm test -- tests/integration/notifications.stock.test.js` y `flutter test test/screens/inventory_badge_test.dart` y comprobar que pasan, y que la suite sigue verde; fin del punto de control (FR-004, FR-012, FR-013)
 
@@ -131,12 +131,12 @@ description: "Lista de tareas para implementar el Sprint 6: notificaciones inter
 
 ### Pruebas de la historia 4 (escribir primero)
 
-- [ ] T036 [P] [US4] Crear `server/tests/integration/notifications.stalled.test.js`: una orden abierta con 72 horas o más desde su último cambio de estado aparece con folio, placa, estado y días detenida; una con un cambio reciente no; editar una nota o un servicio sin cambiar de estado no la saca ni la reinicia; sin registros en el historial se mide desde su fecha de creación; las Terminadas, Entregadas y Canceladas no generan aviso; administrador y recepción ven todas las órdenes detenidas (FR-005, FR-006); debe fallar antes de T037
+- [X] T036 [P] [US4] Crear `server/tests/integration/notifications.stalled.test.js`: una orden abierta con 72 horas o más desde su último cambio de estado aparece con folio, placa, estado y días detenida; una con un cambio reciente no; editar una nota o un servicio sin cambiar de estado no la saca ni la reinicia; sin registros en el historial se mide desde su fecha de creación; las Terminadas, Entregadas y Canceladas no generan aviso; administrador y recepción ven todas las órdenes detenidas (FR-005, FR-006); debe fallar antes de T037
 
 ### Implementación de la historia 4
 
-- [ ] T037 [US4] Completar `server/services/notificationService.js` con los avisos de órdenes detenidas (`orderModel.listStalled` con `NOTICE_STALLED_HOURS`, clave `ORDEN:{id}`, días detenida con `FLOOR(horas / 24)`) (FR-005)
-- [ ] T038 [US4] Ejecutar `npm test -- tests/integration/notifications.stalled.test.js` y comprobar que pasa, y que la suite sigue verde; fin del punto de control (FR-005)
+- [X] T037 [US4] Completar `server/services/notificationService.js` con los avisos de órdenes detenidas (`orderModel.listStalled` con `NOTICE_STALLED_HOURS`, clave `ORDEN:{id}`, días detenida con `FLOOR(horas / 24)`) (FR-005)
+- [X] T038 [US4] Ejecutar `npm test -- tests/integration/notifications.stalled.test.js` y comprobar que pasa, y que la suite sigue verde; fin del punto de control (FR-005)
 
 **Punto de control**: las órdenes detenidas se detectan con el historial de estados.
 
@@ -150,12 +150,12 @@ description: "Lista de tareas para implementar el Sprint 6: notificaciones inter
 
 ### Pruebas de la historia 5 (escribir primero)
 
-- [ ] T039 [P] [US5] Crear `server/tests/integration/notifications.mechanic.test.js`: cada mecánico recibe solo su orden detenida; reasignar la orden mueve el aviso al nuevo mecánico; la petición directa del mecánico no incluye grupos de stock, citas ni mantenimientos aunque existan; ninguna respuesta incluye datos de otras órdenes (FR-006, FR-007); debe fallar antes de T041
+- [X] T039 [P] [US5] Crear `server/tests/integration/notifications.mechanic.test.js`: cada mecánico recibe solo su orden detenida; reasignar la orden mueve el aviso al nuevo mecánico; la petición directa del mecánico no incluye grupos de stock, citas ni mantenimientos aunque existan; ninguna respuesta incluye datos de otras órdenes (FR-006, FR-007); debe fallar antes de T041
 - [ ] T040 [P] [US5] Crear `client/test/screens/notifications_mechanic_test.dart`: con la sesión del mecánico el panel solo muestra órdenes detenidas, no aparece la sección «Clientes por avisar» ni la insignia de Inventario (FR-006, FR-016); debe fallar antes de T042
 
 ### Implementación de la historia 5
 
-- [ ] T041 [US5] Ajustar `server/services/notificationService.js` para filtrar por rol con `noticeKeys.typesForRole` y pasar `mechanicId` a `orderModel.listStalled` cuando el usuario es mecánico, sin consultar mantenimientos, citas ni stock (FR-006, FR-007)
+- [X] T041 [US5] Ajustar `server/services/notificationService.js` para filtrar por rol con `noticeKeys.typesForRole` y pasar `mechanicId` a `orderModel.listStalled` cuando el usuario es mecánico, sin consultar mantenimientos, citas ni stock (FR-006, FR-007)
 - [ ] T042 [US5] Verificar en `client/lib/screens/home_screen.dart` y `client/lib/widgets/notifications_panel.dart` que el menú y el panel respetan el rol (la sección de clientes por avisar se registra en T057); ajustar si hace falta (FR-006, FR-016)
 - [ ] T043 [US5] Ejecutar `npm test -- tests/integration/notifications.mechanic.test.js` y `flutter test test/screens/notifications_mechanic_test.dart` y comprobar que pasan, y que la suite sigue verde; fin del punto de control (FR-006, FR-007)
 
@@ -171,13 +171,13 @@ description: "Lista de tareas para implementar el Sprint 6: notificaciones inter
 
 ### Pruebas de la historia 6 (escribir primero)
 
-- [ ] T044 [P] [US6] Ampliar `server/tests/unit/notificationService.test.js` con `markRead`: guarda la lectura si el aviso es visible; `404` si el tipo no corresponde al rol; `read: false` sin efecto si el aviso ya no existe o es de una orden ajena; repetir no duplica (FR-008, FR-009); debe fallar antes de T046
-- [ ] T045 [P] [US6] Crear `server/tests/integration/notifications.read.test.js` y ampliar `notifications.contract.test.js`: `POST /api/notifications/read` guarda la lectura por usuario, se conserva con otra sesión, no afecta a otro usuario, `400` con una clave mal formada, `404` con un tipo ajeno al rol; al atender el aviso la lectura se descarta y, si la condición vuelve a cumplirse, el aviso reaparece no leído; un mantenimiento que pasa de próximo a vencido reaparece no leído; las filas de lectura de avisos inexistentes se borran al consultar (FR-008, FR-009); debe fallar antes de T046
+- [X] T044 [P] [US6] Ampliar `server/tests/unit/notificationService.test.js` con `markRead`: guarda la lectura si el aviso es visible; `404` si el tipo no corresponde al rol; `read: false` sin efecto si el aviso ya no existe o es de una orden ajena; repetir no duplica (FR-008, FR-009); debe fallar antes de T046
+- [X] T045 [P] [US6] Crear `server/tests/integration/notifications.read.test.js` y ampliar `notifications.contract.test.js`: `POST /api/notifications/read` guarda la lectura por usuario, se conserva con otra sesión, no afecta a otro usuario, `400` con una clave mal formada, `404` con un tipo ajeno al rol; al atender el aviso la lectura se descarta y, si la condición vuelve a cumplirse, el aviso reaparece no leído; un mantenimiento que pasa de próximo a vencido reaparece no leído; las filas de lectura de avisos inexistentes se borran al consultar (FR-008, FR-009); debe fallar antes de T046
 - [ ] T046 [P] [US6] Crear `client/test/screens/notification_open_test.dart`: marcar un aviso como leído baja el contador; abrir un aviso lo marca leído y navega al detalle de la orden, al detalle de la cita, al detalle de la refacción o a Mantenimientos con la placa escrita en el buscador (FR-010); debe fallar antes de T048 y T049
 
 ### Implementación de la historia 6
 
-- [ ] T047 [US6] Agregar `markRead(usuario, key)` a `server/services/notificationService.js` y `POST /api/notifications/read` a `server/routes/notificationRoutes.js`, `server/controllers/notificationController.js` y `server/validators/notificationValidator.js` (FR-008, FR-009)
+- [X] T047 [US6] Agregar `markRead(usuario, key)` a `server/services/notificationService.js` y `POST /api/notifications/read` a `server/routes/notificationRoutes.js`, `server/controllers/notificationController.js` y `server/validators/notificationValidator.js` (FR-008, FR-009)
 - [ ] T048 [US6] Agregar `markRead` y `open` a `client/lib/providers/notifications_provider.dart` y los botones «Marcar como leído» y «Abrir» a `client/lib/widgets/notifications_panel.dart` (FR-008, FR-010)
 - [ ] T049 [US6] Implementar `onOpenSection` en `client/lib/screens/home_screen.dart` para abrir `order_detail_screen.dart`, `appointment_detail_screen.dart` y `part_detail_screen.dart` con el identificador del aviso, o la sección Mantenimientos; y hacer que `client/lib/screens/maintenance_screen.dart` acepte una búsqueda inicial opcional con la placa (FR-010)
 - [ ] T050 [US6] Ejecutar `npm test -- tests/unit/notificationService.test.js tests/integration/notifications.read.test.js` y `flutter test test/screens/notification_open_test.dart` y comprobar que pasan, y que la suite sigue verde; fin del punto de control (FR-008 a FR-010)

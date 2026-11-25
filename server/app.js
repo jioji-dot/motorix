@@ -8,6 +8,7 @@ import clientRoutes from './routes/clientRoutes.js';
 import maintenanceRoutes from './routes/maintenanceRoutes.js';
 import mechanicRoutes from './routes/mechanicRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 import partRoutes from './routes/partRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import ticketRoutes from './routes/ticketRoutes.js';
@@ -34,6 +35,7 @@ export function createApp() {
   app.use('/api/payments', paymentRoutes);
   app.use('/api/dashboard', dashboardRoutes);
   app.use('/api/tickets', ticketRoutes);
+  app.use('/api/notifications', notificationRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
