@@ -87,11 +87,21 @@ export function renderTicketHtml(t) {
     <tr><td>Pagado</td><td class="der">${dinero(t.payment.paid)}</td></tr>
     <tr><td>Saldo</td><td class="der">${dinero(t.payment.balance)}</td></tr>
   </table>
+  ${proximoServicio(t.nextService)}
   <p class="centro">Gracias por su preferencia.</p>
 </div>
 <script>window.addEventListener('load', function () { window.print(); });</script>
 </body>
 </html>`;
+}
+
+// Línea «Próximo servicio» (solo si el ticket la tiene).
+function proximoServicio(proximo) {
+  if (!proximo) return '';
+  const partes = [];
+  if (proximo.date) partes.push(proximo.date.split('-').reverse().join('/'));
+  if (proximo.mileage !== null && proximo.mileage !== undefined) partes.push(`${Number(proximo.mileage).toLocaleString('en-US')} km`);
+  return `<h2>Próximo servicio</h2>\n  <p>${escapar(proximo.name)}${partes.length > 0 ? ` · ${escapar(partes.join(' · '))}` : ''}</p>`;
 }
 
 // Página sencilla para un enlace de impresión vencido o inválido.

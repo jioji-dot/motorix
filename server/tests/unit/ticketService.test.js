@@ -12,12 +12,18 @@ function crearEntorno({ orden = { id: 9, folio: 'OS-000009', status: 'TERMINADO'
     findOrderData: jest.fn(async () => orden),
     findLines: jest.fn(async () => ({ services: [], labor: [], parts: [], payments: [] })),
     findByOrder: jest.fn(async () => ticket),
+    findServiceIntervals: jest.fn(async () => []),
     lastPaidPaymentId: jest.fn(async () => 77),
     create: jest.fn(async () => { ticket = { id: 5, folio: 'TK-000005', orderId: 9, paymentId: 77, generatedAt: '2026-10-19T00:00:00.000Z' }; return 5; }),
     setPayment: jest.fn(async () => {}),
     lockOrder: jest.fn(async () => {}),
   };
-  const servicio = createTicketService({ ticketModel, config, transaction: async (trabajo) => trabajo(conexion) });
+  const servicio = createTicketService({
+    ticketModel,
+    config,
+    settingsService: { getWorkshop: async () => config.workshop },
+    transaction: async (trabajo) => trabajo(conexion),
+  });
   return { servicio, ticketModel };
 }
 
@@ -26,7 +32,9 @@ describe('Ticket: generación', () => {
     const { servicio, ticketModel } = crearEntorno();
     const { ticket, created } = await servicio.generate(9, RECEPCION);
     expect(created).toBe(true);
-    expect(ticketModel.create).toHaveBeenCalledWith(conexion, { orderId: 9, paymentId: 77, generatedBy: 2 });
+    expect(ticketModel.create).toHaveBeenCalledWith(conexion, {
+      orderId: 9, paymentId: 77, generatedBy: 2, workshop: config.workshop, nextService: null,
+    });
     expect(ticket.folio).toBe('TK-000005');
   });
 

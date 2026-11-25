@@ -13,17 +13,26 @@ export async function lockOrder(conexion, orderId) {
 
 export async function findByOrder(orderId, conexion = pool) {
   const [filas] = await conexion.execute(
-    'SELECT id, folio, orderId, paymentId, generatedBy, generatedAt FROM tickets WHERE orderId = ?',
+    `SELECT id, folio, orderId, paymentId, generatedBy, generatedAt,
+            shopName, shopAddress, shopPhone, nextServiceName,
+            DATE_FORMAT(nextServiceDate, '%Y-%m-%d') AS nextServiceDate, nextServiceMileage
+       FROM tickets WHERE orderId = ?`,
     [orderId],
   );
   return filas[0] ?? null;
 }
 
 // Inserta el ticket y le asigna el folio a partir de su id (igual que las órdenes).
-export async function create(conexion, { orderId, paymentId, generatedBy }) {
+export async function create(conexion, { orderId, paymentId, generatedBy, workshop = null, nextService = null }) {
   const [resultado] = await conexion.execute(
-    'INSERT INTO tickets (folio, orderId, paymentId, generatedBy) VALUES (?, ?, ?, ?)',
-    [`TMP-${crypto.randomUUID().slice(0, 15)}`, orderId, paymentId ?? null, generatedBy],
+    `INSERT INTO tickets (folio, orderId, paymentId, generatedBy, shopName, shopAddress, shopPhone,
+                         nextServiceName, nextServiceDate, nextServiceMileage)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      `TMP-${crypto.randomUUID().slice(0, 15)}`, orderId, paymentId ?? null, generatedBy,
+      workshop?.name ?? null, workshop?.address ?? null, workshop?.phone ?? null,
+      nextService?.name ?? null, nextService?.date ?? null, nextService?.mileage ?? null,
+    ],
   );
   const id = resultado.insertId;
   await conexion.execute('UPDATE tickets SET folio = ? WHERE id = ?', [folioDe(id), id]);
@@ -70,4 +79,15 @@ export async function findLines(orderId, conexion = pool) {
   );
   const [payments] = await conexion.execute('SELECT id, amount, method, status FROM payments WHERE orderId = ? ORDER BY id', [orderId]);
   return { services, labor, parts, payments };
+}
+
+// Tipos de servicio con intervalo enlazados a las líneas de servicio de la orden (para el próximo servicio del ticket).
+export async function findServiceIntervals(orderId, conexion = pool) {
+  const [filas] = await conexion.execute(
+    `SELECT DISTINCT st.id, st.name, st.intervalDays, st.intervalKm
+       FROM order_services os JOIN service_types st ON st.id = os.serviceTypeId
+      WHERE os.orderId = ? ORDER BY st.id`,
+    [orderId],
+  );
+  return filas;
 }

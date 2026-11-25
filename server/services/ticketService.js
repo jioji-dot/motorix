@@ -5,17 +5,47 @@ import { env } from '../config/env.js';
 import * as modeloTickets from '../models/ticketModel.js';
 import { BILLABLE_ORDER_STATUSES } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
+import { hoyLocal } from './maintenanceClassifier.js';
+import { settingsService as servicioConfiguracion } from './settingsService.js';
 import { buildTicket } from './ticketBuilder.js';
 
 export const VIGENCIA_TOKEN_SEGUNDOS = 300;
 
-export function createTicketService({ ticketModel = modeloTickets, transaction = withTransaction, config = env } = {}) {
+// Próximo servicio: la fecha más cercana (hoy más los días del intervalo) y el kilometraje menor (kilometraje más los km).
+export function calcularProximoServicio(tipos, kilometraje, hoy = hoyLocal()) {
+  const conDias = tipos.filter((t) => t.intervalDays);
+  const conKm = tipos.filter((t) => t.intervalKm);
+  if (conDias.length === 0 && conKm.length === 0) return null;
+  const [anio, mes, dia] = hoy.split('-').map(Number);
+  const fecha = (dias) => hoyLocal(new Date(anio, mes - 1, dia + dias));
+  const masCercano = conDias.sort((a, b) => a.intervalDays - b.intervalDays)[0];
+  const menorKm = conKm.sort((a, b) => a.intervalKm - b.intervalKm)[0];
+  return {
+    name: (masCercano ?? menorKm).name,
+    date: masCercano ? fecha(masCercano.intervalDays) : null,
+    mileage: menorKm ? kilometraje + menorKm.intervalKm : null,
+  };
+}
+
+export function createTicketService({
+  ticketModel = modeloTickets,
+  transaction = withTransaction,
+  config = env,
+  settingsService = servicioConfiguracion,
+} = {}) {
   // Clave distinta de la de sesión: un token de impresión no sirve como sesión y viceversa.
   const claveDeImpresion = `${config.jwt.secret}:ticket-print`;
 
   async function contenido(ticket) {
     const [order, lineas] = await Promise.all([ticketModel.findOrderData(ticket.orderId), ticketModel.findLines(ticket.orderId)]);
-    return buildTicket({ ticket, order, ...lineas, workshop: config.workshop });
+    // Los tickets generados antes del Sprint 7 no tienen instantánea: se arman con los datos vigentes.
+    const workshop = ticket.shopName
+      ? { name: ticket.shopName, address: ticket.shopAddress ?? '', phone: ticket.shopPhone ?? '' }
+      : await settingsService.getWorkshop();
+    const nextService = ticket.nextServiceName
+      ? { name: ticket.nextServiceName, date: ticket.nextServiceDate ?? null, mileage: ticket.nextServiceMileage ?? null }
+      : null;
+    return buildTicket({ ticket, order, ...lineas, workshop, nextService });
   }
 
   async function exigirOrdenFacturable(orderId) {
@@ -29,7 +59,10 @@ export function createTicketService({ ticketModel = modeloTickets, transaction =
 
   // Genera el ticket de la orden o devuelve el que ya existe (actualizando su pago principal).
   async function generate(orderId, usuario) {
-    await exigirOrdenFacturable(orderId);
+    const orden = await exigirOrdenFacturable(orderId);
+    const workshop = await settingsService.getWorkshop();
+    const tipos = await ticketModel.findServiceIntervals(orderId);
+    const nextService = calcularProximoServicio(tipos, orden.serviceMileage ?? orden.entryMileage);
     let creado = false;
     const ticketId = await transaction(async (conexion) => {
       await ticketModel.lockOrder(conexion, orderId);
@@ -37,7 +70,7 @@ export function createTicketService({ ticketModel = modeloTickets, transaction =
       let existente = await ticketModel.findByOrder(orderId, conexion);
       if (!existente) {
         try {
-          const id = await ticketModel.create(conexion, { orderId, paymentId, generatedBy: usuario.id });
+          const id = await ticketModel.create(conexion, { orderId, paymentId, generatedBy: usuario.id, workshop, nextService });
           creado = true;
           return id;
         } catch (error) {

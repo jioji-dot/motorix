@@ -33,6 +33,7 @@ describe('POST y GET /api/orders/:id/ticket', () => {
       vehicle: { description: 'Nissan Versa 2020', licensePlate: datos.licensePlate, mileage: 40000 },
       services: [{ description: 'Servicio de prueba', amount: '500.00' }],
       labor: [],
+      nextService: null,
       parts: [],
       subtotal: '500.00',
       total: '500.00',

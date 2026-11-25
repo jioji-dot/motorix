@@ -11,6 +11,7 @@ import mechanicRoutes from './routes/mechanicRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import partRoutes from './routes/partRoutes.js';
+import settingsRoutes from './routes/settingsRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import ticketRoutes from './routes/ticketRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
@@ -37,6 +38,7 @@ export function createApp() {
   app.use('/api/dashboard', dashboardRoutes);
   app.use('/api/tickets', ticketRoutes);
   app.use('/api/notifications', notificationRoutes);
+  app.use('/api/settings', settingsRoutes);
   app.use('/api/client-notices', clientNoticeRoutes);
 
   app.use(notFoundHandler);

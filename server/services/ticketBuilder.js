@@ -4,7 +4,7 @@ import { PAYMENT_STATUS } from '../utils/constants.js';
 import { sumar } from '../utils/money.js';
 import { buildSummary } from './paymentSummary.js';
 
-export function buildTicket({ ticket, order, services, labor, parts, payments, workshop }) {
+export function buildTicket({ ticket, order, services, labor, parts, payments, workshop, nextService = null }) {
   const subtotal = sumar([...services, ...labor, ...parts].map((linea) => linea.amount));
   const pagados = payments.filter((p) => p.status === PAYMENT_STATUS.PAID);
   const resumen = buildSummary({ total: order.total, paid: sumar(pagados.map((p) => p.amount)), pending: '0.00' });
@@ -30,5 +30,6 @@ export function buildTicket({ ticket, order, services, labor, parts, payments, w
     subtotal,
     total: resumen.total,
     payment: { methods, status: resumen.status, paid: resumen.paid, balance: resumen.balance },
+    nextService,
   };
 }
