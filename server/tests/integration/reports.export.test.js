@@ -40,7 +40,7 @@ const descargar = async (nombre) => {
   const e = await enlace(usuarios.ADMIN, nombre);
   return request(app).get(new URL(e.body.data.url, 'http://x').pathname);
 };
-const filasCsv = (texto) => texto.replace(/^﻿/, '').trim().split('\r\n');
+const filasCsv = (texto) => texto.replace(/^\uFEFF/, '').trim().split('\r\n');
 
 test('el_enlace_dura_60_segundos_y_apunta_a_la_descarga', async () => {
   const r = await enlace(usuarios.ADMIN, 'income');
@@ -55,7 +55,7 @@ test.each(REPORTES)('el_csv_de_%s_empieza_con_bom_y_trae_las_mismas_cifras_que_l
   expect(r.status).toBe(200);
   expect(r.headers['content-type']).toMatch(/text\/csv; charset=utf-8/);
   expect(r.headers['content-disposition']).toContain(`reporte-${nombre}-${fechaDia(-5)}-${fechaDia(0)}.csv`);
-  expect(r.text.startsWith('﻿')).toBe(true);
+  expect(r.text.startsWith('\uFEFF')).toBe(true);
   const filas = filasCsv(r.text);
   const texto = r.text;
   if (nombre === 'income') {
