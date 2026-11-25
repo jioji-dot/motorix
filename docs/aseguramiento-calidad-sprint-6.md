@@ -54,7 +54,7 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 |:--:|---|---|---|
 | G-01 | Insumo del sprint revisado contra el código | Aprobado con observación | `docs/sprints/sprint-6-notificaciones-internas.md` corregido el 2026-11-24 (H-02 a H-04). Observación: las decisiones de su sección 9 quedan por resolver en `/speckit.clarify` |
 | G-02 | Especificación (`/speckit.specify`) | Aprobado | `specs/006-notificaciones-internas/spec.md`: 7 historias de usuario, 23 requisitos funcionales y 7 criterios de éxito. Cada requisito indica si mantiene lo existente o agrega algo nuevo. Sin marcadores `[NEEDS CLARIFICATION]`; las decisiones abiertas quedan como supuestos recomendados |
-| G-03 | Aclaraciones (`/speckit.clarify`) | Pendiente | |
+| G-03 | Aclaraciones (`/speckit.clarify`) | Aprobado | 5 decisiones resueltas en la sesión del 2026-11-24 (sección 4), todas con la opción recomendada; sin marcadores `[NEEDS CLARIFICATION]`; las 8 decisiones del insumo quedaron resueltas en la especificación (FR-004, FR-005, FR-006, FR-009, FR-011, FR-017) |
 | G-04 | Lista de calidad de requisitos (`/speckit.checklist`) | Pendiente | |
 | G-05 | Plan (`/speckit.plan`) | Pendiente | |
 | G-06 | Tareas (`/speckit.tasks`) | Pendiente | |
@@ -63,7 +63,20 @@ Cada puerta se verifica antes de comenzar la implementación. El detalle de cada
 
 ## 4. Decisiones de aclaración
 
-Pendientes. Las 8 decisiones abiertas del insumo (sección 9) se resolverán en `/speckit.clarify` con la opción recomendada, con la aprobación de Jorge Francisco Dominguez Ramirez. La especificación ya parte de estos supuestos: orden detenida con 3 o más días sin cambio de estado; cita del día es la de hoy, Pendiente o Confirmada; contador actualizado al iniciar sesión, al navegar y cada 60 segundos; identidad de un aviso por tipo, objeto y estado; el mecánico solo ve avisos de sus órdenes; cada hecho se avisa una sola vez, con nota opcional.
+Las 8 decisiones abiertas del insumo (sección 9) se resolvieron el 2026-11-24, algunas como supuestos recomendados desde la especificación y cinco en la etapa de aclaraciones, siempre con la opción recomendada y con la aprobación de Jorge Francisco Dominguez Ramirez. El texto completo está en `specs/006-notificaciones-internas/spec.md` (sección «Aclaraciones» y «Supuestos»).
+
+| ID | Decisión | Resolución | Requisito afectado |
+|:--:|---|---|---|
+| D-01 | Criterio de orden detenida | Orden abierta con 3 o más días desde su último cambio de estado (valor fijo) | FR-005 |
+| D-02 | Cita del día | La de hoy, Pendiente o Confirmada, hasta el fin del día aunque su hora ya pasó | FR-004 |
+| D-03 | Actualización del contador | Al iniciar sesión, al cambiar de módulo y cada 60 segundos | FR-011 |
+| D-04 | Identidad de un aviso para la lectura | Tipo, objeto y estado; la lectura se descarta cuando el aviso desaparece | FR-009 |
+| D-05 | Reaparición de un aviso leído | Vuelve a no leído cuando empeora (Próximo a Vencido, stock bajo a agotado) o cuando la condición reaparece | FR-009 |
+| D-06 | Anticipación de los avisos | Mantenimiento con los márgenes existentes (15 días o 500 km); cita del día el mismo día; cita de mañana solo en la lista de clientes por avisar | FR-004, FR-015 |
+| D-07 | Aviso al cliente y nota | Cada hecho se avisa una vez, con nota opcional de hasta 255 caracteres; un hecho nuevo reaparece | FR-017 |
+| D-08 | Qué ve el mecánico | Solo avisos de órdenes detenidas asignadas a él; sin mantenimientos, citas ni stock | FR-006 |
+| D-09 | Dónde está la lista de clientes por avisar | Sección propia del menú con insignia, para administración y recepción | FR-015 |
+| D-10 | Qué abre cada aviso | Detalle de la orden, de la cita o de la refacción; o Mantenimientos con la placa en el buscador | FR-010 |
 
 ## 5. Riesgos y mitigaciones
 

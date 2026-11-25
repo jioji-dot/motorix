@@ -10,6 +10,16 @@
 
 > Nota de contexto (hallazgos H-02 y H-03 del aseguramiento de la calidad): hoy solo existe una parte dispersa de lo que pide la sección 6.12 del contexto maestro. Existen el resumen de stock de Inventario (`PartsProvider.summary`, se carga solo al abrir esa pantalla), los contadores del panel de control (solo administrador), la lista de Mantenimientos con su clasificación Próximo o Vencido y las citas con sus estados. **No existen** un centro de notificaciones, tablas ni rutas para avisos, un criterio de "orden detenida", una lista de clientes por avisar, ni la insignia de stock en el ícono de Inventario ni el aviso de stock en la pantalla de inicio que mencionaba el insumo original. Este sprint reúne esos avisos en un solo lugar del encabezado, por rol, y agrega la lista de clientes por avisar. Cada requisito indica si **mantiene** un comportamiento existente (que ahora debe quedar probado) o **agrega** uno nuevo.
 
+## Aclaraciones
+
+### Sesión 2026-11-24
+
+- Q: ¿Dónde se accede a la lista de clientes por avisar? → A: En una sección propia del menú, «Clientes por avisar», visible para administración y recepción, con una insignia con el número de clientes pendientes; no se mezcla con el panel de la campana.
+- Q: ¿Qué abre cada tipo de aviso? → A: La orden detenida abre el detalle de la orden; la cita del día, el detalle de la cita; el stock bajo o agotado, el detalle de la refacción; y el mantenimiento próximo o vencido abre la sección Mantenimientos con el buscador ya llenado con la placa del vehículo.
+- Q: ¿Una cita de hoy sigue siendo aviso cuando su hora ya pasó? → A: Sí, mientras siga Pendiente o Confirmada y hasta el fin del día; desaparece al cambiar de estado.
+- Q: ¿Qué órdenes Terminadas entran en la lista de clientes por avisar? → A: Todas las Terminadas que aún no se entregan, sin importar si ya están pagadas o tienen saldo; salen de la lista al entregarse o al marcar al cliente como avisado.
+- Q: ¿Qué pasa con la lectura de un aviso cuando el aviso desaparece? → A: La lectura se descarta; si la condición vuelve a cumplirse, el aviso aparece como nuevo (no leído), aunque tenga el mismo estado que antes.
+
 ## Escenarios de usuario y pruebas *(obligatorio)*
 
 ### Historia de usuario 1 - Ver cuántos avisos tengo en el encabezado (Prioridad: P1)
@@ -111,7 +121,8 @@ Como usuario, quiero marcar un aviso como leído y abrir el módulo relacionado 
 2. **Dado** que dos usuarios ven el mismo aviso, **Cuando** uno lo marca como leído, **Entonces** al otro le sigue apareciendo como no leído.
 3. **Dado** un aviso leído, **Cuando** su condición deja de cumplirse (por ejemplo, el mantenimiento se atiende), **Entonces** el aviso desaparece.
 4. **Dado** un aviso leído, **Cuando** su estado empeora (un mantenimiento pasa de Próximo a Vencido o una refacción de stock bajo a agotado), **Entonces** vuelve a mostrarse como no leído.
-5. **Dado** un aviso, **Cuando** el usuario lo abre, **Entonces** llega a la pantalla relacionada (la orden, la cita, el vehículo con su mantenimiento o el inventario) y el aviso queda leído.
+5. **Dado** un aviso, **Cuando** el usuario lo abre, **Entonces** llega a la pantalla relacionada (el detalle de la orden, el detalle de la cita, el detalle de la refacción, o la sección Mantenimientos con la placa del vehículo ya escrita en el buscador) y el aviso queda leído.
+6. **Dado** un aviso leído que desapareció porque su condición dejó de cumplirse, **Cuando** la condición vuelve a cumplirse, **Entonces** el aviso aparece como no leído.
 
 ---
 
@@ -146,6 +157,7 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 - Cliente desactivado, vehículo sin cliente activo o refacción desactivada: no generan avisos.
 - Marcar dos veces como avisado el mismo hecho (doble clic o dos personas a la vez): se conserva un solo registro y la segunda solicitud no falla.
 - Usuario desactivado o con rol cambiado: sus lecturas se conservan, pero el servidor responde según su rol vigente.
+- Una cita de hoy cuya hora ya pasó pero sigue Pendiente o Confirmada: sigue siendo aviso hasta el fin del día o hasta que cambie de estado.
 - Citas y mantenimientos cuya fecha cae justo en el límite (hoy a medianoche, exactamente a 15 días o a 500 km): se tratan con los mismos criterios del panel de control y de Mantenimientos.
 
 ## Requisitos *(obligatorio)*
@@ -157,7 +169,7 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 - **FR-001** (agrega): El encabezado DEBE mostrar una campana con el número de avisos **no leídos** del usuario y, al abrirla, un panel con los avisos agrupados por tipo. Sin avisos, la campana no muestra número y el panel muestra un estado vacío.
 - **FR-002** (agrega): Los tipos de aviso DEBEN ser: mantenimiento próximo, mantenimiento vencido, cita del día, stock bajo, stock agotado y orden detenida.
 - **FR-003** (agrega): Los avisos DEBEN calcularse al consultarlos con los datos reales del sistema; NO se copian a otra tabla. Lo único que se guarda es la lectura de cada usuario.
-- **FR-004** (mantiene): Los avisos DEBEN usar los mismos criterios que ya existen, de modo que las cifras coincidan entre pantallas: mantenimiento Próximo a 15 días o menos o a 500 km o menos y Vencido si la fecha pasó o el kilometraje alcanzó el próximo (solo pendientes); stock bajo si la existencia es menor o igual al mínimo y agotado si es cero (solo refacciones activas); cita del día Pendiente o Confirmada con fecha de hoy.
+- **FR-004** (mantiene): Los avisos DEBEN usar los mismos criterios que ya existen, de modo que las cifras coincidan entre pantallas: mantenimiento Próximo a 15 días o menos o a 500 km o menos y Vencido si la fecha pasó o el kilometraje alcanzó el próximo (solo pendientes); stock bajo si la existencia es menor o igual al mínimo y agotado si es cero (solo refacciones activas); cita del día Pendiente o Confirmada con fecha de hoy, aunque su hora ya haya pasado.
 - **FR-005** (agrega): Una orden DEBE considerarse **detenida** cuando está abierta (Recibido, Diagnóstico, En reparación o Esperando refacción) y han pasado 3 o más días desde su último cambio de estado, medido con la fecha del último registro del historial de estados. Una orden Terminada se atiende con la lista de clientes por avisar y una Entregada o Cancelada no genera aviso.
 
 **Visibilidad por rol**
@@ -168,8 +180,8 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 **Lectura y navegación**
 
 - **FR-008** (agrega): Marcar un aviso como leído DEBE persistir por usuario: el contador baja, se conserva al cerrar sesión y volver a entrar, y no afecta a otros usuarios.
-- **FR-009** (agrega): La identidad de un aviso DEBE ser su tipo, su objeto y su estado. Si la condición deja de cumplirse, el aviso desaparece; si el estado cambia (de Próximo a Vencido, de stock bajo a agotado), el aviso vuelve a mostrarse como no leído.
-- **FR-010** (agrega): Cada aviso DEBE abrir la pantalla relacionada (la orden, la cita, el vehículo con su mantenimiento o el inventario) y, al abrirlo, quedar marcado como leído.
+- **FR-009** (agrega): La identidad de un aviso DEBE ser su tipo, su objeto y su estado. Si la condición deja de cumplirse, el aviso desaparece y su lectura se descarta, de modo que si la condición vuelve a cumplirse el aviso aparece como nuevo (no leído); si el estado cambia (de Próximo a Vencido, de stock bajo a agotado), el aviso también vuelve a mostrarse como no leído.
+- **FR-010** (agrega): Cada aviso DEBE abrir su pantalla relacionada y, al abrirlo, quedar marcado como leído: la orden detenida abre el detalle de la orden; la cita del día, el detalle de la cita; el stock bajo o agotado, el detalle de la refacción; y el mantenimiento próximo o vencido, la sección Mantenimientos con el buscador ya llenado con la placa del vehículo.
 - **FR-011** (agrega): El contador DEBE actualizarse al iniciar sesión, al cambiar de módulo y cada 60 segundos mientras la sesión esté abierta, y dejar de consultarse al cerrar sesión.
 - **FR-012** (agrega): El ícono de Inventario DEBE mostrar una insignia con el número de alertas de stock (bajo y agotado) solo para el administrador, calculada con el mismo criterio del centro de notificaciones; sin alertas, no se muestra.
 - **FR-013** (mantiene): El resumen de stock de la pantalla de Inventario y la tarjeta de stock del panel de control DEBEN seguir funcionando y mostrar las mismas cifras que el centro de notificaciones.
@@ -177,7 +189,7 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 
 **Clientes por avisar**
 
-- **FR-015** (agrega): Administración y recepción DEBEN tener una lista de clientes por avisar con cliente, teléfono, vehículo, motivo y fecha del hecho, con estos motivos: orden Terminada sin entregar (vehículo listo), cita de mañana Pendiente o Confirmada, y mantenimiento próximo o vencido.
+- **FR-015** (agrega): Administración y recepción DEBEN tener una sección propia del menú, «Clientes por avisar», con una insignia con el número de clientes pendientes, y una lista con cliente, teléfono, vehículo, motivo y fecha del hecho, con estos motivos: orden Terminada sin entregar (vehículo listo, sin importar si está pagada o con saldo), cita de mañana Pendiente o Confirmada, y mantenimiento próximo o vencido.
 - **FR-016** (agrega): El mecánico NO DEBE poder consultar la lista ni marcar clientes como avisados; el servidor DEBE responder que no tiene permiso y la sección no aparece en su menú.
 - **FR-017** (agrega): Marcar a un cliente como avisado DEBE guardar quién lo avisó, cuándo y una nota opcional de hasta 255 caracteres, y sacarlo de la lista por ese hecho. El mismo hecho NO DEBE volver a aparecer; un hecho nuevo (otra orden, otra cita, o el mismo mantenimiento con otra clasificación) SÍ DEBE aparecer. Un mantenimiento avisado como próximo y que luego vence es un hecho nuevo.
 - **FR-018** (agrega): Marcar como avisado NO DEBE enviar ningún mensaje por ningún canal (WhatsApp, correo o SMS): solo registra que una persona avisó al cliente.
@@ -193,7 +205,7 @@ Como recepcionista, quiero una lista de clientes por avisar (vehículo listo, ci
 ### Entidades clave *(incluir si la funcionalidad involucra datos)*
 
 - **Aviso**: mensaje interno calculado al consultar, con tipo, objeto (orden, cita, mantenimiento o refacción), estado y destinatarios por rol. No se guarda.
-- **Lectura de aviso**: constancia de que un usuario leyó un aviso concreto en un estado concreto, con su fecha. Es lo único que se guarda de los avisos.
+- **Lectura de aviso**: constancia de que un usuario leyó un aviso concreto en un estado concreto, con su fecha. Es lo único que se guarda de los avisos y se descarta cuando el aviso desaparece.
 - **Aviso a cliente**: registro de que una persona avisó a un cliente por un hecho (orden terminada, cita de mañana o mantenimiento), con quién, cuándo y una nota opcional.
 - **Hecho**: situación que motiva un aviso a un cliente: una orden terminada sin entregar, una cita de mañana o un mantenimiento próximo o vencido.
 
