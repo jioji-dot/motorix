@@ -22,6 +22,10 @@ export async function limpiarBase() {
   asegurarBaseDePruebas();
   await pool.query('SET FOREIGN_KEY_CHECKS = 0');
   for (const tabla of [
+    'audit_log',
+    'terms_acceptances',
+    'terms_versions',
+    'settings',
     'client_notices',
     'notification_reads',
     'tickets',
@@ -33,6 +37,7 @@ export async function limpiarBase() {
     'order_status_history',
     'order_labor',
     'order_services',
+    'service_types',
     'service_orders',
     'appointments',
     'vehicles',
@@ -246,6 +251,24 @@ export async function crearLineaDeRefaccion({ orderId, partId, quantity = 1, uni
   );
   await recalculateTotal(pool, orderId);
   return resultado.insertId;
+}
+
+// Hace que cada usuario indicado haya aceptado la versión vigente de los términos (si hay una publicada).
+// Los seeds publican la versión 1: las pruebas que cargan seeds y llaman a la API lo usan para no recibir TERMS_NOT_ACCEPTED.
+export async function aceptarTerminos(...usuarios) {
+  asegurarBaseDePruebas();
+  const [[vigente]] = await pool.query('SELECT MAX(version) AS version FROM terms_versions');
+  if (!vigente.version) return;
+  const ids = usuarios.flat().map((u) => (typeof u === 'object' ? u.id : u));
+  for (const id of ids) {
+    await pool.execute('INSERT IGNORE INTO terms_acceptances (userId, version) VALUES (?, ?)', [id, vigente.version]);
+  }
+}
+
+// Marca como vigente la actividad de un usuario hace `minutos` minutos (para probar el cierre por inactividad).
+export async function fijarActividad(userId, minutos) {
+  asegurarBaseDePruebas();
+  await pool.execute('UPDATE users SET lastActivityAt = DATE_SUB(NOW(), INTERVAL ? MINUTE) WHERE id = ?', [minutos, userId]);
 }
 
 // Retrasa `dias` días el último cambio de estado de una orden (para probar las órdenes detenidas).

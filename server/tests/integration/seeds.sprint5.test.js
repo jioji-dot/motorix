@@ -8,7 +8,7 @@ import { aplicarSeeds, cerrarConexiones, emitirToken, limpiarBase } from '../hel
 
 const TABLAS = [
   'users', 'clients', 'vehicles', 'appointments', 'service_orders', 'order_services', 'order_labor', 'order_parts',
-  'parts', 'inventory_movements', 'maintenance', 'payments', 'tickets', 'notification_reads', 'client_notices',
+  'parts', 'inventory_movements', 'maintenance', 'payments', 'tickets', 'notification_reads', 'client_notices', 'settings', 'service_types', 'terms_versions', 'terms_acceptances', 'audit_log',
 ];
 
 const conteos = async () => {

@@ -341,8 +341,6 @@ Las pantallas **NO DEBEN mostrar** datos que el servidor no entrega al rol de la
 - Estados: cargando, vacío («No hay clientes por avisar») y error con «Reintentar».
 - La sección no aparece en el menú del mecánico.
 
----
-
 ### 8.9 Configuración (solo administrador)
 
 Sección del menú «Configuración» con **pestañas** (`TabBar`): **Taller**, **Tipos de servicio**, **Términos** y **Bitácora**.

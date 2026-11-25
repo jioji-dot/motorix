@@ -106,3 +106,63 @@ export const CLIENT_NOTICE_KIND = Object.freeze({
 });
 export const CLIENT_NOTICE_KINDS = Object.values(CLIENT_NOTICE_KIND);
 export const CLIENT_NOTICE_NOTE_MAX = 255;
+
+// ---- Sprint 7: configuración, términos, bitácora, inactividad y reportes
+
+export const SETTING_KEY = Object.freeze({
+  WORKSHOP_NAME: 'workshop.name',
+  WORKSHOP_ADDRESS: 'workshop.address',
+  WORKSHOP_PHONE: 'workshop.phone',
+  WARN_DAYS: 'maintenance.warnDays',
+  WARN_KM: 'maintenance.warnKm',
+});
+
+export const SETTING_LIMITS = Object.freeze({
+  NAME_MAX: 120,
+  ADDRESS_MAX: 200,
+  PHONE_MAX: 30,
+  WARN_DAYS: Object.freeze({ min: 1, max: 365 }),
+  WARN_KM: Object.freeze({ min: 1, max: 100000 }),
+});
+
+export const SERVICE_TYPE_LIMITS = Object.freeze({
+  NAME_MAX: 100,
+  DAYS: Object.freeze({ min: 1, max: 3650 }),
+  KM: Object.freeze({ min: 1, max: 1000000 }),
+});
+
+export const TERMS_TEXT_MAX = 20000;
+
+// El servidor rechaza la sesión que lleva más de este tiempo sin actividad (excepto la consulta automática de avisos).
+export const SESSION_INACTIVITY_MINUTES = 30;
+// La marca de actividad solo se actualiza si tiene más de este tiempo (menos escrituras).
+export const ACTIVITY_REFRESH_SECONDS = 60;
+// Duración del enlace de descarga de un reporte.
+export const EXPORT_LINK_SECONDS = 60;
+// Rango máximo de un reporte, en días (inclusivo).
+export const REPORT_MAX_DAYS = 366;
+
+export const AUDIT_ACTION = Object.freeze({
+  LOGIN_FAILED: 'LOGIN_FAILED',
+  ACCOUNT_LOCKED: 'ACCOUNT_LOCKED',
+  USER_CREATED: 'USER_CREATED',
+  USER_DEACTIVATED: 'USER_DEACTIVATED',
+  USER_REACTIVATED: 'USER_REACTIVATED',
+  USER_ROLE_CHANGED: 'USER_ROLE_CHANGED',
+  SETTINGS_CHANGED: 'SETTINGS_CHANGED',
+  PART_PRICE_CHANGED: 'PART_PRICE_CHANGED',
+  SERVICE_TYPE_CREATED: 'SERVICE_TYPE_CREATED',
+  SERVICE_TYPE_UPDATED: 'SERVICE_TYPE_UPDATED',
+  PAYMENT_CANCELLED: 'PAYMENT_CANCELLED',
+  TERMS_PUBLISHED: 'TERMS_PUBLISHED',
+});
+export const AUDIT_ACTIONS = Object.values(AUDIT_ACTION);
+
+export const REPORT_NAME = Object.freeze({
+  INCOME: 'income',
+  SERVICES: 'services',
+  PRODUCTIVITY: 'productivity',
+  PARTS: 'parts',
+  ROTATION: 'rotation',
+});
+export const REPORT_NAMES = Object.values(REPORT_NAME);
