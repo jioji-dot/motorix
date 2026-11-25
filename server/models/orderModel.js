@@ -306,3 +306,49 @@ export async function changeStatus(conexion, { id, from, to, userId, reason }) {
   }
   return resultado.affectedRows;
 }
+
+// ---- Sprint 6: avisos
+
+// Órdenes abiertas sin cambio de estado desde hace `hours` horas o más. La antigüedad se mide con el último registro
+// del historial de estados (o con la fecha de creación si no tiene) y con la hora de MySQL, no con updatedAt,
+// que cambia al editar líneas. Excluye a los clientes desactivados; con `mechanicId` solo las de ese mecánico.
+export async function listStalled({ hours, mechanicId }) {
+  const parametros = [hours];
+  let filtroMecanico = '';
+  if (mechanicId !== undefined) {
+    filtroMecanico = 'AND o.mechanicId = ?';
+    parametros.push(mechanicId);
+  }
+  const [filas] = await pool.query(
+    `SELECT o.id, o.folio, o.status, o.clientId, o.vehicleId, o.mechanicId, v.licensePlate,
+            c.name AS clientName, v.brand, v.model,
+            TIMESTAMPDIFF(HOUR, COALESCE(h.lastChange, o.createdAt), NOW()) AS hours
+       FROM service_orders o
+       JOIN clients  c ON c.id = o.clientId AND c.active = 1
+       JOIN vehicles v ON v.id = o.vehicleId
+       LEFT JOIN (SELECT orderId, MAX(changedAt) AS lastChange FROM order_status_history GROUP BY orderId) h
+              ON h.orderId = o.id
+      WHERE o.status IN ('RECIBIDO','DIAGNOSTICO','EN_REPARACION','ESPERANDO_REFACCION')
+        AND TIMESTAMPDIFF(HOUR, COALESCE(h.lastChange, o.createdAt), NOW()) >= ?
+        ${filtroMecanico}
+      ORDER BY hours DESC, o.id ASC`,
+    parametros,
+  );
+  return filas.map((fila) => ({ ...fila, hours: Number(fila.hours) }));
+}
+
+// Órdenes Terminadas que aún no se entregan, con el cliente (y su teléfono) y la fecha en que quedaron Terminadas.
+export async function listReadyForPickup() {
+  const [filas] = await pool.query(
+    `SELECT o.id, o.folio, o.clientId, o.vehicleId, v.licensePlate, v.brand, v.model,
+            c.name AS clientName, c.phone AS clientPhone,
+            COALESCE((SELECT MAX(h.changedAt) FROM order_status_history h
+                       WHERE h.orderId = o.id AND h.toStatus = 'TERMINADO'), o.updatedAt) AS finishedAt
+       FROM service_orders o
+       JOIN clients  c ON c.id = o.clientId AND c.active = 1
+       JOIN vehicles v ON v.id = o.vehicleId
+      WHERE o.status = 'TERMINADO'
+      ORDER BY finishedAt ASC, o.id ASC`,
+  );
+  return filas;
+}

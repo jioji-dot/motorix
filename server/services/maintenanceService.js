@@ -69,7 +69,18 @@ export function createMaintenanceService({
     return { items: ordenados.slice(inicio, inicio + pageSize), meta: { page, pageSize, total: ordenados.length } };
   }
 
-  return { create, get, update, list };
+  // Todos los mantenimientos pendientes clasificados, sin paginar (los usan los avisos del Sprint 6).
+  // Con `classification` (arreglo) filtra; con `onlyActiveClients` descarta los de clientes desactivados.
+  async function listAllClassified({ classification, onlyActiveClients = false } = {}) {
+    const todos = (await maintenanceModel.listAll({ status: MAINTENANCE_STATUS.PENDING })).map(conClasificacion);
+    return todos
+      .filter((m) => m.classification !== null)
+      .filter((m) => !classification || classification.includes(m.classification))
+      .filter((m) => !onlyActiveClients || m.client.active !== false)
+      .sort(compareByUrgency);
+  }
+
+  return { create, get, update, list, listAllClassified };
 }
 
 export const maintenanceService = createMaintenanceService();

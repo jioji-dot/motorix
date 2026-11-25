@@ -135,3 +135,24 @@ export async function setStatus(id, status, conexion = pool) {
   await conexion.execute('UPDATE appointments SET status = ? WHERE id = ?', [status, id]);
   return findById(id);
 }
+
+// ---- Sprint 6: avisos
+
+// Citas Pendientes y Confirmadas de un día ('YYYY-MM-DD') con cliente (y su teléfono) y vehículo, ordenadas por hora.
+// Excluye a los clientes desactivados.
+export async function listByDay(fecha) {
+  const [filas] = await pool.query(
+    `SELECT a.id, a.clientId, a.vehicleId, a.scheduledAt, a.reason, a.status,
+            DATE_FORMAT(a.scheduledAt, '%H:%i') AS time,
+            c.name AS clientName, c.phone AS clientPhone,
+            v.brand, v.model, v.licensePlate
+       FROM appointments a
+       JOIN clients  c ON c.id = a.clientId AND c.active = 1
+       JOIN vehicles v ON v.id = a.vehicleId
+      WHERE a.scheduledAt >= ? AND a.scheduledAt < DATE_ADD(?, INTERVAL 1 DAY)
+        AND a.status IN ('PENDIENTE','CONFIRMADA')
+      ORDER BY a.scheduledAt ASC, a.id ASC`,
+    [`${fecha} 00:00:00`, `${fecha} 00:00:00`],
+  );
+  return filas;
+}

@@ -8,7 +8,7 @@ const SELECT_MANTENIMIENTO = `
          DATE_FORMAT(m.nextDate, '%Y-%m-%d') AS nextDate, m.nextMileage,
          m.notes, m.status, m.completedAt, m.sourceOrderId, m.createdAt, m.updatedAt,
          v.brand, v.model, v.year, v.licensePlate, v.currentMileage,
-         c.id AS clientId, c.name AS clientName, c.phone AS clientPhone
+         c.id AS clientId, c.name AS clientName, c.phone AS clientPhone, c.active AS clientActive
     FROM maintenance m
     JOIN vehicles v ON v.id = m.vehicleId
     JOIN clients  c ON c.id = v.clientId`;
@@ -36,7 +36,7 @@ function toMaintenance(fila) {
       licensePlate: fila.licensePlate,
       currentMileage: fila.currentMileage,
     },
-    client: { id: fila.clientId, name: fila.clientName, phone: fila.clientPhone },
+    client: { id: fila.clientId, name: fila.clientName, phone: fila.clientPhone, active: Boolean(fila.clientActive) },
   };
 }
 

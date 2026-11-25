@@ -103,3 +103,23 @@ export async function summary() {
   const low = Number(fila.low);
   return { total, ok: total - out - low, low, out };
 }
+
+// ---- Sprint 6: avisos
+
+// Refacciones activas con stock bajo o agotado (las mismas que cuenta `summary`). No incluye precios.
+export async function listAlerts() {
+  const [filas] = await pool.query(
+    `SELECT id, code, name, stock, minimumStock
+       FROM parts
+      WHERE active = 1 AND stock <= minimumStock
+      ORDER BY name ASC, id ASC`,
+  );
+  return filas.map((fila) => ({
+    id: fila.id,
+    code: fila.code,
+    name: fila.name,
+    stock: fila.stock,
+    minimumStock: fila.minimumStock,
+    stockLevel: stockLevelOf({ ...fila, active: true }),
+  }));
+}
