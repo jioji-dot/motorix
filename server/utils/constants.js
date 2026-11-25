@@ -80,3 +80,29 @@ export const COLLECTION_STATUS = Object.freeze({
 
 // Solo las órdenes terminadas o entregadas admiten pagos y ticket.
 export const BILLABLE_ORDER_STATUSES = Object.freeze([ORDER_STATUS.FINISHED, ORDER_STATUS.DELIVERED]);
+
+// ---- Sprint 6: notificaciones internas y clientes por avisar
+
+export const NOTICE_TYPE = Object.freeze({
+  MAINTENANCE_OVERDUE: 'MAINTENANCE_OVERDUE',
+  MAINTENANCE_SOON: 'MAINTENANCE_SOON',
+  APPOINTMENT_TODAY: 'APPOINTMENT_TODAY',
+  STOCK_OUT: 'STOCK_OUT',
+  STOCK_LOW: 'STOCK_LOW',
+  ORDER_STALLED: 'ORDER_STALLED',
+});
+export const NOTICE_TYPES = Object.values(NOTICE_TYPE);
+
+// Una orden abierta se considera detenida con 72 horas (3 días de 24 horas) o más sin cambio de estado.
+export const NOTICE_STALLED_HOURS = 72;
+// Avisos que muestra el panel por tipo; el total real se informa aparte.
+export const NOTICE_PANEL_LIMIT = 10;
+
+export const CLIENT_NOTICE_KIND = Object.freeze({
+  ORDER_READY: 'ORDEN_LISTA',
+  APPOINTMENT_TOMORROW: 'CITA_MANANA',
+  MAINTENANCE_SOON: 'MANTENIMIENTO_PROXIMO',
+  MAINTENANCE_OVERDUE: 'MANTENIMIENTO_VENCIDO',
+});
+export const CLIENT_NOTICE_KINDS = Object.values(CLIENT_NOTICE_KIND);
+export const CLIENT_NOTICE_NOTE_MAX = 255;
