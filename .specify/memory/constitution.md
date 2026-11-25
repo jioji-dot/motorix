@@ -13,17 +13,23 @@ por el agente de IA.
 - El agente DEBE leer `docs/project-context.md` antes de implementar cualquier sprint.
 - NO se permite agregar funcionalidades fuera del alcance sin indicarlo y obtener
   aprobación del equipo.
-- El desarrollo DEBE seguir los sprints en orden: los sprints 1 → 4 del MVP y, después, el
-  Sprint 5 (precios de refacciones y cobro completo, insumo en
-  `docs/sprints/sprint-5-precios-refacciones-cobro.md`) como primer sprint posterior al MVP;
+- El desarrollo DEBE seguir los sprints en orden: los sprints 1 → 4 del MVP y, después, los
+  sprints posteriores al MVP: el Sprint 5 (precios de refacciones y cobro completo, insumo en
+  `docs/sprints/sprint-5-precios-refacciones-cobro.md`), el Sprint 6 (notificaciones internas y
+  clientes por avisar, insumo en `docs/sprints/sprint-6-notificaciones-internas.md`) y el
+  Sprint 7 (reportes, configuración, términos y seguridad, insumo en
+  `docs/sprints/sprint-7-reportes-configuracion.md`); el Sprint 7 es el último del proyecto.
   NO se implementa todo el sistema de una sola vez. No se inicia por Mercado Pago,
   dashboard o tickets.
 - Todo sprint posterior al MVP DEBE contar con la aprobación del representante del proyecto,
   Jorge Francisco Dominguez Ramirez, autoridad declarada por quien lleva el proyecto por ser
   un proyecto escolar, y esa aprobación DEBE registrarse como enmienda de esta constitución.
-  El Sprint 5 se aprobó el 2026-11-03.
-- El chatbot de WhatsApp está FUERA del MVP; solo puede tratarse como integración externa
-  futura.
+  El Sprint 5 se aprobó el 2026-11-03 y los Sprints 6 y 7 se aprobaron el 2026-11-24.
+- El chatbot de WhatsApp y cualquier mensajería automática al cliente (WhatsApp, correo o SMS)
+  están FUERA del alcance del proyecto (decisión del 2026-11-11): no se implementan ni se
+  preparan. El aviso al cliente lo hace la persona de recepción, apoyada en la lista de
+  clientes por avisar. Las fotos del vehículo, el hosting, los respaldos y la puesta en
+  producción también quedaron fuera (decisión del 2026-11-19).
 - DEBE mantenerse la trazabilidad: requisito de alto nivel → historia de usuario → sprint →
   implementación.
 - Si cambia una regla de negocio, rol, entidad, requisito o sprint, DEBE actualizarse
@@ -187,10 +193,12 @@ por el agente de IA.
 Estas decisiones aún no están tomadas; el agente puede proponer opciones, pero NO asumirlas
 como definitivas:
 
-- Servicio de hosting y proveedor de almacenamiento.
-- Implementación concreta de PDF/tickets.
-- Alcance exacto de Mercado Pago para la demostración.
-- Modo oscuro (por ahora solo tema claro en el MVP) y logotipo e identidad visual.
+- Modo oscuro (por ahora solo tema claro) y logotipo e identidad visual.
+
+Quedaron fuera del alcance (2026-11-19): el servicio de hosting y el proveedor de almacenamiento;
+el sistema se entrega para ejecutarse en local. Quedaron resueltas la implementación de los
+tickets (página imprimible armada al consultarla, sin PDF propio) y el alcance de Mercado Pago
+(enlace de pago en modo de pruebas, sandbox).
 
 Decisiones ya resueltas (acceso a datos con `mysql2` sin ORM, migraciones SQL numeradas,
 MySQL nativo, validación con `zod`, `bcryptjs`, Jest + supertest, estructura del backend sin
@@ -211,4 +219,4 @@ resueltas la librería de componentes de UI (ninguna, solo Material 3 con tema p
   explícitamente o descartarse.
 - Guía de trabajo complementaria: `docs/guia-spec-kit.md` y `CLAUDE.md`.
 
-**Versión**: 1.1.0 | **Ratificada**: 2026-10-18 | **Última enmienda**: 2026-11-03
+**Versión**: 1.2.0 | **Ratificada**: 2026-10-18 | **Última enmienda**: 2026-11-24
