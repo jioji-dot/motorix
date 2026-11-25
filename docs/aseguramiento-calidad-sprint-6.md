@@ -67,7 +67,7 @@ Las 8 decisiones abiertas del insumo (sección 9) se resolvieron el 2026-11-24, 
 
 | ID | Decisión | Resolución | Requisito afectado |
 |:--:|---|---|---|
-| D-01 | Criterio de orden detenida | Orden abierta con 3 o más días desde su último cambio de estado (valor fijo) | FR-005 |
+| D-01 | Criterio de orden detenida | Orden abierta con 72 horas (3 días de 24 horas) o más desde su último cambio de estado (valor fijo) | FR-005 |
 | D-02 | Cita del día | La de hoy, Pendiente o Confirmada, hasta el fin del día aunque su hora ya pasó | FR-004 |
 | D-03 | Actualización del contador | Al iniciar sesión, al cambiar de módulo y cada 60 segundos | FR-011 |
 | D-04 | Identidad de un aviso para la lectura | Tipo, objeto y estado; la lectura se descarta cuando el aviso desaparece | FR-009 |
