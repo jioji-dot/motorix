@@ -77,7 +77,7 @@ describe('GET /api/orders/:id', () => {
         recommendations: null,
         cancellationReason: null,
         deliveredAt: null,
-        services: [{ id: expect.any(Number), description: 'Cambio de bomba de agua', amount: '1850.50' }],
+        services: [{ id: expect.any(Number), description: 'Cambio de bomba de agua', amount: '1850.50', serviceTypeId: null, serviceTypeName: null }],
         labor: [
           { id: expect.any(Number), description: 'Desmontaje y montaje', hours: '2.50', hourlyRate: '300.00', amount: '750.00' },
         ],

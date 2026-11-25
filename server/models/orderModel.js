@@ -92,7 +92,9 @@ export async function findDetail(id, conexion = pool) {
   if (!filas[0]) return null;
 
   const [services] = await conexion.execute(
-    'SELECT id, description, amount FROM order_services WHERE orderId = ? ORDER BY id',
+    `SELECT s.id, s.description, s.amount, s.serviceTypeId, t.name AS serviceTypeName
+       FROM order_services s LEFT JOIN service_types t ON t.id = s.serviceTypeId
+      WHERE s.orderId = ? ORDER BY s.id`,
     [id],
   );
   const [labor] = await conexion.execute(
@@ -214,10 +216,10 @@ export async function recalculateTotal(conexion, orderId) {
   );
 }
 
-export async function addService(conexion, orderId, { description, amount }) {
+export async function addService(conexion, orderId, { description, amount, serviceTypeId = null }) {
   const [resultado] = await conexion.execute(
-    'INSERT INTO order_services (orderId, description, amount) VALUES (?, ?, ?)',
-    [orderId, description, amount],
+    'INSERT INTO order_services (orderId, description, amount, serviceTypeId) VALUES (?, ?, ?, ?)',
+    [orderId, description, amount, serviceTypeId],
   );
   return resultado.insertId;
 }
@@ -226,7 +228,7 @@ export async function addService(conexion, orderId, { description, amount }) {
 export async function updateService(conexion, orderId, lineId, datos) {
   const asignaciones = [];
   const parametros = [];
-  for (const campo of ['description', 'amount']) {
+  for (const campo of ['description', 'amount', 'serviceTypeId']) {
     if (datos[campo] !== undefined) {
       asignaciones.push(`${campo} = ?`);
       parametros.push(datos[campo]);

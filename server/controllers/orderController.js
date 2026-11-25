@@ -68,3 +68,8 @@ export async function removePart(req, res) {
   await orderPartService.remove(id, lineId, req.user);
   res.json({ data: await orderService.get(id, req.user) });
 }
+
+// Propuesta del próximo mantenimiento a partir de los intervalos de los tipos de servicio de la orden (Sprint 7).
+export async function maintenanceProposal(req, res) {
+  res.json({ data: await orderService.getMaintenanceProposal(req.valid.params.id, req.user) });
+}

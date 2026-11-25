@@ -4,12 +4,14 @@ import * as modeloCitas from '../models/appointmentModel.js';
 import * as modeloClientes from '../models/clientModel.js';
 import * as modeloLineasDeRefaccion from '../models/orderPartModel.js';
 import * as modeloOrdenes from '../models/orderModel.js';
+import * as modeloTiposDeServicio from '../models/serviceTypeModel.js';
 import * as modeloUsuarios from '../models/userModel.js';
 import * as modeloVehiculos from '../models/vehicleModel.js';
 import { APPOINTMENT_STATUS, MOVEMENT_TYPE, ORDER_FINAL_STATUSES, ORDER_OPEN_STATUSES } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
 import { aCentavos } from '../utils/money.js';
 import { inventoryService as servicioInventario } from './inventoryService.js';
+import { hoyLocal } from './maintenanceClassifier.js';
 import { errorDeLimite, esErrorDeRango, exigirDentroDelLimite } from './orderLimits.js';
 import { allowedTransitions, canTransition, transitionExists } from './orderStateMachine.js';
 import { serializeOrder, serializeOrderListItem } from './serializers.js';
@@ -25,6 +27,7 @@ export function createOrderService({
   vehicleModel = modeloVehiculos,
   userModel = modeloUsuarios,
   orderPartModel = modeloLineasDeRefaccion,
+  serviceTypeModel = modeloTiposDeServicio,
   inventoryService = servicioInventario,
   transaction = withTransaction,
 } = {}) {
@@ -219,9 +222,48 @@ export function createOrderService({
     return conPermisos(await orderModel.findDetail(id), usuario);
   }
 
-  const addService = (id, datos, usuario) => sobreLineas(id, usuario, (c) => orderModel.addService(c, id, datos));
+  // El tipo de servicio debe existir y estar activo (Sprint 7, FR-006).
+  async function validarTipo(serviceTypeId) {
+    if (serviceTypeId === undefined || serviceTypeId === null) return;
+    const tipo = await serviceTypeModel.findById(serviceTypeId);
+    if (!tipo || !tipo.active) {
+      throw HttpError.validation('Revisa los datos enviados.', [{ field: 'serviceTypeId', message: 'El tipo de servicio no existe o está desactivado.' }]);
+    }
+  }
+
+  const addService = (id, datos, usuario) =>
+    sobreLineas(id, usuario, async (c) => {
+      await validarTipo(datos.serviceTypeId);
+      return orderModel.addService(c, id, datos);
+    });
   const updateService = (id, lineId, datos, usuario) =>
-    sobreLineas(id, usuario, (c) => orderModel.updateService(c, id, lineId, datos));
+    sobreLineas(id, usuario, async (c) => {
+      await validarTipo(datos.serviceTypeId);
+      return orderModel.updateService(c, id, lineId, datos);
+    });
+
+  // Propuesta del próximo mantenimiento: por cada tipo con intervalo de la orden, fecha (hoy más los días) y
+  // kilometraje (el del servicio o el de entrada más los kilómetros). El usuario puede corregirla (Sprint 7, FR-007).
+  async function getMaintenanceProposal(id, usuario) {
+    const orden = await get(id, usuario);
+    const kilometraje = orden.serviceMileage ?? orden.entryMileage;
+    const [anio, mes, dia] = hoyLocal().split('-').map(Number);
+    const vistos = new Set();
+    const propuesta = [];
+    for (const linea of orden.services) {
+      if (!linea.serviceTypeId || vistos.has(linea.serviceTypeId)) continue;
+      vistos.add(linea.serviceTypeId);
+      const tipo = await serviceTypeModel.findById(linea.serviceTypeId);
+      if (!tipo || (!tipo.intervalDays && !tipo.intervalKm)) continue;
+      propuesta.push({
+        serviceTypeId: tipo.id,
+        serviceType: tipo.name,
+        nextDate: tipo.intervalDays ? hoyLocal(new Date(anio, mes - 1, dia + tipo.intervalDays)) : null,
+        nextMileage: tipo.intervalKm ? kilometraje + tipo.intervalKm : null,
+      });
+    }
+    return propuesta;
+  }
   const removeService = (id, lineId, usuario) => sobreLineas(id, usuario, (c) => orderModel.removeService(c, id, lineId));
   const addLabor = (id, datos, usuario) => sobreLineas(id, usuario, (c) => orderModel.addLabor(c, id, datos));
   const updateLabor = (id, lineId, datos, usuario) =>
@@ -316,6 +358,7 @@ export function createOrderService({
     update,
     addService,
     updateService,
+    getMaintenanceProposal,
     removeService,
     addLabor,
     updateLabor,

@@ -53,7 +53,7 @@ describe('Servicios', () => {
       .set(mecanico())
       .send({ description: 'Cambio de aceite', amount: 450 });
     expect(respuesta.status).toBe(201);
-    expect(respuesta.body.data.services).toEqual([{ id: expect.any(Number), description: 'Cambio de aceite', amount: '450.00' }]);
+    expect(respuesta.body.data.services).toEqual([{ id: expect.any(Number), description: 'Cambio de aceite', amount: '450.00', serviceTypeId: null, serviceTypeName: null }]);
     expect(respuesta.body.data).not.toHaveProperty('total');
     expect(await totalDe(ordenId)).toBe('450.00');
   });
@@ -64,7 +64,7 @@ describe('Servicios', () => {
 
     const editada = await request(app).patch(`/api/orders/${ordenId}/services/${lineaId}`).set(mecanico()).send({ amount: 500, description: 'Aceite sintético' });
     expect(editada.status).toBe(200);
-    expect(editada.body.data.services[0]).toEqual({ id: lineaId, description: 'Aceite sintético', amount: '500.00' });
+    expect(editada.body.data.services[0]).toEqual({ id: lineaId, description: 'Aceite sintético', amount: '500.00', serviceTypeId: null, serviceTypeName: null });
     expect(editada.body.data).not.toHaveProperty('total');
     expect(await totalDe(ordenId)).toBe('500.00');
 

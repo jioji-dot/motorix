@@ -38,6 +38,7 @@ router.post('/', authorize('ADMIN', 'RECEPTIONIST'), validate(createOrderSchema)
 router.patch('/:id', todos, validate(idParamSchema, 'params'), validate(updateOrderSchema), asyncHandler(controlador.update));
 
 // Cambio de estado: la máquina de estados decide qué rol y qué asignación puede aplicar cada transición.
+router.get('/:id/maintenance-proposal', todos, validate(idParamSchema, 'params'), asyncHandler(controlador.maintenanceProposal));
 router.post('/:id/status', todos, validate(idParamSchema, 'params'), validate(changeStatusSchema), asyncHandler(controlador.changeStatus));
 
 // Servicios y mano de obra: solo el mecánico asignado o el administrador (el servicio comprueba la asignación).
