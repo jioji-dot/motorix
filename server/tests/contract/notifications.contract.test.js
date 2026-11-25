@@ -18,7 +18,7 @@ const get = (u) => request(app).get('/api/notifications').set('Authorization', `
 test('get_devuelve_la_forma_del_contrato', async () => {
   const r = await get(usuarios.ADMIN);
   expect(r.status).toBe(200);
-  expect(Object.keys(r.body.data).sort()).toEqual(['groups', 'stockAlerts', 'total', 'unread'].sort());
+  expect(Object.keys(r.body.data).sort()).toEqual(['clientsToNotify', 'groups', 'stockAlerts', 'total', 'unread'].sort());
   expect(r.body.meta).toEqual({ limitPerType: 10 });
   for (const grupo of r.body.data.groups) {
     expect(Object.keys(grupo).sort()).toEqual(['items', 'total', 'type', 'unread']);

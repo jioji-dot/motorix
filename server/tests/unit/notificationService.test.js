@@ -22,6 +22,7 @@ function crear({ ordenes = [], lecturas = [], citas = [], refacciones = [], mant
     partModel: { listAlerts: jest.fn(async () => refacciones) },
     maintenanceService: { listAllClassified: jest.fn(async () => mantenimientos) },
     notificationModel: modeloLecturas,
+    clientNoticeService: { countPending: jest.fn(async () => 0) },
     hoy: () => '2026-11-24',
   });
   return { servicio, modeloLecturas };
@@ -85,6 +86,7 @@ describe('notificationService.get', () => {
       orderModel: { listStalled }, appointmentModel: { listByDay }, partModel: { listAlerts },
       maintenanceService: { listAllClassified },
       notificationModel: { listReads: async () => [], saveRead: async () => {}, deleteReads: async () => {} },
+      clientNoticeService: { countPending: async () => 0 },
     });
     await s.get(mecanico);
     expect(listStalled).toHaveBeenCalledWith({ hours: 72, mechanicId: 3 });

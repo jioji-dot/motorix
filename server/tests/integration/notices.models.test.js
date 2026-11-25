@@ -249,7 +249,7 @@ describe('clientNoticeModel (avisos a clientes)', () => {
     expect(segundo.created).toBe(false);
 
     const registro = await modeloAvisosClientes.findByFact('ORDEN_LISTA', 4001);
-    expect(registro).toMatchObject({ clientId, kind: 'ORDEN_LISTA', factId: 4001, note: 'No contestó' });
+    expect(registro).toMatchObject({ client: { id: clientId }, kind: 'ORDEN_LISTA', factId: 4001, note: 'No contestó' });
     expect(registro.noticedBy.id).toBe(usuarios.RECEPTIONIST.id);
     expect(registro.noticedAt).toBeInstanceOf(Date);
     const [[{ n }]] = await pool.query("SELECT COUNT(*) AS n FROM client_notices WHERE kind = 'ORDEN_LISTA' AND factId = 4001");

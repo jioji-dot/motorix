@@ -4,6 +4,7 @@ import cors from 'cors';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import clientNoticeRoutes from './routes/clientNoticeRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
 import maintenanceRoutes from './routes/maintenanceRoutes.js';
 import mechanicRoutes from './routes/mechanicRoutes.js';
@@ -36,6 +37,7 @@ export function createApp() {
   app.use('/api/dashboard', dashboardRoutes);
   app.use('/api/tickets', ticketRoutes);
   app.use('/api/notifications', notificationRoutes);
+  app.use('/api/client-notices', clientNoticeRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

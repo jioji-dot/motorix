@@ -7,6 +7,7 @@ import * as modeloRefacciones from '../models/partModel.js';
 import { NOTICE_PANEL_LIMIT, NOTICE_STALLED_HOURS, NOTICE_TYPE } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
 import { hoyLocal } from './maintenanceClassifier.js';
+import { clientNoticeService as servicioAvisosClientes } from './clientNoticeService.js';
 import { maintenanceService as servicioMantenimientos } from './maintenanceService.js';
 import { GROUP_ORDER, buildKey, compareFor, parseKey, typesForRole } from './noticeKeys.js';
 
@@ -42,6 +43,7 @@ export function createNotificationService({
   partModel = modeloRefacciones,
   maintenanceService = servicioMantenimientos,
   notificationModel = modeloLecturas,
+  clientNoticeService = servicioAvisosClientes,
   hoy = hoyLocal,
 } = {}) {
   const deMantenimiento = (m, tipo) => ({
@@ -159,6 +161,10 @@ export function createNotificationService({
     };
     if (usuario.role === 'ADMIN') {
       respuesta.stockAlerts = (porTipo.get(T.STOCK_OUT)?.length ?? 0) + (porTipo.get(T.STOCK_LOW)?.length ?? 0);
+    }
+    // La insignia de «Clientes por avisar» solo existe para quien puede ver esa lista.
+    if (usuario.role === 'ADMIN' || usuario.role === 'RECEPTIONIST') {
+      respuesta.clientsToNotify = await clientNoticeService.countPending();
     }
     return { ...respuesta, limitPerType: NOTICE_PANEL_LIMIT };
   }
