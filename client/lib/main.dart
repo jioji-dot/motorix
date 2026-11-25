@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/appointments_provider.dart';
+import 'providers/audit_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/client_notices_provider.dart';
 import 'providers/clients_provider.dart';
@@ -11,6 +12,9 @@ import 'providers/notifications_provider.dart';
 import 'providers/parts_provider.dart';
 import 'providers/orders_provider.dart';
 import 'providers/payments_provider.dart';
+import 'providers/service_types_provider.dart';
+import 'providers/settings_provider.dart';
+import 'providers/terms_admin_provider.dart';
 import 'providers/users_provider.dart';
 import 'providers/vehicles_provider.dart';
 import 'providers/sidebar_provider.dart';
@@ -23,9 +27,12 @@ import 'screens/login_screen.dart';
 import 'screens/maintenance_screen.dart';
 import 'screens/parts_screen.dart';
 import 'screens/orders_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/terms_screen.dart';
 import 'screens/users_screen.dart';
 import 'screens/vehicles_screen.dart';
 import 'services/api_client.dart';
+import 'widgets/inactivity_watcher.dart';
 import 'utils/app_theme.dart';
 
 void main() {
@@ -120,6 +127,34 @@ class MotorixApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (c) {
+            final provider = SettingsProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (c) {
+            final provider = ServiceTypesProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (c) {
+            final provider = TermsAdminProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (c) {
+            final provider = AuditProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (c) {
             final provider = UsersProvider(api);
             c.read<AuthProvider>().addSessionEndListener(provider.reset);
             return provider;
@@ -143,11 +178,16 @@ class _AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final autenticado = context.select<AuthProvider, bool>((a) => a.isAuthenticated);
+    final terminosPendientes = context.select<AuthProvider, bool>((a) => a.termsPending);
     return AnimatedSwitcher(
       duration: AppMotion.navigation,
-      child: autenticado
-          ? HomeScreen(
+      child: autenticado && terminosPendientes
+          ? const TermsScreen(key: ValueKey('terminos'))
+          : autenticado
+          ? InactivityWatcher(
               key: const ValueKey('home'),
+              onTimeout: () => context.read<AuthProvider>().logoutByInactivity(),
+              child: HomeScreen(
               sectionBuilders: {
                 'Clientes': (_) => const ClientsScreen(),
                 'Vehículos': (_) => const VehiclesScreen(),
@@ -158,7 +198,9 @@ class _AuthGate extends StatelessWidget {
                 'Clientes por avisar': (_) => const ClientNoticesScreen(),
                 'Panel de control': (_) => const DashboardScreen(),
                 'Usuarios': (_) => const UsersScreen(),
+                'Configuración': (_) => const SettingsScreen(),
               },
+            ),
             )
           : const LoginScreen(key: ValueKey('login')),
     );

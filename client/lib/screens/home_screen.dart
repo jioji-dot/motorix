@@ -63,6 +63,11 @@ const _todasLasSecciones = [
     icon: LucideIcons.userCog,
     roles: {UserRole.admin},
   ),
+  ShellSection(
+    label: 'Configuración',
+    icon: LucideIcons.settings,
+    roles: {UserRole.admin},
+  ),
 ];
 
 /// Permite que una pantalla de una sección lleve a otra (por ejemplo, las tarjetas del panel de control).

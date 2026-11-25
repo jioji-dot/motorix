@@ -113,6 +113,29 @@ class _MaintenanceFormScreenState extends State<MaintenanceFormScreen> {
         (!_editing && widget.preset == null && _vehicleId != null);
   }
 
+  /// Propone la fecha y el kilometraje del próximo mantenimiento con los intervalos de los tipos de servicio de la orden;
+  /// la persona puede corregirlos antes de guardar (Sprint 7, FR-007).
+  Future<void> _usarPropuesta() async {
+    final api = context.read<ApiClient>();
+    try {
+      final respuesta = await api.get('/orders/${widget.preset!.sourceOrderId}/maintenance-proposal') as Map<String, dynamic>;
+      final propuestas = (respuesta['data'] as List<dynamic>).cast<Map<String, dynamic>>();
+      if (!mounted) return;
+      if (propuestas.isEmpty) {
+        showFeedback(context, 'La orden no tiene servicios con un tipo que tenga intervalo.', error: true);
+        return;
+      }
+      final p = propuestas.first;
+      setState(() {
+        if (_serviceType.text.trim().isEmpty) _serviceType.text = p['serviceType'] as String;
+        _nextDate.text = (p['nextDate'] as String?) ?? '';
+        _nextMileage.text = (p['nextMileage'] as int?)?.toString() ?? '';
+      });
+    } on ApiException catch (e) {
+      if (mounted) showFeedback(context, e.message, error: true);
+    }
+  }
+
   Future<void> _pickDate(TextEditingController controlador) async {
     final inicial = _leerFecha(controlador.text) ?? DateTime.now();
     final elegida = await showDatePicker(
@@ -276,6 +299,16 @@ class _MaintenanceFormScreenState extends State<MaintenanceFormScreen> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Text('Próximo mantenimiento (indica la fecha, el kilometraje o ambos)', style: texto.bodySmall),
+                    if (!_editing && widget.preset?.sourceOrderId != null)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          key: const Key('usar-propuesta'),
+                          onPressed: _usarPropuesta,
+                          icon: const Icon(LucideIcons.wand, size: 16),
+                          label: const Text('Usar propuesta de la orden'),
+                        ),
+                      ),
                     const SizedBox(height: AppSpacing.sm),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,

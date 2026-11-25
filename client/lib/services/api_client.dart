@@ -38,12 +38,20 @@ class ApiClient {
   /// Se invoca cuando la API responde 401 con una sesión activa (sesión vencida).
   void Function()? onUnauthorized;
 
+  /// Se invoca cuando la API responde 401 `SESSION_INACTIVE` (la sesión pasó demasiado tiempo sin actividad).
+  void Function()? onSessionInactive;
+
+  /// Se invoca cuando la API responde 403 `TERMS_NOT_ACCEPTED` (hay una versión de los términos sin aceptar).
+  void Function()? onTermsRequired;
+
   Future<dynamic> get(String path, {Map<String, String?> query = const {}}) =>
       _send('GET', path, query: query);
 
   Future<dynamic> post(String path, {Object? body}) => _send('POST', path, body: body);
 
   Future<dynamic> patch(String path, {Object? body}) => _send('PATCH', path, body: body);
+
+  Future<dynamic> put(String path, {Object? body}) => _send('PUT', path, body: body);
 
   Future<dynamic> delete(String path) => _send('DELETE', path);
 
@@ -97,6 +105,12 @@ class ApiClient {
     final codigo = (error?['code'] as String?) ?? 'UNKNOWN_ERROR';
     if (respuesta.statusCode == 401 && token != null && codigo == 'UNAUTHENTICATED') {
       onUnauthorized?.call();
+    }
+    if (respuesta.statusCode == 401 && token != null && codigo == 'SESSION_INACTIVE') {
+      onSessionInactive?.call();
+    }
+    if (respuesta.statusCode == 403 && token != null && codigo == 'TERMS_NOT_ACCEPTED') {
+      onTermsRequired?.call();
     }
     final detalles = (error?['details'] as List?)?.whereType<Map<String, dynamic>>().toList() ?? const [];
     final extra = {

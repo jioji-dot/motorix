@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/service_order.dart';
+import '../models/service_type.dart';
 import '../utils/app_theme.dart';
 
 const double _importeMaximo = 99999999.99;
@@ -33,12 +34,16 @@ String? _validarDescripcion(String? valor) {
 }
 
 /// Diálogo para agregar o editar un servicio realizado. Devuelve `{description, amount}` o `null` si se cancela.
-Future<Map<String, dynamic>?> showServiceDialog(BuildContext context, {OrderService? service}) {
+Future<Map<String, dynamic>?> showServiceDialog(BuildContext context, {OrderService? service, List<ServiceType> types = const []}) {
   return showDialog<Map<String, dynamic>>(
     context: context,
     builder: (_) => _LineDialog(
       title: service == null ? 'Agregar servicio' : 'Editar servicio',
       initialDescription: service?.description,
+      types: types,
+      initialTypeId: service?.serviceTypeId,
+      initialTypeName: service?.serviceTypeName,
+      incluirTipoNulo: service != null,
       campos: [
         _CampoLinea(
           clave: 'amount',
@@ -96,10 +101,26 @@ class _CampoLinea {
 }
 
 class _LineDialog extends StatefulWidget {
-  const _LineDialog({required this.title, required this.campos, this.initialDescription});
+  const _LineDialog({
+    required this.title,
+    required this.campos,
+    this.initialDescription,
+    this.types = const [],
+    this.initialTypeId,
+    this.initialTypeName,
+    this.incluirTipoNulo = false,
+  });
 
   final String title;
   final String? initialDescription;
+
+  /// Tipos de servicio activos que se pueden elegir (Sprint 7); vacío en la mano de obra.
+  final List<ServiceType> types;
+  final int? initialTypeId;
+  final String? initialTypeName;
+
+  /// Al editar, se envía `serviceTypeId: null` para poder quitar el tipo.
+  final bool incluirTipoNulo;
   final List<_CampoLinea> campos;
 
   @override
@@ -110,10 +131,12 @@ class _LineDialogState extends State<_LineDialog> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _description;
   late final Map<String, TextEditingController> _controllers;
+  int? _typeId;
 
   @override
   void initState() {
     super.initState();
+    _typeId = widget.initialTypeId;
     _description = TextEditingController(text: widget.initialDescription ?? '');
     _controllers = {
       for (final campo in widget.campos) campo.clave: TextEditingController(text: campo.inicial ?? ''),
@@ -134,6 +157,7 @@ class _LineDialogState extends State<_LineDialog> {
     Navigator.of(context).pop(<String, dynamic>{
       'description': _description.text.trim(),
       for (final campo in widget.campos) campo.clave: double.parse(_controllers[campo.clave]!.text.trim()),
+      if (widget.types.isNotEmpty && (_typeId != null || widget.incluirTipoNulo)) 'serviceTypeId': _typeId,
     });
   }
 
@@ -157,6 +181,23 @@ class _LineDialogState extends State<_LineDialog> {
                   decoration: const InputDecoration(labelText: 'Descripción'),
                   validator: _validarDescripcion,
                 ),
+                if (widget.types.isNotEmpty || widget.initialTypeId != null) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  DropdownButtonFormField<int?>(
+                    key: const Key('campo-tipo-de-servicio-linea'),
+                    initialValue: _typeId,
+                    isExpanded: true,
+                    decoration: const InputDecoration(labelText: 'Tipo de servicio (opcional)'),
+                    items: [
+                      const DropdownMenuItem<int?>(value: null, child: Text('Sin tipo')),
+                      for (final t in widget.types) DropdownMenuItem<int?>(value: t.id, child: Text(t.name)),
+                      // Un tipo desactivado que la línea ya usa se sigue mostrando.
+                      if (widget.initialTypeId != null && !widget.types.any((t) => t.id == widget.initialTypeId))
+                        DropdownMenuItem<int?>(value: widget.initialTypeId, child: Text(widget.initialTypeName ?? 'Tipo desactivado')),
+                    ],
+                    onChanged: (v) => setState(() => _typeId = v),
+                  ),
+                ],
                 for (final campo in widget.campos) ...[
                   const SizedBox(height: AppSpacing.lg),
                   TextFormField(

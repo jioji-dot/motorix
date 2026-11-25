@@ -1,9 +1,13 @@
 /// Servicio realizado en una orden.
 class OrderService {
-  const OrderService({required this.id, required this.description, required this.amount});
+  const OrderService({required this.id, required this.description, required this.amount, this.serviceTypeId, this.serviceTypeName});
 
   final int id;
   final String description;
+
+  /// Tipo de servicio del catálogo (Sprint 7); nulo si la línea no tiene tipo.
+  final int? serviceTypeId;
+  final String? serviceTypeName;
 
   /// Importe con dos decimales, como lo devuelve la API (por ejemplo "1250.00").
   final String amount;
@@ -12,6 +16,8 @@ class OrderService {
         id: json['id'] as int,
         description: json['description'] as String,
         amount: json['amount'].toString(),
+        serviceTypeId: json['serviceTypeId'] as int?,
+        serviceTypeName: json['serviceTypeName'] as String?,
       );
 }
 

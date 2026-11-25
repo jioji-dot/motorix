@@ -6,6 +6,8 @@ import '../models/service_order.dart';
 import '../models/user.dart';
 import '../providers/auth_provider.dart';
 import '../providers/orders_provider.dart';
+import '../providers/service_types_provider.dart';
+import '../models/service_type.dart';
 import '../services/api_client.dart';
 import '../utils/app_theme.dart';
 import '../utils/format.dart';
@@ -152,14 +154,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   // ---- Líneas
 
+
+  /// Tipos de servicio activos del catálogo (Sprint 7) para elegir en la línea; un fallo no impide capturar el servicio.
+  Future<List<ServiceType>> _tiposActivos() async {
+    final provider = context.read<ServiceTypesProvider>();
+    if (!provider.loaded) await provider.load();
+    return provider.activeTypes;
+  }
   Future<void> _agregarServicio() async {
-    final datos = await showServiceDialog(context);
+    final tipos = await _tiposActivos();
+    if (!mounted) return;
+    final datos = await showServiceDialog(context, types: tipos);
     if (datos == null || !mounted) return;
     await _ejecutar((p) => p.addService(widget.orderId, datos), 'Servicio agregado.');
   }
 
   Future<void> _editarServicio(OrderService servicio) async {
-    final datos = await showServiceDialog(context, service: servicio);
+    final tipos = await _tiposActivos();
+    if (!mounted) return;
+    final datos = await showServiceDialog(context, service: servicio, types: tipos);
     if (datos == null || !mounted) return;
     await _ejecutar((p) => p.updateService(widget.orderId, servicio.id, datos), 'Servicio actualizado.');
   }

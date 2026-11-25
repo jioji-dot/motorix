@@ -9,6 +9,30 @@ String collectionStatusLabel(String estado) => switch (estado) {
       _ => estado,
     };
 
+/// Próximo servicio del ticket (Sprint 7): el tipo más cercano con su fecha y su kilometraje.
+class NextService {
+  const NextService({required this.name, this.date, this.mileage});
+
+  final String name;
+
+  /// Fecha 'AAAA-MM-DD' (nula si el tipo solo tiene intervalo en kilómetros).
+  final String? date;
+  final int? mileage;
+
+  /// «Cambio de aceite · 24/05/2027 · 45,000 km».
+  String get label {
+    String miles(int n) => n.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (_) => ',');
+    return [
+      name,
+      if (date != null) date!.split('-').reversed.join('/'),
+      if (mileage != null) '${miles(mileage!)} km',
+    ].join(' · ');
+  }
+
+  factory NextService.fromJson(Map<String, dynamic> json) =>
+      NextService(name: json['name'] as String, date: json['date'] as String?, mileage: json['mileage'] as int?);
+}
+
 /// Ticket de servicio: su contenido se arma en el servidor con los datos vigentes de la orden y sus pagos.
 class Ticket {
   const Ticket({
@@ -33,6 +57,7 @@ class Ticket {
     this.services = const [],
     this.labor = const [],
     this.parts = const [],
+    this.nextService,
   });
 
   final int id;
@@ -50,6 +75,7 @@ class Ticket {
   final List<OrderService> services;
   final List<OrderLabor> labor;
   final List<OrderPart> parts;
+  final NextService? nextService;
   final String subtotal;
   final String total;
   final List<String> paymentMethods;
@@ -85,6 +111,7 @@ class Ticket {
       services: lista('services', (e) => OrderService.fromJson({'id': 0, ...e})),
       labor: lista('labor', (e) => OrderLabor.fromJson({'id': 0, ...e})),
       parts: lista('parts', (e) => OrderPart.fromJson({'id': 0, 'partId': 0, 'code': '', ...e})),
+      nextService: json['nextService'] == null ? null : NextService.fromJson(json['nextService'] as Map<String, dynamic>),
       subtotal: json['subtotal'].toString(),
       total: json['total'].toString(),
       paymentMethods: ((pago['methods'] as List?) ?? const []).cast<String>(),

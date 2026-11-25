@@ -147,6 +147,10 @@ class _TicketScreenState extends State<TicketScreen> {
                   fila('Estado del pago', collectionStatusLabel(t.paymentStatus)),
                   fila('Pagado', formatMoney(t.paid)),
                   fila('Saldo', formatMoney(t.balance)),
+                  if (t.nextService != null) ...[
+                    const Divider(height: AppSpacing.xl),
+                    Container(key: const Key('proximo-servicio'), child: fila('Próximo servicio', t.nextService!.label)),
+                  ],
                   const SizedBox(height: AppSpacing.lg),
                   FilledButton(
                     key: const Key('boton-imprimir'),
