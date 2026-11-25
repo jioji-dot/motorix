@@ -248,8 +248,6 @@ export async function crearLineaDeRefaccion({ orderId, partId, quantity = 1, uni
   return resultado.insertId;
 }
 
-// Carga los datos de ejemplo (usuarios y scripts SQL de database/seeds/) con el mismo script que `npm run seed`.
-// Siempre sobre la base de pruebas: el proceso hijo hereda DB_NAME, que tests/env.js fija en una base "_test".
 // Retrasa `dias` días el último cambio de estado de una orden (para probar las órdenes detenidas).
 export async function envejecerOrden(orderId, dias) {
   asegurarBaseDePruebas();
@@ -264,6 +262,8 @@ export async function crearOrdenDetenida({ mechanicId, createdBy, dias = 5, stat
   return { id, ...cliente };
 }
 
+// Carga los datos de ejemplo (usuarios y scripts SQL de database/seeds/) con el mismo script que `npm run seed`.
+// Siempre sobre la base de pruebas: el proceso hijo hereda DB_NAME, que tests/env.js fija en una base "_test".
 export function aplicarSeeds() {
   asegurarBaseDePruebas();
   const servidor = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
