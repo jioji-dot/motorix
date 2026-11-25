@@ -1,0 +1,140 @@
+    √ el_maximo_99999999_99_se_acepta_y_un_centavo_mas_se_rechaza
+    √ el_precio_0_se_permite_en_compra_y_en_venta (1 ms)
+    √ categoria_y_marca_son_obligatorias_de_hasta_60_caracteres
+    √ confirmBelowCost_es_un_booleano_opcional_en_el_alta_y_en_la_edicion (1 ms)
+    √ una_edicion_con_solo_confirmBelowCost_no_cuenta_como_cambio
+PASS tests/unit/mercadoPagoGateway.test.js
+  Pasarela de Mercado Pago
+    √ sin_token_no_esta_configurada_y_no_sale_a_la_red (2 ms)
+    √ arma_la_preferencia_con_importe_descripcion_y_referencia_y_devuelve_el_enlace_de_pruebas (1 ms)
+    √ incluye_la_direccion_de_notificaciones_solo_si_esta_configurada
+    √ traduce_errores_de_red_y_respuestas_fallidas_a_MP_UNAVAILABLE_sin_exponer_el_token (1 ms)
+    √ usa_un_tiempo_de_espera_para_no_quedar_colgado
+    √ consulta_un_pago_y_lo_traduce_a_la_forma_interna
+    √ un_pago_inexistente_devuelve_null_y_un_identificador_invalido_ni_siquiera_consulta (1 ms)
+    √ busca_por_referencia_codificandola_y_devuelve_el_mas_reciente
+PASS tests/unit/ticketBuilder.test.js
+  Armado del ticket
+    √ incluye_todos_los_datos_esperados (2 ms)
+    √ el_kilometraje_es_el_del_servicio_o_el_de_entrada_si_falta (1 ms)
+    √ el_subtotal_es_la_suma_de_las_lineas_y_coincide_con_el_total_de_la_orden
+    √ sin_pagos_el_estado_es_SIN_PAGOS_sin_metodos_y_con_todo_el_saldo (1 ms)
+    √ con_un_pago_parcial_el_estado_es_PARCIAL
+    √ con_varios_metodos_los_lista_una_vez_en_el_orden_en_que_se_cobraron
+    √ los_pagos_rechazados_cancelados_y_pendientes_no_cuentan (1 ms)
+    √ una_orden_con_total_cero_se_marca_SIN_COBRO
+PASS tests/unit/passwordPolicy.test.js
+  Política de contraseñas
+    √ acepta_contrasena_con_8_caracteres_mayuscula_minuscula_y_numero (2 ms)
+    √ rechaza_contrasena_de_menos_de_8_caracteres
+    √ rechaza_contrasena_sin_mayuscula
+    √ rechaza_contrasena_sin_minuscula
+    √ rechaza_contrasena_sin_numero
+    √ indica_en_espanol_que_requisitos_faltan (1 ms)
+PASS tests/unit/orderLimits.test.js
+  Límite de importes de una línea y del total de una orden
+    √ el_maximo_es_99999999_99_expresado_en_centavos (2 ms)
+    √ el_importe_de_una_linea_es_cantidad_por_precio_unitario_en_centavos
+    √ el_limite_es_inclusivo_99999999_99_se_acepta_y_un_centavo_mas_se_rechaza (5 ms)
+    √ rechaza_con_409_AMOUNT_LIMIT_EXCEEDED_el_campo_y_el_maximo_en_el_mensaje (1 ms)
+    √ un_nuevo_total_que_pasa_del_maximo_se_rechaza_aunque_cada_parte_quepa (1 ms)
+PASS tests/unit/csv.test.js
+  toCsv
+    √ empieza_con_bom_utf8_y_usa_saltos_de_linea_crlf (2 ms)
+    √ entrecomilla_los_campos_con_comas_comillas_y_saltos_de_linea
+    √ escribe_numeros_y_vacios_sin_texto_extra
+    √ sin_filas_solo_escribe_el_encabezado (1 ms)
+    √ conserva_los_acentos_y_la_enie
+  neutralizar (celdas que se podrían leer como fórmulas)
+    √ antepone_un_apostrofo_a_"=1+1"
+    √ antepone_un_apostrofo_a_"+SUMA(A1)"
+    √ antepone_un_apostrofo_a_"-2+3" (1 ms)
+    √ antepone_un_apostrofo_a_"@cmd"
+    √ antepone_un_apostrofo_a_"\tcmd"
+    √ antepone_un_apostrofo_a_"\rcmd"
+    √ antepone_un_apostrofo_a_"=HYPERLINK(\"http://x\")"
+    √ no_cambia_"Cambio de aceite"
+    √ no_cambia_"12.50" (1 ms)
+    √ no_cambia_"0"
+    √ no_cambia_"a=b"
+    √ no_cambia_"ok-ok"
+    √ no_cambia_""
+    √ un_numero_negativo_real_no_se_toca
+    √ las_descripciones_con_formula_salen_neutralizadas_en_el_archivo
+PASS tests/unit/maintenanceClassifier.test.js
+  Clasificación de mantenimientos: fechas
+    √ una_fecha_de_ayer_esta_vencida (2 ms)
+    √ una_fecha_de_hoy_es_proxima_y_no_vencida
+    √ a_15_dias_es_proximo (1 ms)
+    √ a_16_dias_es_normal
+    √ cuenta_bien_el_cambio_de_mes_y_de_anio
+    √ acepta_objetos_Date_de_la_base_de_datos
+  Clasificación de mantenimientos: kilometraje
+    √ con_501_km_por_recorrer_es_normal
+    √ con_500_km_por_recorrer_es_proximo
+    √ con_1_km_por_recorrer_es_proximo
+    √ al_alcanzar_el_kilometraje_esta_vencido
+    √ al_superar_el_kilometraje_esta_vencido_con_valor_negativo
+  Clasificación de mantenimientos: fecha y kilometraje juntos
+    √ gana_la_condicion_mas_urgente_vencido_por_km_aunque_la_fecha_sea_lejana
+    √ gana_la_fecha_vencida_aunque_falte_mucho_kilometraje (1 ms)
+    √ es_proximo_si_solo_una_de_las_dos_condiciones_esta_cerca
+    √ es_normal_si_ambas_estan_lejos
+  Orden por urgencia
+    √ ordena_vencido_proximo_normal
+    √ dentro_de_un_grupo_el_mas_urgente_va_primero
+    √ el_vencido_hace_mas_tiempo_va_primero_y_los_empates_se_desempatan_por_id (1 ms)
+    √ la_urgencia_sin_valores_es_infinita
+  hoyLocal
+    √ da_la_fecha_local_con_ceros_a_la_izquierda
+PASS tests/unit/webhookVerifier.test.js
+  Lectura de notificaciones de Mercado Pago
+    √ lee_el_tipo_y_el_identificador_del_cuerpo (2 ms)
+    √ lee_el_formato_con_parametros_en_la_direccion
+    √ otros_tipos_de_notificacion_se_reconocen_sin_identificador
+    √ las_notificaciones_mal_formadas_devuelven_null (1 ms)
+  Firma de las notificaciones
+    √ acepta_una_firma_valida
+    √ rechaza_firmas_alteradas_de_otro_secreto_o_de_otro_pago
+    √ rechaza_encabezados_ausentes_o_incompletos
+PASS tests/unit/serializers.test.js
+  Serializador de refacciones por rol
+    √ el_administrador_ve_el_precio_de_compra_y_el_de_venta (2 ms)
+    √ recepcion_no_recibe_purchasePrice_pero_si_el_precio_de_venta
+    √ el_mecanico_no_recibe_ni_purchasePrice_ni_salePrice_y_conserva_el_resto (1 ms)
+    √ sin_usuario_tampoco_se_envia_el_precio_de_compra_y_no_modifica_el_original (1 ms)
+  Serializador de órdenes por rol (Sprint 5, FR-008)
+    √ administrador_y_recepcion_reciben_la_orden_completa_con_total_e_importes
+    √ el_mecanico_no_recibe_total_ni_precio_unitario_ni_importe_de_las_lineas_de_refaccion (1 ms)
+    √ el_mecanico_conserva_los_importes_de_servicios_y_mano_de_obra
+    √ el_listado_y_el_historial_aplican_la_misma_regla
+    √ no_modifica_el_original_ni_falla_con_una_orden_sin_lineas_de_refaccion
+PASS tests/unit/ticketPrint.test.js
+  Página imprimible del ticket
+    √ contiene_todos_los_datos_del_ticket (2 ms)
+    √ incluye_estilos_de_impresion_y_la_llamada_a_imprimir_y_no_tiene_menus_ni_botones (1 ms)
+    √ escapa_el_html_de_todo_texto_variable
+    √ omite_las_secciones_sin_lineas
+    √ etiquetas_de_metodos_y_estados
+    √ la_pagina_de_error_escapa_el_mensaje
+PASS tests/unit/paymentSummary.test.js
+  Resumen de cobro de una orden
+    √ sin_pagos_el_estado_es_SIN_PAGOS_y_todo_el_total_esta_disponible (2 ms)
+    √ un_pago_parcial_deja_el_estado_PARCIAL_y_el_saldo_pendiente
+    √ pagos_por_el_total_dejan_la_orden_PAGADA_sin_saldo
+    √ un_pago_pendiente_reserva_saldo_pero_no_cuenta_como_pagado
+    √ un_pago_pendiente_por_todo_el_saldo_no_deja_disponible_pero_la_orden_sigue_sin_pagos
+    √ con_total_cero_el_estado_es_SIN_COBRO_y_no_hay_nada_disponible (1 ms)
+    √ los_centavos_no_acumulan_error_de_redondeo
+PASS tests/unit/money.test.js
+  Aritmética de importes en centavos
+    √ convierte_importes_a_centavos_enteros_sin_error_de_punto_flotante (2 ms)
+    √ 0_1_mas_0_2_es_exactamente_0_30 (1 ms)
+    √ formatea_centavos_con_dos_decimales_y_ceros
+    √ suma_listas_de_importes_grandes_y_vacias
+Test Suites: 137 passed, 137 total
+Tests:       1664 passed, 1664 total
+Snapshots:   0 total
+Time:        211.423 s, estimated 214 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

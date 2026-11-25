@@ -69,6 +69,7 @@ npm run seed
 | 4 | `004_sprint4_payments_tickets.sql` | `008_payments_tickets.sql` |
 | 5 | (sin migración: endurece lo anterior) | (sin seeds nuevos) |
 | 6 | `005_sprint6_notificaciones.sql`: tablas `notification_reads` (lecturas de avisos por usuario) y `client_notices` (clientes ya avisados, único por tipo de hecho y hecho) | `009_notificaciones.sql`: una cita de hoy, una orden detenida del mecánico y un cliente ya avisado, con fechas relativas a la carga |
+| 7 | `006_sprint7_configuracion_seguridad.sql`: tablas `settings`, `service_types`, `terms_versions`, `terms_acceptances` y `audit_log`; columnas `order_services.serviceTypeId`, `users.lastActivityAt` y la instantánea de `tickets` | `010_configuracion.sql`: configuración inicial, cinco tipos de servicio con intervalos, líneas enlazadas a un tipo y la versión 1 de los términos |
 
 Los avisos **no se guardan**: se calculan al consultar; solo se guarda su lectura y los avisos hechos a clientes. Los seeds de cada sprint son
 idempotentes (cargarlos dos veces no cambia ningún conteo).

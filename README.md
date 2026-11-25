@@ -3,7 +3,7 @@
 Sistema de Gestión para Taller Mecánico. Proyecto académico de Ingeniería en Sistemas Computacionales,
 desarrollado con **Desarrollo Guiado por Especificaciones (SDD)** usando Spec Kit.
 
-Este repositorio contiene los **cuatro sprints** del MVP y los sprints posteriores al MVP (el **Sprint 5** y el **Sprint 6**):
+Este repositorio contiene los **cuatro sprints** del MVP y los sprints posteriores al MVP (los **Sprints 5, 6 y 7**; el 7 es el último del proyecto):
 
 - **Sprint 1**: autenticación con roles, gestión de usuarios, clientes y vehículos.
 - **Sprint 2**: agenda de citas y órdenes de servicio (asignación de mecánico, diagnóstico, servicios, mano de obra,
@@ -16,6 +16,9 @@ Este repositorio contiene los **cuatro sprints** del MVP y los sprints posterior
   costo y precios ocultos al mecánico.
 - **Sprint 6** (posterior al MVP): notificaciones internas (campana con avisos de mantenimientos, citas, stock y órdenes detenidas, según el
   rol) y la lista de clientes por avisar, sin enviar mensajes.
+- **Sprint 7** (posterior al MVP, el último): configuración del taller, catálogo de tipos de servicio con intervalos, próximo servicio en el
+  ticket, términos y condiciones con aceptación por versión, bitácora, cierre por inactividad, encabezados de seguridad y reportes del
+  administrador con exportación a CSV.
 
 El alcance completo y las reglas de negocio están en [`docs/project-context.md`](docs/project-context.md)
 y las reglas del proyecto en la [constitución](.specify/memory/constitution.md).
@@ -40,6 +43,7 @@ La documentación de cada funcionalidad está en `specs/`:
 - [`specs/004-pagos-tickets-dashboard/`](specs/004-pagos-tickets-dashboard/) (Sprint 4)
 - [`specs/005-precios-refacciones-cobro/`](specs/005-precios-refacciones-cobro/) (Sprint 5)
 - [`specs/006-notificaciones-internas/`](specs/006-notificaciones-internas/) (Sprint 6)
+- [`specs/007-reportes-configuracion/`](specs/007-reportes-configuracion/) (Sprint 7)
 
 Cada carpeta incluye `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/api.md`, `quickstart.md`,
 `tasks.md` y `validacion-quickstart.md`.
@@ -144,6 +148,22 @@ desde En reparación; una orden en curso puede cancelarse con motivo). Una orden
 - **Clientes por avisar**: vehículos listos (orden Terminada sin entregar), citas de mañana y mantenimientos próximos o vencidos, con el
   teléfono del cliente. Marcar a alguien como avisado guarda quién y cuándo (con una nota opcional) y ocurre **una sola vez por hecho**.
   La aplicación **no envía ningún mensaje**: la persona llama o avisa en persona.
+
+### Configuración, reportes, términos y seguridad (Sprint 7)
+
+| Rol | Configuración y catálogo | Reportes | Bitácora | Términos |
+|-----|--------------------------|----------|----------|----------|
+| Administrador | Edita datos del taller, márgenes y tipos de servicio | Los cinco, con exportación a CSV | Consulta (solo lectura) | Publica versiones y ve quién aceptó |
+| Recepcionista | Solo elige tipos de servicio activos | — | — | Acepta la versión vigente |
+| Mecánico | Solo elige tipos de servicio activos | — | — | Acepta la versión vigente |
+
+- Los **datos del taller** del ticket y los **márgenes de «Próximo»** se editan en Configuración; `WORKSHOP_*` de `.env` queda como valor de
+  respaldo. El ticket guarda una instantánea de esos datos y de su **próximo servicio** (calculado con los intervalos de los tipos de servicio).
+- Los **reportes** (ingresos por periodo, servicios frecuentes, productividad por mecánico, refacciones con margen y rotación) usan un rango de
+  hasta 366 días, importes en centavos enteros y se exportan a CSV con un enlace de 60 segundos.
+- Al ingresar hay que **aceptar los términos y condiciones** vigentes; el servidor rechaza toda operación sin la aceptación (`403`).
+- La **sesión se cierra a los 30 minutos sin actividad**; la **bitácora** registra inicios de sesión fallidos, cambios de usuarios, de precios, de
+  configuración y del catálogo, pagos cancelados y la publicación de términos, sin guardar contraseñas ni datos de pago.
 
 ### Pagos, ticket y panel de control (Sprint 4)
 

@@ -392,6 +392,29 @@ de origen (no se guardan); solo se guarda qué avisos leyó cada usuario (`notif
 
 ------------------------------------------------------------------------
 
+## 6.13 Configuración, reportes, términos y seguridad
+
+Implementado en el **Sprint 7** (`specs/007-reportes-configuracion/`), el último del proyecto. Todo lo de esta sección es exclusivo del
+administrador salvo lo indicado.
+
+- **Configuración del taller**: nombre, dirección y teléfono del ticket y los márgenes de «Próximo» (de 1 a 365 días y de 1 a 100,000 km). Se
+  leen de la base en cada consulta; sin valores guardados se usan `WORKSHOP_*` de `.env` y los de siempre (15 días y 500 km).
+- **Ticket**: guarda al generarse una instantánea de los datos del taller y el «Próximo servicio»; los tickets anteriores al sprint se arman con
+  los datos vigentes.
+- **Catálogo de tipos de servicio** con intervalo en días y en kilómetros (nunca se borran). Una línea de servicio de una orden puede enlazarse
+  a un tipo; con eso se propone el próximo mantenimiento (`GET /orders/:id/maintenance-proposal`) y se calcula el próximo servicio del ticket.
+- **Reportes** (ingresos por periodo, servicios frecuentes, productividad por mecánico, refacciones con costo y margen, rotación de
+  inventario) para un rango de hasta 366 días, con importes en centavos enteros y exportación a CSV (UTF-8 con BOM) con un enlace de 60 segundos.
+  El costo es el precio de compra vigente; con precio de compra 0 la refacción sale «sin costo» y no entra en el margen total. La rotación es
+  la salida por órdenes del periodo entre la existencia actual.
+- **Términos y condiciones y aviso de privacidad**: versiones numeradas; cada usuario acepta la vigente una vez; el servidor responde
+  `403 TERMS_NOT_ACCEPTED` en toda ruta protegida si falta la aceptación (exentas: `/auth/me` y `/terms/current` y `/terms/accept`). Los textos
+  sembrados son una plantilla que el taller debe revisar; no es asesoría legal.
+- **Seguridad**: bitácora de acciones sensibles (solo lectura, sin secretos), cierre de sesión a los 30 minutos sin actividad (la consulta
+  automática de avisos no cuenta), encabezados de seguridad con un middleware propio (sin `helmet`) y la política de contraseñas del Sprint 1.
+- **API nueva**: `/settings`, `/service-types`, `/terms`, `/audit-log` y `/reports`; códigos de error nuevos `TERMS_NOT_ACCEPTED`,
+  `SESSION_INACTIVE` y `SERVICE_TYPE_DUPLICATE`.
+
 # 7. Funcionalidad fuera del MVP actual
 
 ## Chatbot de WhatsApp
@@ -1034,8 +1057,8 @@ constitución (2026-11-03). Su alcance está en `docs/sprints/sprint-5-precios-r
 
 El **Sprint 6** (notificaciones internas y clientes por avisar) fue aprobado en la enmienda 1.2.0 de la constitución (2026-11-24). Su
 alcance está en `docs/sprints/sprint-6-notificaciones-internas.md` y su especificación en `specs/006-notificaciones-internas/`; **está
-implementado** (migración `005_sprint6_notificaciones.sql` y seeds `009_notificaciones.sql`). El **Sprint 7** (reportes y configuración)
-es el último del proyecto.
+implementado** (migración `005_sprint6_notificaciones.sql` y seeds `009_notificaciones.sql`). El **Sprint 7** (reportes y configuración) fue aprobado en la misma
+enmienda, está **implementado** (migración `006_sprint7_configuracion_seguridad.sql` y seeds `010_configuracion.sql`) y es el último del proyecto.
 
 # 15. Definición funcional del MVP
 
@@ -1444,6 +1467,28 @@ Antes de asumirlas como definitivas, el equipo debe decidir:
   no generan avisos.
 - **Hallazgos de la revisión del código** (documento de aseguramiento de calidad): no existía `StockAlertsProvider` (se creó la insignia de
   Inventario desde el centro de avisos), el insumo hablaba de otra numeración de migración y del seguimiento por `updatedAt`.
+
+### Decisiones resueltas con Spec Kit para el Sprint 7 (2026-11-25)
+
+- **Exportación** (`/speckit-clarify`): CSV (UTF-8 con BOM) con un enlace de corta vida, sin dependencias nuevas; las celdas que empiezan con
+  `=`, `+`, `-` o `@` se neutralizan.
+- **Entrega en dos partes**: 7A (configuración, catálogo, ticket, términos y seguridad) antes de la 7B (reportes).
+- **Instantánea del ticket** y **tipo de servicio opcional** en las líneas (las existentes quedan sin tipo).
+- **Reportes**: rango libre de hasta 366 días en hora local, productividad por órdenes terminadas y mano de obra, rotación contra la existencia
+  actual, margen «sin costo» con precio de compra 0, y exclusivos del administrador.
+- **Términos**: versión 1 sembrada, nuevas versiones publicadas desde la aplicación, una aceptación por versión, quien publica acepta su versión.
+- **Bitácora**: lista cerrada de acciones y de campos; sin edición, borrado ni exportación.
+- **Inactividad**: 30 minutos para todos los roles, validada en el servidor.
+- **Hallazgos de la revisión del código** (documento de aseguramiento de calidad): no existía `helmet`, las variables del taller son
+  `WORKSHOP_*`, los márgenes eran constantes de 15 días y 500 km, la política de contraseñas ya existía y el ticket no guardaba instantánea.
+
+### Deuda técnica declarada al cierre del proyecto
+
+- El costo de las refacciones en los reportes es el precio de compra vigente (las líneas de orden no guardan el costo); un cambio posterior del
+  precio de compra cambia el margen histórico.
+- La rotación usa la existencia actual, no la existencia promedio del periodo.
+- Los textos de los términos y del aviso de privacidad son una plantilla que el taller debe revisar con quien corresponda.
+- Quedan fuera del proyecto: mensajería al cliente, hosting y despliegue, respaldos, HTTPS, cifrado en disco y doble factor.
 
 CLAUDE puede proponer opciones para estas decisiones, pero no debe
 introducir dependencias grandes sin justificar su necesidad.
