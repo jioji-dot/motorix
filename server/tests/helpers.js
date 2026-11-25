@@ -22,6 +22,8 @@ export async function limpiarBase() {
   asegurarBaseDePruebas();
   await pool.query('SET FOREIGN_KEY_CHECKS = 0');
   for (const tabla of [
+    'client_notices',
+    'notification_reads',
     'tickets',
     'payments',
     'maintenance',
