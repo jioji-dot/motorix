@@ -59,6 +59,11 @@ const _todasLasSecciones = [
     roles: {UserRole.admin},
   ),
   ShellSection(
+    label: 'Reportes',
+    icon: LucideIcons.chartBar,
+    roles: {UserRole.admin},
+  ),
+  ShellSection(
     label: 'Usuarios',
     icon: LucideIcons.userCog,
     roles: {UserRole.admin},

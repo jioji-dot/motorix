@@ -12,6 +12,7 @@ import 'providers/notifications_provider.dart';
 import 'providers/parts_provider.dart';
 import 'providers/orders_provider.dart';
 import 'providers/payments_provider.dart';
+import 'providers/reports_provider.dart';
 import 'providers/service_types_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/terms_admin_provider.dart';
@@ -27,6 +28,7 @@ import 'screens/login_screen.dart';
 import 'screens/maintenance_screen.dart';
 import 'screens/parts_screen.dart';
 import 'screens/orders_screen.dart';
+import 'screens/reports_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/terms_screen.dart';
 import 'screens/users_screen.dart';
@@ -155,6 +157,13 @@ class MotorixApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (c) {
+            final provider = ReportsProvider(api);
+            c.read<AuthProvider>().addSessionEndListener(provider.reset);
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (c) {
             final provider = UsersProvider(api);
             c.read<AuthProvider>().addSessionEndListener(provider.reset);
             return provider;
@@ -199,6 +208,7 @@ class _AuthGate extends StatelessWidget {
                 'Panel de control': (_) => const DashboardScreen(),
                 'Usuarios': (_) => const UsersScreen(),
                 'Configuración': (_) => const SettingsScreen(),
+                'Reportes': (_) => const ReportsScreen(),
               },
             ),
             )

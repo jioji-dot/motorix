@@ -98,6 +98,9 @@ class ApiAdmin extends ApiAvisos {
   List<Map<String, dynamic>> bitacora;
   Map<String, dynamic> reportes = reportesDeEjemplo();
 
+  /// Propuesta del próximo mantenimiento que devuelve `/orders/:id/maintenance-proposal`.
+  List<Map<String, dynamic>> propuesta = [];
+
   /// Si es verdadero, toda petición responde 401 `SESSION_INACTIVE`.
   bool sesionInactiva = false;
 
@@ -127,7 +130,8 @@ class ApiAdmin extends ApiAvisos {
         ruta == '/api/settings' ||
         ruta.startsWith('/api/service-types') ||
         ruta == '/api/audit-log' ||
-        ruta.startsWith('/api/reports');
+        ruta.startsWith('/api/reports') ||
+        ruta.endsWith('/maintenance-proposal');
     if (!propia) return super.call(peticion);
 
     peticiones.add(peticion);
@@ -160,6 +164,8 @@ class ApiAdmin extends ApiAvisos {
         'pending': [{'userId': 2, 'name': 'Recepción'}],
       });
     }
+
+    if (ruta.endsWith('/maintenance-proposal')) return _ok(propuesta);
 
     if (ruta == '/api/settings' && metodo == 'GET') return _ok(ajustes);
     if (ruta == '/api/settings' && metodo == 'PUT') {
