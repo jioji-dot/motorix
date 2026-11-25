@@ -285,6 +285,28 @@ export async function crearOrdenDetenida({ mechanicId, createdBy, dias = 5, stat
   return { id, ...cliente };
 }
 
+// Deja la orden con su único registro de término en la fecha indicada ('YYYY-MM-DD') y con el estado final dado.
+export async function terminarEn(orderId, fecha, status = 'TERMINADO') {
+  asegurarBaseDePruebas();
+  await pool.execute('DELETE FROM order_status_history WHERE orderId = ?', [orderId]);
+  const [[orden]] = await pool.query('SELECT createdBy FROM service_orders WHERE id = ?', [orderId]);
+  await pool.execute(
+    "INSERT INTO order_status_history (orderId, fromStatus, toStatus, changedBy, changedAt) VALUES (?, 'EN_REPARACION', 'TERMINADO', ?, ?)",
+    [orderId, orden.createdBy, `${fecha} 12:00:00`],
+  );
+  await pool.execute('UPDATE service_orders SET status = ? WHERE id = ?', [status, orderId]);
+}
+
+// Inserta un pago con la fecha de cobro indicada ('YYYY-MM-DD', a las 12:00).
+export async function pagarEn({ orderId, createdBy, fecha, amount = 100, method = 'EFECTIVO', status = 'PAGADO' }) {
+  asegurarBaseDePruebas();
+  const [r] = await pool.execute(
+    'INSERT INTO payments (orderId, amount, method, status, paidAt, createdBy) VALUES (?, ?, ?, ?, ?, ?)',
+    [orderId, amount, method, status, status === 'PAGADO' ? `${fecha} 12:00:00` : null, createdBy],
+  );
+  return r.insertId;
+}
+
 // Carga los datos de ejemplo (usuarios y scripts SQL de database/seeds/) con el mismo script que `npm run seed`.
 // Siempre sobre la base de pruebas: el proceso hijo hereda DB_NAME, que tests/env.js fija en una base "_test".
 export function aplicarSeeds() {
