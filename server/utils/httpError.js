@@ -25,6 +25,20 @@ export class HttpError extends Error {
     return new HttpError(403, 'FORBIDDEN', message);
   }
 
+  // Hay una versión vigente de los términos que el usuario no ha aceptado (Sprint 7).
+  static termsNotAccepted() {
+    return new HttpError(
+      403,
+      'TERMS_NOT_ACCEPTED',
+      'Debes aceptar los términos y condiciones y el aviso de privacidad para continuar.',
+    );
+  }
+
+  // La sesión pasó demasiado tiempo sin actividad (Sprint 7).
+  static sessionInactive() {
+    return new HttpError(401, 'SESSION_INACTIVE', 'Tu sesión se cerró por inactividad. Inicia sesión de nuevo.');
+  }
+
   static accountDisabled() {
     return new HttpError(403, 'ACCOUNT_DISABLED', 'Tu cuenta está desactivada. Contacta al administrador.');
   }

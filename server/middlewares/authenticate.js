@@ -2,8 +2,12 @@
 // por lo que un cambio de rol o una desactivación surten efecto de inmediato.
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
+import * as termsModel from '../models/termsModel.js';
 import * as userModel from '../models/userModel.js';
 import { HttpError } from '../utils/httpError.js';
+
+// Rutas que un usuario sin aceptación vigente de los términos sí puede usar: consultar su sesión, ver los términos y aceptarlos.
+const EXENTAS_DE_TERMINOS = new Set(['/api/auth/me', '/api/terms/current', '/api/terms/accept']);
 
 export async function authenticate(req, _res, next) {
   try {
@@ -21,6 +25,13 @@ export async function authenticate(req, _res, next) {
     const usuario = await userModel.findById(carga.sub);
     if (!usuario) throw HttpError.unauthenticated('Tu sesión ya no es válida. Inicia sesión de nuevo.');
     if (!usuario.active) throw HttpError.accountDisabled();
+
+    // Aceptación de los términos vigentes: se valida en el servidor en todas las rutas protegidas (Sprint 7, FR-021).
+    const ruta = (req.originalUrl ?? '').split('?')[0].replace(/\/+$/, '');
+    if (!EXENTAS_DE_TERMINOS.has(ruta)) {
+      const vigente = await termsModel.current();
+      if (vigente && !(await termsModel.hasAccepted(usuario.id, vigente.version))) throw HttpError.termsNotAccepted();
+    }
 
     req.user = {
       id: usuario.id,

@@ -14,6 +14,7 @@ import partRoutes from './routes/partRoutes.js';
 import serviceTypeRoutes from './routes/serviceTypeRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import termsRoutes from './routes/termsRoutes.js';
 import ticketRoutes from './routes/ticketRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -40,6 +41,7 @@ export function createApp() {
   app.use('/api/tickets', ticketRoutes);
   app.use('/api/notifications', notificationRoutes);
   app.use('/api/settings', settingsRoutes);
+  app.use('/api/terms', termsRoutes);
   app.use('/api/service-types', serviceTypeRoutes);
   app.use('/api/client-notices', clientNoticeRoutes);
 
