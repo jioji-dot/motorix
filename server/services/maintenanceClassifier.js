@@ -27,7 +27,13 @@ export function hoyLocal(ahora = new Date()) {
 }
 
 // Devuelve { classification, daysLeft, kmLeft }; los valores faltantes son null y los vencidos, negativos.
-export function classify({ nextDate = null, nextMileage = null }, currentMileage, hoy = hoyLocal()) {
+// `margenes` ({ dias, km }) sale de la configuración (Sprint 7); por omisión, los valores de siempre (15 días y 500 km).
+export function classify(
+  { nextDate = null, nextMileage = null },
+  currentMileage,
+  hoy = hoyLocal(),
+  margenes = { dias: MAINTENANCE_WARNING_DAYS, km: MAINTENANCE_WARNING_KM },
+) {
   const daysLeft = nextDate ? aDias(nextDate) - aDias(hoy) : null;
   const kmLeft = nextMileage !== null && nextMileage !== undefined ? nextMileage - currentMileage : null;
 
@@ -35,8 +41,8 @@ export function classify({ nextDate = null, nextMileage = null }, currentMileage
   if ((daysLeft !== null && daysLeft < 0) || (kmLeft !== null && kmLeft <= 0)) {
     classification = MAINTENANCE_CLASS.OVERDUE;
   } else if (
-    (daysLeft !== null && daysLeft <= MAINTENANCE_WARNING_DAYS) ||
-    (kmLeft !== null && kmLeft <= MAINTENANCE_WARNING_KM)
+    (daysLeft !== null && daysLeft <= margenes.dias) ||
+    (kmLeft !== null && kmLeft <= margenes.km)
   ) {
     classification = MAINTENANCE_CLASS.SOON;
   }

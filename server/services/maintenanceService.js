@@ -6,19 +6,24 @@ import { MAINTENANCE_STATUS } from '../utils/constants.js';
 import { HttpError } from '../utils/httpError.js';
 import { reglasDeMantenimiento } from '../validators/maintenanceValidator.js';
 import { classify, compareByUrgency, hoyLocal } from './maintenanceClassifier.js';
+import { settingsService as servicioConfiguracion } from './settingsService.js';
 
 export function createMaintenanceService({
   maintenanceModel = modeloMantenimientos,
   vehicleModel = modeloVehiculos,
   transaction = withTransaction,
   hoy = hoyLocal,
+  settingsService = servicioConfiguracion,
 } = {}) {
   // La clasificación se calcula siempre con el kilometraje actual del vehículo y la fecha de hoy.
-  function conClasificacion(mantenimiento) {
+  // Los márgenes de «Próximo» se leen de la configuración una vez por operación.
+  const margenes = () => settingsService.getMaintenanceMargins();
+
+  function conClasificacion(mantenimiento, m) {
     if (mantenimiento.status !== MAINTENANCE_STATUS.PENDING) {
       return { ...mantenimiento, classification: null, daysLeft: null, kmLeft: null };
     }
-    return { ...mantenimiento, ...classify(mantenimiento, mantenimiento.vehicle.currentMileage, hoy()) };
+    return { ...mantenimiento, ...classify(mantenimiento, mantenimiento.vehicle.currentMileage, hoy(), m) };
   }
 
   function validarReglas(datos) {
@@ -35,13 +40,13 @@ export function createMaintenanceService({
     const id = await transaction((conexion) =>
       maintenanceModel.createReplacing(conexion, { ...datos, createdBy: usuario.id }),
     );
-    return conClasificacion(await maintenanceModel.findById(id));
+    return conClasificacion(await maintenanceModel.findById(id), await margenes());
   }
 
   async function get(id) {
     const mantenimiento = await maintenanceModel.findById(id);
     if (!mantenimiento) throw HttpError.notFound('No se encontró el mantenimiento solicitado.');
-    return conClasificacion(mantenimiento);
+    return conClasificacion(mantenimiento, await margenes());
   }
 
   async function update(id, datos) {
@@ -59,7 +64,8 @@ export function createMaintenanceService({
   }
 
   async function list({ classification, status, vehicleId, clientId, search, page, pageSize }) {
-    const todos = (await maintenanceModel.listAll({ status, vehicleId, clientId, search })).map(conClasificacion);
+    const m = await margenes();
+    const todos = (await maintenanceModel.listAll({ status, vehicleId, clientId, search })).map((x) => conClasificacion(x, m));
     const filtrados = classification ? todos.filter((m) => classification.includes(m.classification)) : todos;
     // Los atendidos (sin clasificación) van al final, del más reciente al más antiguo.
     const pendientes = filtrados.filter((m) => m.classification !== null).sort(compareByUrgency);
@@ -72,7 +78,8 @@ export function createMaintenanceService({
   // Todos los mantenimientos pendientes clasificados, sin paginar (los usan los avisos del Sprint 6).
   // Con `classification` (arreglo) filtra; con `onlyActiveClients` descarta los de clientes desactivados.
   async function listAllClassified({ classification, onlyActiveClients = false } = {}) {
-    const todos = (await maintenanceModel.listAll({ status: MAINTENANCE_STATUS.PENDING })).map(conClasificacion);
+    const m = await margenes();
+    const todos = (await maintenanceModel.listAll({ status: MAINTENANCE_STATUS.PENDING })).map((x) => conClasificacion(x, m));
     return todos
       .filter((m) => m.classification !== null)
       .filter((m) => !classification || classification.includes(m.classification))
