@@ -1,0 +1,140 @@
+  Claves de aviso
+    √ construye_y_lee_la_clave_de_MAINTENANCE_OVERDUE (2 ms)
+    √ construye_y_lee_la_clave_de_MAINTENANCE_SOON
+    √ construye_y_lee_la_clave_de_STOCK_OUT
+    √ construye_y_lee_la_clave_de_STOCK_LOW
+    √ construye_y_lee_la_clave_de_APPOINTMENT_TODAY
+    √ construye_y_lee_la_clave_de_ORDER_STALLED
+    √ un_mantenimiento_que_empeora_cambia_de_clave (1 ms)
+    √ una_refaccion_que_se_agota_cambia_de_clave
+    √ rechaza_la_clave_mal_formada_""
+    √ rechaza_la_clave_mal_formada_"MANT"
+    √ rechaza_la_clave_mal_formada_"MANT:1"
+    √ rechaza_la_clave_mal_formada_"MANT:1:NORMAL"
+    √ rechaza_la_clave_mal_formada_"MANT:x:VENCIDO" (1 ms)
+    √ rechaza_la_clave_mal_formada_"STOCK:1:VENCIDO"
+    √ rechaza_la_clave_mal_formada_"CITA:0"
+    √ rechaza_la_clave_mal_formada_"CITA:-2"
+    √ rechaza_la_clave_mal_formada_"ORDEN:1:2"
+    √ rechaza_la_clave_mal_formada_"orden:1"
+    √ rechaza_la_clave_mal_formada_"ORDEN:1.5"
+    √ rechaza_la_clave_mal_formada_null
+    √ rechaza_la_clave_mal_formada_undefined (1 ms)
+    √ rechaza_la_clave_mal_formada_42
+    √ construir_con_un_tipo_o_un_id_invalido_lanza_un_error (4 ms)
+    √ las_claves_caben_en_la_columna_de_60_caracteres
+  Tipos de aviso permitidos por rol
+    √ el_administrador_recibe_todos_los_tipos
+    √ recepcion_recibe_mantenimientos_citas_y_ordenes_detenidas_pero_nunca_stock
+    √ el_mecanico_solo_recibe_ordenes_detenidas
+    √ un_rol_desconocido_no_recibe_nada
+    √ el_orden_de_los_grupos_incluye_cada_tipo_una_sola_vez
+  Orden por urgencia dentro de cada tipo
+    √ mantenimientos_vencidos_el_mas_pasado_primero_por_dias_o_por_kilometros
+    √ mantenimientos_proximos_el_que_vence_antes_primero
+    √ citas_del_dia_por_hora
+    √ stock_el_mas_por_debajo_de_su_minimo_primero_y_luego_por_nombre
+    √ ordenes_detenidas_de_mas_a_menos_dias
+    √ un_tipo_desconocido_lanza_un_error
+PASS tests/unit/mercadoPagoGateway.test.js
+  Pasarela de Mercado Pago
+    √ sin_token_no_esta_configurada_y_no_sale_a_la_red (2 ms)
+    √ arma_la_preferencia_con_importe_descripcion_y_referencia_y_devuelve_el_enlace_de_pruebas (1 ms)
+    √ incluye_la_direccion_de_notificaciones_solo_si_esta_configurada
+    √ traduce_errores_de_red_y_respuestas_fallidas_a_MP_UNAVAILABLE_sin_exponer_el_token (1 ms)
+    √ usa_un_tiempo_de_espera_para_no_quedar_colgado (1 ms)
+    √ consulta_un_pago_y_lo_traduce_a_la_forma_interna
+    √ un_pago_inexistente_devuelve_null_y_un_identificador_invalido_ni_siquiera_consulta (1 ms)
+    √ busca_por_referencia_codificandola_y_devuelve_el_mas_reciente
+PASS tests/unit/passwordPolicy.test.js
+  Política de contraseñas
+    √ acepta_contrasena_con_8_caracteres_mayuscula_minuscula_y_numero (2 ms)
+    √ rechaza_contrasena_de_menos_de_8_caracteres (1 ms)
+    √ rechaza_contrasena_sin_mayuscula
+    √ rechaza_contrasena_sin_minuscula
+    √ rechaza_contrasena_sin_numero (1 ms)
+    √ indica_en_espanol_que_requisitos_faltan
+PASS tests/unit/maintenanceClassifier.test.js
+  Clasificación de mantenimientos: fechas
+    √ una_fecha_de_ayer_esta_vencida (2 ms)
+    √ una_fecha_de_hoy_es_proxima_y_no_vencida
+    √ a_15_dias_es_proximo (1 ms)
+    √ a_16_dias_es_normal
+    √ cuenta_bien_el_cambio_de_mes_y_de_anio
+    √ acepta_objetos_Date_de_la_base_de_datos (1 ms)
+  Clasificación de mantenimientos: kilometraje
+    √ con_501_km_por_recorrer_es_normal
+    √ con_500_km_por_recorrer_es_proximo
+    √ con_1_km_por_recorrer_es_proximo
+    √ al_alcanzar_el_kilometraje_esta_vencido
+    √ al_superar_el_kilometraje_esta_vencido_con_valor_negativo
+  Clasificación de mantenimientos: fecha y kilometraje juntos
+    √ gana_la_condicion_mas_urgente_vencido_por_km_aunque_la_fecha_sea_lejana (1 ms)
+    √ gana_la_fecha_vencida_aunque_falte_mucho_kilometraje
+    √ es_proximo_si_solo_una_de_las_dos_condiciones_esta_cerca
+    √ es_normal_si_ambas_estan_lejos
+  Orden por urgencia
+    √ ordena_vencido_proximo_normal (1 ms)
+    √ dentro_de_un_grupo_el_mas_urgente_va_primero
+    √ el_vencido_hace_mas_tiempo_va_primero_y_los_empates_se_desempatan_por_id
+    √ la_urgencia_sin_valores_es_infinita
+  hoyLocal
+    √ da_la_fecha_local_con_ceros_a_la_izquierda
+PASS tests/unit/orderLimits.test.js
+  Límite de importes de una línea y del total de una orden
+    √ el_maximo_es_99999999_99_expresado_en_centavos (1 ms)
+    √ el_importe_de_una_linea_es_cantidad_por_precio_unitario_en_centavos
+    √ el_limite_es_inclusivo_99999999_99_se_acepta_y_un_centavo_mas_se_rechaza (5 ms)
+    √ rechaza_con_409_AMOUNT_LIMIT_EXCEEDED_el_campo_y_el_maximo_en_el_mensaje (2 ms)
+    √ un_nuevo_total_que_pasa_del_maximo_se_rechaza_aunque_cada_parte_quepa
+PASS tests/unit/serializers.test.js
+  Serializador de refacciones por rol
+    √ el_administrador_ve_el_precio_de_compra_y_el_de_venta (1 ms)
+    √ recepcion_no_recibe_purchasePrice_pero_si_el_precio_de_venta (1 ms)
+    √ el_mecanico_no_recibe_ni_purchasePrice_ni_salePrice_y_conserva_el_resto (1 ms)
+    √ sin_usuario_tampoco_se_envia_el_precio_de_compra_y_no_modifica_el_original
+  Serializador de órdenes por rol (Sprint 5, FR-008)
+    √ administrador_y_recepcion_reciben_la_orden_completa_con_total_e_importes (1 ms)
+    √ el_mecanico_no_recibe_total_ni_precio_unitario_ni_importe_de_las_lineas_de_refaccion
+    √ el_mecanico_conserva_los_importes_de_servicios_y_mano_de_obra
+    √ el_listado_y_el_historial_aplican_la_misma_regla (1 ms)
+    √ no_modifica_el_original_ni_falla_con_una_orden_sin_lineas_de_refaccion
+PASS tests/unit/ticketPrint.test.js
+  Página imprimible del ticket
+    √ contiene_todos_los_datos_del_ticket (3 ms)
+    √ incluye_estilos_de_impresion_y_la_llamada_a_imprimir_y_no_tiene_menus_ni_botones
+    √ escapa_el_html_de_todo_texto_variable (1 ms)
+    √ omite_las_secciones_sin_lineas
+    √ etiquetas_de_metodos_y_estados
+    √ la_pagina_de_error_escapa_el_mensaje (1 ms)
+PASS tests/unit/ticketBuilder.test.js
+  Armado del ticket
+    √ incluye_todos_los_datos_esperados (2 ms)
+    √ el_kilometraje_es_el_del_servicio_o_el_de_entrada_si_falta
+    √ el_subtotal_es_la_suma_de_las_lineas_y_coincide_con_el_total_de_la_orden
+    √ sin_pagos_el_estado_es_SIN_PAGOS_sin_metodos_y_con_todo_el_saldo
+    √ con_un_pago_parcial_el_estado_es_PARCIAL (1 ms)
+    √ con_varios_metodos_los_lista_una_vez_en_el_orden_en_que_se_cobraron
+    √ los_pagos_rechazados_cancelados_y_pendientes_no_cuentan
+    √ una_orden_con_total_cero_se_marca_SIN_COBRO
+PASS tests/unit/paymentSummary.test.js
+  Resumen de cobro de una orden
+    √ sin_pagos_el_estado_es_SIN_PAGOS_y_todo_el_total_esta_disponible (1 ms)
+    √ un_pago_parcial_deja_el_estado_PARCIAL_y_el_saldo_pendiente
+    √ pagos_por_el_total_dejan_la_orden_PAGADA_sin_saldo
+    √ un_pago_pendiente_reserva_saldo_pero_no_cuenta_como_pagado (1 ms)
+    √ un_pago_pendiente_por_todo_el_saldo_no_deja_disponible_pero_la_orden_sigue_sin_pagos
+    √ con_total_cero_el_estado_es_SIN_COBRO_y_no_hay_nada_disponible
+    √ los_centavos_no_acumulan_error_de_redondeo (1 ms)
+PASS tests/unit/money.test.js
+  Aritmética de importes en centavos
+    √ convierte_importes_a_centavos_enteros_sin_error_de_punto_flotante (1 ms)
+    √ 0_1_mas_0_2_es_exactamente_0_30 (1 ms)
+    √ formatea_centavos_con_dos_decimales_y_ceros
+    √ suma_listas_de_importes_grandes_y_vacias
+Test Suites: 106 passed, 106 total
+Tests:       1462 passed, 1462 total
+Snapshots:   0 total
+Time:        85.811 s, estimated 93 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

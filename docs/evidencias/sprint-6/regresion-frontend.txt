@@ -1,0 +1,5 @@
+00:25 +306: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Desde el detalle del cliente registrar_vehiculo_abre_el_formulario_con_el_propietario_ya_elegido
+00:26 +307: C:/GPS/motorix/client/test/screens/vehicles_screen_test.dart: Detalle de vehículo muestra_los_datos_y_el_propietario
+00:26 +308: All tests passed!
+Analyzing client...                                             
+No issues found! (ran in 2.7s)
