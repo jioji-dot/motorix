@@ -2,7 +2,7 @@
 
 Este documento es el registro de calidad del Sprint 7 de Motorix, el último del proyecto. Reúne las puertas de calidad, las decisiones, los riesgos, la trazabilidad de los criterios de aceptación, los hallazgos, la regresión de los sprints 1 a 6 y el control de calidad final, con sus evidencias.
 
-Resultado general: **implementado y validado, con dos pendientes declarados** (capturas de pantalla y cronometraje de SC-001).
+Resultado general: **implementado y validado, con un pendiente declarado** (cronometraje de SC-001).
 
 ## 0. Datos del documento
 
@@ -42,7 +42,7 @@ Los criterios se marcan `[x]` solo cuando se cumplen de verdad.
 - [x] Los 26 criterios de aceptación están Aprobados.
 - [x] Todas las pruebas de los sprints 1 a 6 siguen pasando.
 - [x] No hay defectos críticos ni altos abiertos (sección 7).
-- [x] La matriz de calidad final (sección 9) está completa, con evidencia (las capturas y el cronometraje de SC-001 quedan pendientes y declarados).
+- [x] La matriz de calidad final (sección 9) está completa, con evidencia (las capturas se tomaron el 2026-11-25; el cronometraje de SC-001 queda pendiente y declarado).
 - [x] Reporte, análisis y matriz no se contradicen.
 
 ## 3. Puertas de calidad
@@ -147,6 +147,7 @@ Se registra todo lo que se encuentre, sea en los documentos, en el análisis o e
 | H-13 | En el código de la utilidad CSV y en las pantallas de Flutter el código se escribió junto con sus pruebas o antes de ellas (la tarea pedía pruebas primero) y no se hizo prueba de mutación en este sprint; en el backend de las historias sí se comprobó que las pruebas fallaban antes de implementar | Baja | Proceso | Aceptado | Se declara como lección: el orden de pruebas primero se cumplió en el backend de configuración, catálogo, términos, seguridad y reportes, y no en la utilidad CSV ni en la interfaz | Historial de commits |
 | H-14 | Por error se ejecutó `dart format` sobre todo `client/lib` y reformateó archivos de sprints anteriores | Baja | Proceso | Resuelto | Antes de confirmar se restauraron los archivos versionados y se reaplicaron solo los cambios del sprint; el diff no contiene reformateos ajenos | Commits de `client/` |
 | H-15 | La prueba del cierre por inactividad en la aplicación falló al principio porque el vigilante limitaba los reinicios con el reloj real (no simulado) | Baja | Prueba | Resuelto | Se quitó el límite: reiniciar un temporizador es barato | `client/lib/widgets/inactivity_watcher.dart` |
+| H-16 | Al tomar las capturas se vio que la pestaña «Bitácora» solo filtraba por acción, aunque FR-025 pide filtros por fecha, usuario y acción (el servidor ya aceptaba los tres y la prueba de la pantalla solo cubría la acción) | Media | Capturas (G-08) | Resuelto | Se agregó primero la prueba `filtra_por_rango_de_fechas_y_usuario` (falló), luego los campos «Desde» y «Hasta», el selector de usuario y el botón «Filtrar»; se comprobó contra la API real (1 registro de Recepción en el rango) | `client/test/screens/audit_tab_test.dart`, `captura-bitacora-filtrada.png` |
 
 ## 8. Línea base de regresión
 
@@ -155,7 +156,7 @@ Se ejecuta la suite completa antes de tocar el código y de nuevo al cierre. Nin
 | Suite | Comando | Antes del sprint 7 | Después del sprint 7 | Diferencia | Evidencia |
 |---|---|---|---|---|---|
 | Backend (Jest) | `npm test` en `server/` | 106 suites y 1462 pruebas aprobadas, 0 fallidas | 137 suites y 1664 pruebas aprobadas, 0 fallidas | +31 suites y +202 pruebas; ninguna anterior pasó de verde a rojo | [Antes](evidencias/sprint-6/regresion-backend.txt) · [Después](evidencias/sprint-7/regresion-backend.txt) · [Lint](evidencias/sprint-7/lint-backend.txt) (sin avisos) |
-| Frontend (Flutter) | `flutter test` en `client/` | 308 pruebas aprobadas, 0 fallidas; `flutter analyze` sin avisos | 364 pruebas aprobadas, 0 fallidas; `flutter analyze` sin avisos | +56 pruebas; ninguna anterior pasó de verde a rojo | [Antes](evidencias/sprint-6/regresion-frontend.txt) · [Después](evidencias/sprint-7/regresion-frontend.txt) |
+| Frontend (Flutter) | `flutter test` en `client/` | 308 pruebas aprobadas, 0 fallidas; `flutter analyze` sin avisos | 365 pruebas aprobadas, 0 fallidas; `flutter analyze` sin avisos | +57 pruebas; ninguna anterior pasó de verde a rojo | [Antes](evidencias/sprint-6/regresion-frontend.txt) · [Después](evidencias/sprint-7/regresion-frontend.txt) |
 
 **Fecha de la línea base:** 2026-11-25, sobre el commit `2f9debf` de la rama `006-notificaciones-internas` (cierre del Sprint 6), antes de crear los cambios del Sprint 7.
 
@@ -177,15 +178,15 @@ Cinco requisitos funcionales elegidos entre los que más pueden fallar, en las 9
 
 - Salida de la regresión del backend, del lint y del frontend: `docs/evidencias/sprint-7/`.
 - Informe de la validación contra la API real: `specs/007-reportes-configuracion/validacion-quickstart.md`.
-- Capturas de pantalla de los Sprints 6 y 7: **pendientes de tomar** con la aplicación completa en ejecución (no se pudieron automatizar sin credenciales de prueba de la interfaz).
+- Capturas de pantalla (2026-11-25), tomadas por Claude Code con Chrome sin interfaz sobre la app web local, la API real y la base de pruebas con los seeds: `captura-terminos-aceptacion.png`, `captura-configuracion-taller.png`, `captura-configuracion-guardada.png`, `captura-tipos-de-servicio.png`, `captura-terminos-publicacion.png`, `captura-bitacora.png`, `captura-bitacora-filtrada.png`, `captura-reporte-ingresos.png`, `captura-reporte-servicios-frecuentes.png`, `captura-reporte-productividad.png`, `captura-reporte-refacciones-margen.png`, `captura-reporte-rotacion-inventario.png`, `captura-ticket-proximo-servicio.png` en `docs/evidencias/sprint-7/`. Las del Sprint 6 están en `docs/evidencias/sprint-6/`. Al tomarlas se encontró y corrigió el hallazgo H-16.
 - **Pendiente de una persona (SC-001):** cronometrar que el administrador cambie los datos del taller y vea el ticket nuevo en menos de 1 minuto. SC-003 (reportes con un año de datos en menos de 3 segundos) lo cubre `reports.performance.test.js`.
 
 ## 10. Cierre
 
-**Estado del sprint 7: implementado y validado, con dos pendientes declarados** (capturas de pantalla y cronometraje de SC-001), el 2026-11-25. Es el último sprint del proyecto.
+**Estado del sprint 7: implementado y validado, con un pendiente declarado** (cronometraje de SC-001), el 2026-11-25; las capturas se tomaron el mismo día. Es el último sprint del proyecto.
 
 - 26 de 26 criterios de aceptación aprobados; 10 de 10 historias de usuario implementadas (34 requisitos funcionales), con las entregas 7A y 7B completas.
-- Backend: 137 suites y 1664 pruebas en verde (+202). Frontend: 364 pruebas en verde (+56) y análisis sin avisos. Ninguna prueba anterior se rompió.
+- Backend: 137 suites y 1664 pruebas en verde (+202). Frontend: 365 pruebas en verde (+57) y análisis sin avisos. Ninguna prueba anterior se rompió.
 - Hallazgos: 15 registrados (H-01 a H-15), todos resueltos o aceptados; ninguno crítico ni alto abierto.
 - Validación contra la API real: 18 de 18 escenarios del quickstart.
 - Deuda técnica declarada: costo de refacciones con el precio de compra vigente, rotación contra la existencia actual y textos legales como plantilla (ver `docs/project-context.md`).

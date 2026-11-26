@@ -31,4 +31,4 @@
 
 ## Comprobaciones de la interfaz
 
-Las verifican las pruebas de Flutter (56 nuevas, todas en verde): aceptación de términos y rechazo, cierre por 30 minutos de inactividad (con mensaje), configuración del taller y márgenes con sus límites, tipos de servicio, bitácora, publicación de términos, reportes con sus estados y exportación, tipo de servicio en la línea de la orden, «Usar propuesta» y la línea «Próximo servicio» del ticket. Las capturas de pantalla quedan pendientes (ver el documento de aseguramiento de calidad).
+Las verifican las pruebas de Flutter (57 nuevas, todas en verde): aceptación de términos y rechazo, cierre por 30 minutos de inactividad (con mensaje), configuración del taller y márgenes con sus límites, tipos de servicio, bitácora, publicación de términos, reportes con sus estados y exportación, tipo de servicio en la línea de la orden, «Usar propuesta» y la línea «Próximo servicio» del ticket. Las capturas de pantalla están en `docs/evidencias/sprint-7/` (2026-11-25); al tomarlas se agregaron los filtros de fecha y usuario de la bitácora que faltaban (hallazgo H-16).
