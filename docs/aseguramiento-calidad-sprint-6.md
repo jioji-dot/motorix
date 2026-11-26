@@ -43,7 +43,7 @@ Los criterios se marcan `[x]` solo cuando se cumplen de verdad. Los de entrada s
 - [x] Los 14 criterios de aceptación están Aprobados.
 - [x] Todas las pruebas de los sprints 1 a 5 siguen pasando.
 - [x] No hay defectos críticos ni altos abiertos (sección 7).
-- [x] La matriz de calidad final (sección 9) está completa, con evidencia (las capturas se tomaron el 2026-11-25; el cronometraje de SC-004 queda pendiente y declarado).
+- [x] La matriz de calidad final (sección 9) está completa, con evidencia (las capturas y el cronometraje de SC-004 se hicieron el 2026-11-25).
 - [x] Reporte, análisis y matriz no se contradicen.
 
 ## 3. Puertas de calidad
@@ -161,11 +161,11 @@ Cinco requisitos funcionales elegidos entre los que más pueden fallar, en las 9
 - Salida de la regresión del backend, del lint y del frontend: `docs/evidencias/sprint-6/`.
 - Informe de la validación contra la API real: `specs/006-notificaciones-internas/validacion-quickstart.md`.
 - Capturas de pantalla (2026-11-25), tomadas por Claude Code con Chrome sin interfaz sobre la app web local, la API real y la base de pruebas con los seeds, con las tres cuentas de ejemplo: `captura-campana-admin.png`, `captura-insignia-inventario.png`, `captura-panel-de-avisos.png`, `captura-panel-de-avisos-2.png`, `captura-panel-de-avisos-3.png`, `captura-recepcion-sin-stock.png`, `captura-recepcion-panel-sin-stock.png`, `captura-mecanico-sus-ordenes.png`, `captura-clientes-por-avisar.png`, `captura-marcar-avisado-nota.png`, `captura-cliente-avisado.png` en `docs/evidencias/sprint-6/`. Muestran la campana con 9 avisos y la insignia de Inventario (3) del administrador, el panel agrupado por tipo, la recepción sin avisos de stock (6) y el mecánico con solo su orden detenida (1).
-- **Pendiente de una persona (SC-004):** cronometrar que recepción pueda abrir «Clientes por avisar», ubicar a un cliente con su teléfono y marcarlo avisado en menos de 1 minuto. SC-005 (el contador se actualiza al marcar como leído) lo cubre `notification_open_test.dart`: el contador baja en la misma interacción, y persiste tras cerrar sesión (escenario 4).
+- **SC-004 medido (2026-11-25):** Jorge, con la cuenta de recepción, la app web local, la API real y la base de pruebas recién sembrada, abrió «Clientes por avisar», ubicó la fila «Vehículo listo» de José Manuel Ortega Vega (OS-000005) con su teléfono y la marcó como avisada en **29 segundos** medidos con cronómetro (meta: menos de 1 minuto). SC-005 (el contador se actualiza al marcar como leído) lo cubre `notification_open_test.dart`: el contador baja en la misma interacción, y persiste tras cerrar sesión (escenario 4).
 
 ## 10. Cierre
 
-**Estado del sprint 6: implementado y validado, con un pendiente declarado** (cronometraje de SC-004), el 2026-11-25; las capturas se tomaron el mismo día.
+**Estado del sprint 6: implementado y validado, sin pendientes técnicos**, el 2026-11-25 (capturas y cronometraje de SC-004 hechos el mismo día). Solo falta la aprobación de Jorge.
 
 - 14 de 14 criterios de aceptación aprobados; 7 de 7 historias de usuario implementadas (23 requisitos funcionales).
 - Backend: 106 suites y 1462 pruebas en verde (+130). Frontend: 308 pruebas en verde (+52) y análisis sin avisos. Ninguna prueba anterior se rompió.
