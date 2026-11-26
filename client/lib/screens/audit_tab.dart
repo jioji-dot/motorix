@@ -9,7 +9,7 @@ import '../utils/app_theme.dart';
 import '../utils/format.dart';
 import '../widgets/state_views.dart';
 
-/// Bitácora de acciones sensibles: solo lectura, con filtro por acción y paginación (Sprint 7, solo administrador).
+/// Bitácora de acciones sensibles: solo lectura, con filtros por fecha, usuario y acción y paginación (Sprint 7, solo administrador).
 class AuditTab extends StatefulWidget {
   const AuditTab({super.key});
 
@@ -18,12 +18,29 @@ class AuditTab extends StatefulWidget {
 }
 
 class _AuditTabState extends State<AuditTab> {
+  final _desde = TextEditingController();
+  final _hasta = TextEditingController();
+  int? _usuario;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) context.read<AuditProvider>().load(page: 1);
+      if (!mounted) return;
+      final provider = context.read<AuditProvider>();
+      _desde.text = provider.from ?? '';
+      _hasta.text = provider.to ?? '';
+      setState(() => _usuario = provider.userId);
+      provider.loadUsers();
+      provider.load(page: 1);
     });
+  }
+
+  @override
+  void dispose() {
+    _desde.dispose();
+    _hasta.dispose();
+    super.dispose();
   }
 
   @override
@@ -111,29 +128,83 @@ class _AuditTabState extends State<AuditTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: 320,
-              child: DropdownButtonFormField<String?>(
-                key: const Key('filtro-accion'),
-                isExpanded: true,
-                initialValue: provider.action,
-                decoration: const InputDecoration(labelText: 'Acción'),
-                items: [
-                  const DropdownMenuItem<String?>(
-                    value: null,
-                    child: Text('Todas las acciones'),
+          Wrap(
+            spacing: AppSpacing.md,
+            runSpacing: AppSpacing.md,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextField(
+                  key: const Key('filtro-desde'),
+                  controller: _desde,
+                  decoration: const InputDecoration(
+                    labelText: 'Desde (AAAA-MM-DD)',
                   ),
-                  for (final a in auditActions)
-                    DropdownMenuItem<String?>(
-                      value: a,
-                      child: Text(auditActionLabel(a)),
-                    ),
-                ],
-                onChanged: provider.setAction,
+                ),
               ),
-            ),
+              SizedBox(
+                width: 200,
+                child: TextField(
+                  key: const Key('filtro-hasta'),
+                  controller: _hasta,
+                  decoration: const InputDecoration(
+                    labelText: 'Hasta (AAAA-MM-DD)',
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 240,
+                child: DropdownButtonFormField<int?>(
+                  key: const Key('filtro-usuario'),
+                  isExpanded: true,
+                  initialValue: _usuario,
+                  decoration: const InputDecoration(labelText: 'Usuario'),
+                  items: [
+                    const DropdownMenuItem<int?>(
+                      value: null,
+                      child: Text('Todos los usuarios'),
+                    ),
+                    for (final u in provider.users)
+                      DropdownMenuItem<int?>(
+                        value: u.id,
+                        child: Text(u.name, overflow: TextOverflow.ellipsis),
+                      ),
+                  ],
+                  onChanged: (valor) => setState(() => _usuario = valor),
+                ),
+              ),
+              FilledButton(
+                key: const Key('aplicar-filtros'),
+                onPressed: () => provider.setFilters(
+                  from: _desde.text,
+                  to: _hasta.text,
+                  userId: _usuario,
+                ),
+                child: const Text('Filtrar'),
+              ),
+              SizedBox(
+                width: 280,
+                child: DropdownButtonFormField<String?>(
+                  key: const Key('filtro-accion'),
+                  isExpanded: true,
+                  initialValue: provider.action,
+                  decoration: const InputDecoration(labelText: 'Acción'),
+                  items: [
+                    const DropdownMenuItem<String?>(
+                      value: null,
+                      child: Text('Todas las acciones'),
+                    ),
+                    for (final a in auditActions)
+                      DropdownMenuItem<String?>(
+                        value: a,
+                        child: Text(auditActionLabel(a)),
+                      ),
+                  ],
+                  onChanged: provider.setAction,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppSpacing.md),
           Expanded(child: cuerpo),
