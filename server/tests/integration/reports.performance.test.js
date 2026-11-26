@@ -51,6 +51,8 @@ test.each(REPORTES)('el_reporte_%s_con_un_ano_de_datos_responde_en_menos_de_3_se
   const inicio = process.hrtime.bigint();
   const r = await request(app).get(url).set(h);
   const ms = Number(process.hrtime.bigint() - inicio) / 1e6;
+  // Con REPORTAR_TIEMPOS=1 imprime el tiempo medido, para registrarlo como evidencia de SC-003.
+  if (process.env.REPORTAR_TIEMPOS) console.log(`SC-003 ${nombre}: ${ms.toFixed(1)} ms`);
   expect(r.status).toBe(200);
   expect(ms).toBeLessThan(3000);
 }, 60000);

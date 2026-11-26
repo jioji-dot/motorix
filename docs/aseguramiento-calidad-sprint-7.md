@@ -2,7 +2,7 @@
 
 Este documento es el registro de calidad del Sprint 7 de Motorix, el último del proyecto. Reúne las puertas de calidad, las decisiones, los riesgos, la trazabilidad de los criterios de aceptación, los hallazgos, la regresión de los sprints 1 a 6 y el control de calidad final, con sus evidencias.
 
-Resultado general: **implementado y validado, con un pendiente declarado** (cronometraje de SC-001).
+Resultado general: **implementado y validado, sin pendientes técnicos** (solo falta la aprobación de Jorge).
 
 ## 0. Datos del documento
 
@@ -42,7 +42,7 @@ Los criterios se marcan `[x]` solo cuando se cumplen de verdad.
 - [x] Los 26 criterios de aceptación están Aprobados.
 - [x] Todas las pruebas de los sprints 1 a 6 siguen pasando.
 - [x] No hay defectos críticos ni altos abiertos (sección 7).
-- [x] La matriz de calidad final (sección 9) está completa, con evidencia (las capturas se tomaron el 2026-11-25; el cronometraje de SC-001 queda pendiente y declarado).
+- [x] La matriz de calidad final (sección 9) está completa, con evidencia (las capturas y la medición de SC-001 se hicieron el 2026-11-25).
 - [x] Reporte, análisis y matriz no se contradicen.
 
 ## 3. Puertas de calidad
@@ -179,11 +179,11 @@ Cinco requisitos funcionales elegidos entre los que más pueden fallar, en las 9
 - Salida de la regresión del backend, del lint y del frontend: `docs/evidencias/sprint-7/`.
 - Informe de la validación contra la API real: `specs/007-reportes-configuracion/validacion-quickstart.md`.
 - Capturas de pantalla (2026-11-25), tomadas por Claude Code con Chrome sin interfaz sobre la app web local, la API real y la base de pruebas con los seeds: `captura-terminos-aceptacion.png`, `captura-configuracion-taller.png`, `captura-configuracion-guardada.png`, `captura-tipos-de-servicio.png`, `captura-terminos-publicacion.png`, `captura-bitacora.png`, `captura-bitacora-filtrada.png`, `captura-reporte-ingresos.png`, `captura-reporte-servicios-frecuentes.png`, `captura-reporte-productividad.png`, `captura-reporte-refacciones-margen.png`, `captura-reporte-rotacion-inventario.png`, `captura-ticket-proximo-servicio.png` en `docs/evidencias/sprint-7/`. Las del Sprint 6 están en `docs/evidencias/sprint-6/`. Al tomarlas se encontró y corrigió el hallazgo H-16.
-- **Pendiente de una persona (SC-001):** cronometrar que el administrador cambie los datos del taller y vea el ticket nuevo en menos de 1 minuto. SC-003 (reportes con un año de datos en menos de 3 segundos) lo cubre `reports.performance.test.js`.
+- **SC-001 medido (2026-11-25):** con la API real y sin reiniciar el servidor, cambiar el teléfono del taller y generar un ticket nuevo tomó **29 ms** (meta: menos de 1 minuto); el ticket nuevo trae el teléfono nuevo y el anterior conserva el suyo. **SC-003 medido:** con un año de datos (3,000 órdenes) cada reporte respondió entre **9.1 y 26.1 ms** (meta: menos de 3 segundos) en `reports.performance.test.js`. Detalle de ambas mediciones en `docs/evidencias/sprint-7/mediciones-sc-001-sc-003.txt`.
 
 ## 10. Cierre
 
-**Estado del sprint 7: implementado y validado, con un pendiente declarado** (cronometraje de SC-001), el 2026-11-25; las capturas se tomaron el mismo día. Es el último sprint del proyecto.
+**Estado del sprint 7: implementado y validado, sin pendientes técnicos**, el 2026-11-25 (capturas y medición de SC-001 hechas el mismo día). Solo falta la aprobación de Jorge. Es el último sprint del proyecto.
 
 - 26 de 26 criterios de aceptación aprobados; 10 de 10 historias de usuario implementadas (34 requisitos funcionales), con las entregas 7A y 7B completas.
 - Backend: 137 suites y 1664 pruebas en verde (+202). Frontend: 365 pruebas en verde (+57) y análisis sin avisos. Ninguna prueba anterior se rompió.

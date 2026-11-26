@@ -1,0 +1,26 @@
+Medición de SC-001 (Sprint 7) — 2026-11-25
+Entorno: API real (node server/server.js, puerto 3099) sobre motorix_sdd_test con migraciones 001-006 y seeds 001-010 recién cargados.
+El servidor NO se reinició entre el cambio de configuración y la generación del ticket.
+
+Preparación (fuera del cronómetro):
+  - Se generó el ticket TK-000002 de la orden OS-000005 con el teléfono del taller 5512345678.
+  - La orden OS-000004 pasó a En reparación y a Terminado (Segundo mecánico).
+
+Medición (cronómetro del guion, performance.now()):
+  1. PUT /api/settings  -> teléfono del taller = 5569203153 (administrador)
+  2. POST /api/orders/4/ticket -> TK-000003
+  Tiempo total: 29 ms (meta: menos de 1 minuto)
+
+Comprobaciones:
+  - TK-000003 muestra el teléfono nuevo 5569203153: SÍ
+  - TK-000002 (anterior) conserva 5512345678 después del cambio: SÍ
+Resultado: CUMPLE
+
+Medición de SC-003 (Sprint 7) — 2026-11-25
+Comando: REPORTAR_TIEMPOS=1 npm test -- tests/integration/reports.performance.test.js (base de pruebas con un año de datos: 3,000 órdenes)
+  income (ingresos):            11.5 ms
+  services (servicios):         26.1 ms
+  productivity (productividad): 25.7 ms
+  parts (refacciones):          24.3 ms
+  rotation (rotación):           9.1 ms
+Meta: menos de 3 segundos por reporte. Resultado: CUMPLE (6 de 6 pruebas aprobadas)
